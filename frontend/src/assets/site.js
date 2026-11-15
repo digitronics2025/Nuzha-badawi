@@ -84,9 +84,37 @@ for (const poster of document.querySelectorAll('[data-video]')) {
   }, { once: true });
 }
 
+// Turnstile is enabled by the public Worker once domain credentials are configured.
+// Without backend configuration, keep the form visible but never claim delivery.
+async function setupContactSecurity(form) {
+  const target=document.getElementById('nusya-turnstile');
+  if(!target)return;
+  try {
+    const response=await fetch('/api/v1/config',{headers:{accept:'application/json'},credentials:'same-origin',signal:AbortSignal.timeout(5000)});
+    if(!response.ok)throw Error('not ready');
+    const config=await response.json();
+    if(!config.ready||!config.turnstileSiteKey)throw Error('not ready');
+    const permittedPairs=new Set(config.approvedTranslationPairs||[]);
+    for(const kind of ['translation','interpretation']){
+      const source=form.querySelector(`.form-detail[data-for="${kind}"] [name="sourceLanguage"]`);
+      const targetLanguage=form.querySelector(`.form-detail[data-for="${kind}"] [name="targetLanguage"]`);
+      if(!source||!targetLanguage)continue;
+      for(const option of source.options)if(option.value)option.disabled=![...permittedPairs].some(pair=>pair.startsWith(option.value+':'));
+      const updateTarget=()=>{for(const option of targetLanguage.options)if(option.value)option.disabled=!permittedPairs.has(source.value+':'+option.value);if(targetLanguage.selectedOptions[0]?.disabled)targetLanguage.value='';};
+      source.addEventListener('change',updateTarget);updateTarget();
+    }
+    target.className='cf-turnstile';
+    target.dataset.sitekey=config.turnstileSiteKey;
+    target.dataset.action='nusya_enquiry';
+    const script=document.createElement('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js';script.async=true;script.defer=true;
+    document.head.append(script);
+    form.dataset.backendReady='true';
+  }catch { form.dataset.backendReady='false'; }
+}
 // Service-aware enquiry form. Backend owns validation, spam controls and durable acceptance.
 const form = document.querySelector('#enquiry-form');
 if (form) {
+  setupContactSecurity(form);
   const typeChoices = [...form.querySelectorAll('input[name="type"]')];
   const panels = [...form.querySelectorAll('.form-detail')];
   const feedback = form.querySelector('#enquiry-feedback');
@@ -111,6 +139,9 @@ if (form) {
   form.addEventListener('submit',async event => {
     event.preventDefault(); feedback.hidden=true;
     if (!form.checkValidity()) { form.reportValidity(); return; }
+    if(form.dataset.backendReady!=='true') { show(form.dataset.error || 'The contact system is not configured yet.'); return; }
+    const token=form.querySelector('[name="cf-turnstile-response"]')?.value;
+    if(!token) { show(({en:'Complete the security challenge before submitting.', ar:'أكمل التحقق الأمني قبل الإرسال.', ru:'Пройдите проверку безопасности перед отправкой.'})[form.dataset.locale] || form.dataset.error); return; }
     const type=selectedType();
     if ((type==='translation'||type==='interpretation') && activeField('sourceLanguage') && activeField('sourceLanguage')===activeField('targetLanguage')) { show(form.dataset.same || 'Source and target must differ.'); return; }
     const request = {
@@ -120,7 +151,7 @@ if (form) {
       email: form.elements.namedItem('email')?.value?.trim() || '',
       message: form.elements.namedItem('message')?.value?.trim() || '',
       details: Object.fromEntries(['language','goal','sourceLanguage','targetLanguage','dueDate','eventDate','format'].map(key=>[key,activeField(key)]).filter(([,value])=>value)),
-      privacyAcknowledged: form.elements.namedItem('privacyAcknowledged')?.checked || false
+      privacyAcknowledged: form.elements.namedItem('privacyAcknowledged')?.checked || false, turnstileToken:token
     };
     submit.disabled=true;
     try {
@@ -128,7 +159,7 @@ if (form) {
       const json = response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
       if (response.status===201 && json?.ok===true && json.reference) {
         show(`${form.dataset.success || 'Received:'} ${json.reference}`,true);
-        form.reset(); delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false;
+        form.reset(); delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false; window.turnstile?.reset?.();
       } else show(json?.message || form.dataset.error || 'The contact system is not available yet.');
     } catch {
       show(form.dataset.error || 'The contact system is not available yet.');
