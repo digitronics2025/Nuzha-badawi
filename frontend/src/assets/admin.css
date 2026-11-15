@@ -774,6 +774,13 @@ input[type="file"] {
   }
 }
 
+[hidden]{display:none!important}
+/* Review editing stays in the existing page revision and publishing workflow. */
+.testimonial-editor{border:1px solid #d8c5b1;border-radius:12px;padding:20px;margin-block:24px;min-width:0}
+.testimonial-editor legend{font-weight:650;padding-inline:8px}
+.testimonial-editor>.edit-label{margin-block:16px}
+.testimonial-editor input[type=checkbox]{width:18px;height:18px;vertical-align:middle;accent-color:#795131}
+
 .page-top h1:focus {
   outline: none;
 }

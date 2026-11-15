@@ -57,15 +57,32 @@ export default {
         "faq_2_answer": "Вкажіть мовний напрям, тип матеріалу та бажаний термін. Можливість виконання підтверджується до прийняття замовлення.",
         "faq_3_question": "Чи можна записатися онлайн?",
         "faq_3_answer": "Заняття з англійської можна переглянути на Preply. Щодо інших послуг надішліть запит.",
-        "proof_0": "Індивідуальний підхід",
-        "proof_1": "Багатомовний досвід",
-        "proof_2": "Міжкультурне спілкування"
+        "proof_0": "Досвід викладання учням віком 5–65 років",
+        "proof_1": "Досвід роботи з учнями рівнів A1 і B2",
+        "proof_2": "Досвід індивідуальних і групових занять",
+        "proof_age": "Досвід викладання учням віком 5–65 років",
+        "proof_levels": "Досвід роботи з учнями рівнів A1 і B2",
+        "proof_formats": "Досвід індивідуальних і групових занять",
+        "testimonials_title": "Що кажуть учні англійської",
+        "testimonials_intro": "Терпіння, зрозумілі пояснення та впевненість у розмові — словами самих учнів.",
+        "testimonials_rating": "Preply: 5,0/5 на основі 4 відгуків учнів",
+        "testimonials_snapshot": "Знімок екрана надано 15 листопада 2026 року. Показники платформи можуть змінюватися.",
+        "review_yura_quote": "Я більше не боюся говорити англійською.",
+        "review_yura_author": "Юра",
+        "review_yura_date": "2 травня 2026",
+        "review_m_quote": "Вона розумна викладачка, яка дуже зрозуміло пояснює інформацію",
+        "review_m_author": "M",
+        "review_m_date": "24 квітня 2026",
+        "review_serg_quote": "Заняття зрозумілі, цікаві та добре організовані.",
+        "review_serg_author": "Serg",
+        "review_serg_date": "15 листопада 2026"
       },
       "seo": {
         "title": "Нозха Бадаві — мовні заняття та спілкування",
         "description": "Індивідуальні заняття з англійської, російської та арабської мов, підготовка до професійного спілкування, письмовий та усний переклад із Нозхою Бадаві."
       },
-      "media": {}
+      "media": {},
+      "testimonialsEnabled": false
     },
     "about": {
       "fields": {
@@ -99,6 +116,7 @@ export default {
         "journey_6_title": "Мовний досвід",
         "journey_6_body": "Англійська, російська, арабська та українська; шведська — початковий рівень. Не всі ці мови пропонуються для занять.",
         "journey_6_date": "",
+        "teaching_experience": "Мій викладацький досвід охоплює учнів віком від 5 до 65 років із різним початковим рівнем, зокрема A1 і B2. Я викладала російську очно іноземним студентам в Україні, серед яких були арабомовні учні, та англійську онлайн українським учням в Україні й інших країнах Європи. Маю досвід індивідуальних і групових занять. Відповідний вік, рівні, формати та актуальну доступність уточнюємо перед записом.",
         "title": "Індивідуальний підхід до мов.",
         "description": "Дізнайтеся про викладання, освіту, переклад і підтримку студентів, що сформували підхід Нозхи."
       },
@@ -127,6 +145,9 @@ export default {
         "process_1_body": "Обговоримо ваш рівень, формат і потреби.",
         "process_2_title": "Зробіть наступний крок",
         "process_2_body": "Отримайте інформацію про запис або особисту відповідь.",
+        "teaching_experience": "Мій викладацький досвід охоплює учнів віком від 5 до 65 років із різним початковим рівнем, зокрема A1 і B2. Я викладала російську очно іноземним студентам в Україні, серед яких були арабомовні учні, та англійську онлайн українським учням в Україні й інших країнах Європи. Маю досвід індивідуальних і групових занять. Відповідний вік, рівні, формати та актуальну доступність уточнюємо перед записом.",
+        "english_experience": "Мій досвід викладання англійської онлайн включає індивідуальні та групові заняття з українськими учнями в Україні й інших країнах Європи. Актуальні формати й доступність уточнюємо перед записом.",
+        "russian_experience": "Мій досвід викладання російської включає очні заняття з іноземними студентами в Україні, зокрема арабомовними, а також онлайн-викладання. Це опис досвіду; актуальне місце та формати уточнюємо перед записом.",
         "title": "Мовні заняття для вашого світу.",
         "description": "Індивідуальне вивчення англійської, російської та арабської відповідно до ваших цілей."
       },
@@ -274,15 +295,32 @@ export default {
         "faq_2_answer": "Send the language direction, type of material and desired deadline. Availability and eligible language pairs are confirmed before accepting a job.",
         "faq_3_question": "Can I book online?",
         "faq_3_answer": "You can explore English lessons on Preply. For other teaching or professional services, send an enquiry about current options.",
-        "proof_0": "Personalised learning",
-        "proof_1": "Multilingual experience",
-        "proof_2": "Cross-cultural communication"
+        "proof_0": "Teaching experience with ages 5–65",
+        "proof_1": "Experience with A1 and B2 learners",
+        "proof_2": "Individual and group teaching experience",
+        "proof_age": "Teaching experience with ages 5–65",
+        "proof_levels": "Experience with A1 and B2 learners",
+        "proof_formats": "Individual and group teaching experience",
+        "testimonials_title": "What English learners say",
+        "testimonials_intro": "Patience, clear explanations and the confidence to speak — in learners’ own words.",
+        "testimonials_rating": "Preply: 5.0/5 from 4 student reviews",
+        "testimonials_snapshot": "Screenshot supplied 15 November 2026. Platform figures can change.",
+        "review_yura_quote": "I am not afraid to speak English anymore.",
+        "review_yura_author": "Юра",
+        "review_yura_date": "2 May 2026",
+        "review_m_quote": "she is a clever teacher who explains information very clearly",
+        "review_m_author": "M",
+        "review_m_date": "24 April 2026",
+        "review_serg_quote": "The lessons are clear, interesting and well-organised.",
+        "review_serg_author": "Serg",
+        "review_serg_date": "15 November 2026"
       },
       "seo": {
         "title": "Nozha Badavi — language lessons and coaching",
         "description": "Personalised English, Russian and Arabic lessons, professional communication coaching, translation and interpretation with Nozha Badavi."
       },
-      "media": {}
+      "media": {},
+      "testimonialsEnabled": false
     },
     "about": {
       "fields": {
@@ -316,6 +354,7 @@ export default {
         "journey_6_title": "Language background",
         "journey_6_body": "English, Russian, Arabic and Ukrainian; Swedish at beginner level. This does not mean all languages are offered for lessons.",
         "journey_6_date": "",
+        "teaching_experience": "My teaching experience includes learners aged 5 to 65, with different starting levels including A1 and B2. I have taught Russian in person to international students in Ukraine, including Arabic-speaking learners, and English online to Ukrainian learners in Ukraine and elsewhere in Europe. My experience includes individual lessons and group teaching. Current age suitability, levels, formats and availability are confirmed before booking.",
         "title": "A personal approach to languages.",
         "description": "Meet Nozha and explore the teaching, education, translation, interpretation and student-support experience behind her approach."
       },
@@ -344,6 +383,9 @@ export default {
         "process_1_body": "We discuss your level, format and requirements.",
         "process_2_title": "Take the next step",
         "process_2_body": "Receive a clear booking path or a personal response.",
+        "teaching_experience": "My teaching experience includes learners aged 5 to 65, with different starting levels including A1 and B2. I have taught Russian in person to international students in Ukraine, including Arabic-speaking learners, and English online to Ukrainian learners in Ukraine and elsewhere in Europe. My experience includes individual lessons and group teaching. Current age suitability, levels, formats and availability are confirmed before booking.",
+        "english_experience": "My online English teaching experience includes individual lessons and groups, supporting Ukrainian learners in Ukraine and elsewhere in Europe. Current formats and availability are confirmed before booking.",
+        "russian_experience": "My Russian teaching experience includes in-person lessons for international students in Ukraine, including Arabic-speaking learners, as well as online tutoring. This describes my experience; current location and formats are confirmed before booking.",
         "title": "Language lessons around your world.",
         "description": "Individual learning in English, Russian and Arabic, shaped around your goals."
       },
@@ -491,15 +533,32 @@ export default {
         "faq_2_answer": "اذكر اتجاه الترجمة ونوع المادة والموعد المرغوب فيه. نؤكد اللغات المؤهلة قبل قبول الطلب.",
         "faq_3_question": "هل يمكن الحجز عبر الإنترنت؟",
         "faq_3_answer": "يمكن استكشاف دروس الإنجليزية عبر Preply. وللخدمات الأخرى يمكنك الاستفسار عن الخيارات المتاحة.",
-        "proof_0": "تعلّم يناسبك",
-        "proof_1": "خبرة متعددة اللغات",
-        "proof_2": "تواصل بين الثقافات"
+        "proof_0": "خبرة في تعليم متعلّمين من 5 إلى 65 سنة",
+        "proof_1": "خبرة مع متعلّمين بمستويَي A1 وB2",
+        "proof_2": "خبرة في الدروس الفردية والجماعية",
+        "proof_age": "خبرة في تعليم متعلّمين من 5 إلى 65 سنة",
+        "proof_levels": "خبرة مع متعلّمين بمستويَي A1 وB2",
+        "proof_formats": "خبرة في الدروس الفردية والجماعية",
+        "testimonials_title": "ماذا يقول متعلّمو الإنجليزية",
+        "testimonials_intro": "الصبر والشرح الواضح والثقة في التحدّث — بكلمات المتعلّمين أنفسهم.",
+        "testimonials_rating": "Preply: تقييم 5.0 من 5 بناءً على 4 مراجعات للطلبة",
+        "testimonials_snapshot": "لقطة الشاشة مقدّمة في 15 نوفمبر 2026. قد تتغيّر أرقام المنصة.",
+        "review_yura_quote": "لم أعد أخاف من التحدّث بالإنجليزية.",
+        "review_yura_author": "Юра",
+        "review_yura_date": "2 مايو 2026",
+        "review_m_quote": "إنها معلّمة ذكية تشرح المعلومات بوضوح شديد",
+        "review_m_author": "M",
+        "review_m_date": "24 أبريل 2026",
+        "review_serg_quote": "الدروس واضحة وممتعة ومنظّمة جيداً.",
+        "review_serg_author": "Serg",
+        "review_serg_date": "15 نوفمبر 2026"
       },
       "seo": {
         "title": "نزهة بدوي — دروس لغات وتواصل مهني",
         "description": "دروس مخصّصة في الإنجليزية والروسية والعربية، والتواصل المهني والترجمة التحريرية والشفوية مع Nozha Badavi."
       },
-      "media": {}
+      "media": {},
+      "testimonialsEnabled": false
     },
     "about": {
       "fields": {
@@ -533,6 +592,7 @@ export default {
         "journey_6_title": "الخلفية اللغوية",
         "journey_6_body": "الإنجليزية والروسية والعربية والأوكرانية، والسويدية بمستوى مبتدئ. لا يعني ذلك توفر دروس في جميع هذه اللغات.",
         "journey_6_date": "",
+        "teaching_experience": "تشمل خبرتي التعليمية متعلّمين تتراوح أعمارهم بين 5 و65 سنة، بمستويات بداية مختلفة منها A1 وB2. درّست الروسية حضورياً لطلبة دوليين في أوكرانيا، من بينهم ناطقون بالعربية، والإنجليزية عبر الإنترنت لمتعلّمين أوكرانيين في أوكرانيا ودول أوروبية أخرى. تشمل خبرتي الدروس الفردية والجماعية. يتم تأكيد الأعمار والمستويات والصيغ المناسبة والتوفر الحالي قبل الحجز.",
         "title": "نهج شخصي في تعلّم اللغات.",
         "description": "تعرّف على Nozha وخبرتها في التعليم والترجمة ودعم الطلبة الدوليين التي تشكّل أسلوبها في التدريس."
       },
@@ -561,6 +621,9 @@ export default {
         "process_1_body": "نناقش مستواك والصيغة المناسبة واحتياجاتك.",
         "process_2_title": "ابدأ الخطوة التالية",
         "process_2_body": "تحصل على طريقة واضحة للحجز أو الرد على طلبك.",
+        "teaching_experience": "تشمل خبرتي التعليمية متعلّمين تتراوح أعمارهم بين 5 و65 سنة، بمستويات بداية مختلفة منها A1 وB2. درّست الروسية حضورياً لطلبة دوليين في أوكرانيا، من بينهم ناطقون بالعربية، والإنجليزية عبر الإنترنت لمتعلّمين أوكرانيين في أوكرانيا ودول أوروبية أخرى. تشمل خبرتي الدروس الفردية والجماعية. يتم تأكيد الأعمار والمستويات والصيغ المناسبة والتوفر الحالي قبل الحجز.",
+        "english_experience": "تشمل خبرتي في تدريس الإنجليزية عبر الإنترنت دروساً فردية وجماعية لمتعلّمين أوكرانيين في أوكرانيا ودول أوروبية أخرى. يتم تأكيد الصيغ والتوفر الحالي قبل الحجز.",
+        "russian_experience": "تشمل خبرتي في تدريس الروسية دروساً حضورية لطلبة دوليين في أوكرانيا، من بينهم ناطقون بالعربية، إضافة إلى التدريس عبر الإنترنت. يصف ذلك خبرتي؛ ويتم تأكيد الموقع الحالي والصيغ المتاحة قبل الحجز.",
         "title": "دروس لغات تناسب عالمك.",
         "description": "تعلّم فردي للإنجليزية والروسية والعربية بما يناسب أهدافك."
       },
@@ -708,15 +771,32 @@ export default {
         "faq_2_answer": "Укажите языковое направление, тип материала и желаемый срок. Возможность работы подтверждается до принятия заказа.",
         "faq_3_question": "Как записаться онлайн?",
         "faq_3_answer": "Английские уроки можно посмотреть на Preply. По другим услугам отправьте запрос о доступных вариантах.",
-        "proof_0": "Индивидуальный подход",
-        "proof_1": "Многоязычный опыт",
-        "proof_2": "Общение между культурами"
+        "proof_0": "Опыт обучения учеников от 5 до 65 лет",
+        "proof_1": "Опыт работы с учениками уровней A1 и B2",
+        "proof_2": "Опыт индивидуальных и групповых занятий",
+        "proof_age": "Опыт обучения учеников от 5 до 65 лет",
+        "proof_levels": "Опыт работы с учениками уровней A1 и B2",
+        "proof_formats": "Опыт индивидуальных и групповых занятий",
+        "testimonials_title": "Что говорят ученики английского",
+        "testimonials_intro": "Терпение, понятные объяснения и уверенность в разговоре — словами самих учеников.",
+        "testimonials_rating": "Preply: 5,0/5 на основе 4 отзывов учеников",
+        "testimonials_snapshot": "Снимок экрана предоставлен 15 ноября 2026 года. Показатели платформы могут меняться.",
+        "review_yura_quote": "Я больше не боюсь говорить по-английски.",
+        "review_yura_author": "Юра",
+        "review_yura_date": "2 мая 2026",
+        "review_m_quote": "Она умный преподаватель, который очень понятно объясняет информацию",
+        "review_m_author": "M",
+        "review_m_date": "24 апреля 2026",
+        "review_serg_quote": "Уроки понятные, интересные и хорошо организованные.",
+        "review_serg_author": "Serg",
+        "review_serg_date": "15 ноября 2026"
       },
       "seo": {
         "title": "Нузя Бадави — языковые уроки и общение",
         "description": "Индивидуальные уроки английского, русского и арабского, подготовка к профессиональному общению, письменный и устный перевод с Nozha Badavi."
       },
-      "media": {}
+      "media": {},
+      "testimonialsEnabled": false
     },
     "about": {
       "fields": {
@@ -750,6 +830,7 @@ export default {
         "journey_6_title": "Языковая подготовка",
         "journey_6_body": "Английский, русский, арабский и украинский языки; шведский — начальный уровень. Не все эти языки предлагаются для изучения.",
         "journey_6_date": "",
+        "teaching_experience": "Мой преподавательский опыт охватывает учеников от 5 до 65 лет с разными начальными уровнями, в том числе A1 и B2. Я преподавала русский очно иностранным студентам в Украине, включая арабоязычных учеников, и английский онлайн украинским ученикам в Украине и других странах Европы. У меня есть опыт индивидуальных и групповых занятий. Подходящий возраст, уровни, форматы и текущая доступность уточняются до записи.",
         "title": "Индивидуальный подход к языкам.",
         "description": "Познакомьтесь с Нузей и её опытом преподавания, образования, перевода и поддержки иностранных студентов."
       },
@@ -778,6 +859,9 @@ export default {
         "process_1_body": "Обсудим уровень, формат и требования.",
         "process_2_title": "Сделайте следующий шаг",
         "process_2_body": "Получите понятный путь записи или личный ответ.",
+        "teaching_experience": "Мой преподавательский опыт охватывает учеников от 5 до 65 лет с разными начальными уровнями, в том числе A1 и B2. Я преподавала русский очно иностранным студентам в Украине, включая арабоязычных учеников, и английский онлайн украинским ученикам в Украине и других странах Европы. У меня есть опыт индивидуальных и групповых занятий. Подходящий возраст, уровни, форматы и текущая доступность уточняются до записи.",
+        "english_experience": "Мой опыт преподавания английского онлайн включает индивидуальные и групповые занятия с украинскими учениками в Украине и других странах Европы. Текущие форматы и доступность уточняются до записи.",
+        "russian_experience": "Мой опыт преподавания русского включает очные занятия с иностранными студентами в Украине, в том числе арабоязычными, а также онлайн-занятия. Это описание опыта; текущее место и форматы уточняются до записи.",
         "title": "Уроки языков для вашего мира.",
         "description": "Индивидуальные занятия английским, русским и арабским для ваших целей."
       },

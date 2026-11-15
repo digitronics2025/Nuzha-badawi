@@ -133,23 +133,32 @@ def process_section(loc):
     steps=''.join(f'<li class="process-card" data-reveal><span class="step-number" aria-hidden="true">{E(num)}</span>{field(loc,f"process_{i}_title","h3")}{field(loc,f"process_{i}_body","p")}</li>' for i,(num,head,text) in enumerate(c['process']))
     return f'<section class="section-pad wrap process-section">{label(c["source_label"])}{title(loc,"process_title")}<ol class="process-grid">{steps}</ol></section>'
 
+def testimonials_section(loc):
+    c=COPY[loc]
+    cards=[]
+    for key,slot in [('yura','reviewYuraScreenshot'),('m','reviewMScreenshot'),('serg','reviewSergScreenshot')]:
+        prefix='review_'+key
+        cards.append(f'''<article class="review-card" data-review-card="{key}"><blockquote><p data-nusya-field="{prefix}_quote">{T(loc,prefix+'_quote')}</p></blockquote><div class="review-credit"><cite dir="auto" data-nusya-field="{prefix}_author">{T(loc,prefix+'_author')}</cite><span data-nusya-field="{prefix}_date">{T(loc,prefix+'_date')}</span></div><p class="review-attribution">{T(loc,'review_attribution')}</p><a class="text-link review-source-link" data-review-image="{slot}" href="#" hidden>{T(loc,'review_view_source')}{arrow()}</a></article>''')
+    return f'''<section class="testimonials-section section-pad" data-nusya-testimonials hidden aria-labelledby="testimonials-title"><div class="wrap"><div class="section-heading"><h2 id="testimonials-title" class="display" data-nusya-field="testimonials_title">{T(loc,'testimonials_title')}</h2><p class="section-lead" data-nusya-field="testimonials_intro">{T(loc,'testimonials_intro')}</p></div><div class="review-grid">{''.join(cards)}</div><div class="review-summary"><div><a data-nusya-link="preply" href="{E(SOCIAL['preply'])}" target="_blank" rel="noopener noreferrer" class="review-rating" data-nusya-field="testimonials_rating">{T(loc,'testimonials_rating')}</a><p class="review-snapshot" data-nusya-field="testimonials_snapshot">{T(loc,'testimonials_snapshot')}</p></div>{pill(c['preply_cta'],SOCIAL['preply'],'outline',True)}</div></div><dialog class="review-dialog" data-review-dialog aria-labelledby="review-dialog-title" data-source-alt="{T(loc,'review_source_alt')}"><div class="review-dialog-header"><h2 id="review-dialog-title">{T(loc,'review_source_title')}</h2><button type="button" class="btn btn-outline" data-review-close>{T(loc,'review_close')}</button></div><p data-review-caption dir="auto"></p><p role="status" data-review-loading>{T(loc,'review_loading')}</p><p role="status" data-review-error hidden>{T(loc,'review_image_error')}</p><span data-review-image-target hidden></span></dialog></section>'''
+
 def home(loc):
     c=COPY[loc]
     hero=f'''<section class="hero"><div class="wrap hero-grid"><div class="hero-copy">{label(c['eyebrow'])}<p class="hero-person">{T(loc,'person')}</p><h1 class="display hero-title" data-nusya-field="hero">{T(loc,'hero')}</h1><p class="hero-lead" data-nusya-field="hero_desc">{T(loc,'hero_desc')}</p><div class="button-row">{pill(c['lessons_cta'],U(loc,'lessons'))}{pill(c['find_service_cta'],U(loc)+'#services','outline')}</div></div><div class="hero-visual">{portrait(loc)}<svg class="connection-route" viewBox="0 0 560 120" aria-hidden="true"><path d="M10 100C100 100 70 10 200 20S350 110 550 10"/><circle cx="550" cy="10" r="4"/></svg></div></div></section>'''
     proof='<div class="wrap proof-grid">'+''.join(f'<div class="proof-item"><span class="proof-icon" aria-hidden="true">{small_globe()}</span><span data-nusya-field="proof_{i}">{T(loc,f"proof_{i}")}</span></div>' for i,item in enumerate(c['proof']))+'</div>'
     about=f'''<section class="section-pad about-section"><div class="wrap about-grid"><div class="about-copy">{label(c['history_label'])}{title(loc,'about_title')}<p class="section-lead" data-nusya-field="about_desc">{T(loc,'about_desc')}</p>{pill(c['history_link'],U(loc,'about'),'outline')}</div>{experience_timeline(loc,True)}</div></section>'''
     faqs=f'''<section class="section-pad faq-section"><div class="wrap faq-grid"><div>{label(c['faq_eyebrow'])}{title(loc,'faq_title')}</div><div class="faq-list">{''.join(f'<details><summary>{field(loc,f"faq_{i}_question")}<span aria-hidden="true" class="faq-plus">+</span></summary>{field(loc,f"faq_{i}_answer","p")}</details>' for i,(q,a) in enumerate(c['faq']))}</div></div></section>'''
-    return hero+f'<section class="proof-section">{proof}</section>'+video_section(loc)+service_guide(loc)+about+process_section(loc)+faqs+cta_section(loc)
+    return hero+f'<section class="proof-section">{proof}</section>'+video_section(loc)+service_guide(loc)+testimonials_section(loc)+about+process_section(loc)+faqs+cta_section(loc)
 
 def page_about(loc):
     c=COPY[loc]
     story=f'''<section class="section-pad wrap about-grid about-standalone"><div class="about-art">{portrait(loc,'about')}</div><div class="about-copy" data-reveal>{label(c['about_eyebrow'])}<h2 class="display" data-nusya-field="story_heading">{T(loc,'story_heading')}</h2><p class="section-lead" data-nusya-field="story_body">{T(loc,'story_body')}</p><div class="subtle-quote">“{T(loc,'tagline')}”</div></div></section>'''
     journey=f'<section class="section-pad journey-section"><div class="wrap">{title(loc,"journey_title")}{experience_timeline(loc)}</div></section>'
-    return page_intro(loc,c['about_eyebrow'],c['about_page_title'],c['about_page_desc'])+story+journey+video_section(loc)+cta_section(loc)
+    return page_intro(loc,c['about_eyebrow'],c['about_page_title'],c['about_page_desc'])+story+f'<section class="wrap teaching-experience"><p class="section-lead" data-nusya-field="teaching_experience">{T(loc,"teaching_experience")}</p></section>'+journey+video_section(loc)+cta_section(loc)
 
 def page_lessons(loc):
     c=COPY[loc]
-    return page_intro(loc,c['lessons_eyebrow'],c['lessons_page_title'],c['lessons_page_desc'])+f'<section class="section-pad wrap">{lesson_cards(loc,True)}<p class="info-note">{T(loc,"lesson_note")}</p></section>'+process_section(loc)+cta_section(loc)
+    experience=''.join(f'<p class="section-lead" data-nusya-field="{key}">{T(loc,key)}</p>' for key in ['teaching_experience','english_experience','russian_experience'])
+    return page_intro(loc,c['lessons_eyebrow'],c['lessons_page_title'],c['lessons_page_desc'])+f'<section class="section-pad wrap">{lesson_cards(loc,True)}<div class="teaching-experience">{experience}</div><p class="info-note">{T(loc,"lesson_note")}</p></section>'+process_section(loc)+cta_section(loc)
 
 def page_coaching(loc):
     c=COPY[loc]

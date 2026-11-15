@@ -71,6 +71,14 @@ The reference and timestamp shown above are examples, not live records. HTTP 201
 
 The content payload is a schema-bounded structure `{fields:{...},seo:{title,description},media:{heroPortrait,aboutPortrait}}`, not arbitrary HTML. Text is inserted safely with HTMLRewriter; external video links are allowlisted and approved. `baseRevision` must match the latest draft; unexpected edits return 409. Arabic/Russian published copy remains stable if the English source changes and review state becomes `needs_review`.
 
+### Teaching experience and testimonials
+
+The homepage payload also accepts optional `testimonialsEnabled: boolean` (missing means false). Existing revisions therefore keep the new section hidden, including after rollback. Home fields reuse `proof_0`, `proof_1`, `proof_2` and add `testimonials_title`, `testimonials_intro`, `testimonials_rating`, `testimonials_snapshot`, and `review_{yura,m,serg}_{quote,author,date}`. Earlier draft keys `proof_age`, `proof_levels`, `proof_formats` remain accepted but are hidden from the editor; current rendering uses the existing numbered proof fields. About and Lessons expose `teaching_experience`; Lessons also exposes `english_experience` and `russian_experience`. The combined catalogue has 73 allowlisted homepage fields, so the payload cap is 128 fields; every key and per-field length remain strictly validated. The normal escaping and translation review apply; there is no new table or route.
+
+Home-only optional media keys `reviewYuraScreenshot`, `reviewMScreenshot` and `reviewSergScreenshot` accept existing media IDs (10–80 ASCII letters, digits, hyphen or underscore). No external image URLs are accepted. Publish/rollback require each referenced asset to be published with consent. The public media endpoint requires both publication and consent. Private previews use the authenticated media route. Review images use dedicated links and accessible labels, not the managed-portrait renderer; no source image is loaded before its link is opened. Empty quotations/authors remove their cards; absent image IDs leave text-only cards. Rating snapshots remain attributed plain text, never `AggregateRating` structured data or an automatic platform feed.
+
+Legacy proof aliases resolve consistently in the public renderer, the current editor and the English comparison shown during translation review. An explicitly saved numbered proof field always takes precedence, including an intentional empty value.
+
 ## Source-of-truth settings
 
 All new services default to `acceptingRequests=false` until Nozha approves current availability. The `approvedTranslationPairs` list is **directed**, e.g. `en:ru` does not imply `ru:en`. Public locales are exactly UK/EN/AR/RU, with no Korean service or locale. The video is the supplied Vimeo ID/hash and can be updated to another allowlisted privacy-hashed Vimeo URL.

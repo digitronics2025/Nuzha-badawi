@@ -25,7 +25,7 @@ test('dashboard publication is absent until an audited publish, then follows suc
 test('infographic fields remain bounded, localized and compatible with partial historical revisions',()=>{
  for(const locale of ['uk','en','ar','ru']){
   const schema=fieldSchema(locale,'home');
-  assert.ok(Object.keys(schema).length<=65);
+  assert.ok(Object.keys(schema).length<=128);
   assert.equal(schema.journey_3_date.maxLength,60);
   assert.equal(schema.journey_3_body.group,'Experience timeline');
   assert.equal(schema.faq_0_question.multiline,false);

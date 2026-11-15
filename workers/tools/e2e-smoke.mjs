@@ -146,6 +146,14 @@ if(MODE==='staging'&&auth){
  const mid=r.body.id;
  r=await admin('/api/v1/admin/media?status=private&limit=20');check('private media discoverable with saved provenance',r.body.items?.some(item=>item.id===mid&&item.source==='Generated test image, owner licence'&&item.published===false));
  r=await pub(`/media/${mid}`);check('unpublished media hidden publicly',r.status===404);
+ // The new homepage contract is inspected without altering shared owner drafts,
+ // publications or translation provenance. Full review writes use disposable D1
+ // in platform.test.mjs and the native runtime checks before staging promotion.
+ for(const locale of ['uk','en','ar','ru']){
+  const home=(await admin(`/api/v1/admin/pages/home?locale=${locale}`)).body;
+  check(`review editor schema ${locale}`,['proof_0','proof_1','proof_2','testimonials_title','testimonials_rating','testimonials_snapshot','review_yura_quote','review_m_quote','review_serg_quote'].every(key=>home.fieldSchema?.[key]));
+  check(`review fallback is opt-in and localized ${locale}`,home.defaultContent?.testimonialsEnabled===false&&Boolean(home.defaultContent?.fields?.testimonials_snapshot)&&Boolean(home.defaultContent?.fields?.review_yura_quote));
+ }
  r=await admin(`/api/v1/admin/media/${mid}/publish`,{method:'POST',body:JSON.stringify({consentConfirmed:true})});check('media publish with consent',r.body.published===true);
  r=await admin('/api/v1/admin/media?status=published&limit=20');check('approved media discoverable in owner library',r.body.items?.some(item=>item.id===mid&&item.published===true));
  r=await pub(`/media/${mid}`);check('published media served publicly',r.status===200&&r.headers.get('content-type')==='image/png');

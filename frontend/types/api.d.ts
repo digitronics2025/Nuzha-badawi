@@ -121,3 +121,11 @@ export interface AdminMediaList {
   items: AdminMedia[];
   nextCursor: string | null;
 }
+
+export interface PageContentPayload {
+  fields: Record<string,string>;
+  seo?: {title?: string;description?: string};
+  media?: Partial<Record<'heroPortrait'|'aboutPortrait'|'reviewYuraScreenshot'|'reviewMScreenshot'|'reviewSergScreenshot',string>>;
+  /** Homepage only. Missing/false keeps testimonials hidden, including old revisions. */
+  testimonialsEnabled?: boolean;
+}

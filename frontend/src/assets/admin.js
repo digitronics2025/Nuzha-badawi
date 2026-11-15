@@ -302,6 +302,27 @@ mediaLabel.htmlFor = mediaField.id;
 mediaField.maxLength = 80;
 extraEditor.after(mediaLabel, mediaField);
 mediaField.addEventListener("input", () => dirty());
+const reviewSettings = node("fieldset", undefined, "testimonial-editor");
+reviewSettings.append(node("legend", "Review visibility and source images"));
+const reviewToggle = node("input");
+reviewToggle.type = "checkbox";
+reviewToggle.id = "testimonials-enabled";
+const reviewLabel = node("label", undefined, "edit-label");
+reviewLabel.append(reviewToggle, document.createTextNode(" Show approved testimonials on the homepage"));
+reviewSettings.append(reviewLabel, node("p", "The rating is a dated Preply snapshot. Source screenshots are optional and require approved crops without student portraits.", "box-note"));
+const reviewMediaFields = {};
+for (const [key, author] of [["reviewYuraScreenshot", "Юра"], ["reviewMScreenshot", "M"], ["reviewSergScreenshot", "Serg"]]) {
+  const label = node("label", author + " — approved source screenshot media ID", "edit-label");
+  const input = node("input", undefined, "admin-input");
+  input.id = "review-media-" + key;
+  input.dataset.reviewMedia = key;
+  input.maxLength = 80;
+  input.placeholder = "Optional; leave blank for a text-only review";
+  label.htmlFor = input.id;
+  reviewSettings.append(label, input);
+  reviewMediaFields[key] = input;
+}
+reviewSettings.addEventListener("input", editorInput);
 const actions = $(".editor-actions");
 const publishBtn = $("button[disabled]", actions);
 publishBtn.id = "publish-page";
@@ -360,6 +381,13 @@ function readEditor() {
   if (mediaField.value.trim())
     state.content.media[key] = mediaField.value.trim();
   else delete state.content.media[key];
+  if (state.page === "home") {
+    state.content.testimonialsEnabled = reviewToggle.checked;
+    for (const [slot, input] of Object.entries(reviewMediaFields)) {
+      if (input.value.trim()) state.content.media[slot] = input.value.trim();
+      else delete state.content.media[slot];
+    }
+  }
 }
 function editorInput() {
   if (!state.content) return;
@@ -395,6 +423,13 @@ function inputField(key, value, schema, source) {
   }
   return fragment;
 }
+function resolveProofFields(fields) {
+  const resolved = { ...fields };
+  for (const [legacy, current] of [["proof_age", "proof_0"], ["proof_levels", "proof_1"], ["proof_formats", "proof_2"]]) {
+    if (Object.hasOwn(resolved, legacy) && !Object.hasOwn(resolved, current)) resolved[current] = resolved[legacy];
+  }
+  return resolved;
+}
 async function loadPage() {
   if (!state.session) return;
   const sequence = ++state.sequence,
@@ -416,10 +451,12 @@ async function loadPage() {
     if (!current("pages", sequence)) return;
     const base = result.defaultContent || { fields: {}, seo: {}, media: {} },
       saved = result.draft || result.published || {};
+    const savedFields = resolveProofFields(saved.fields);
     state.content = {
-      fields: { ...base.fields, ...saved.fields },
+      fields: { ...base.fields, ...savedFields },
       seo: { ...base.seo, ...saved.seo },
       media: { ...base.media, ...saved.media },
+      ...(page === "home" ? { testimonialsEnabled: saved.testimonialsEnabled === true } : {}),
     };
     state.revision = result.draftRevision;
     state.publishedRevision = result.publishedRevision;
@@ -428,7 +465,7 @@ async function loadPage() {
     const source = english
       ? {
           ...english.defaultContent?.fields,
-          ...(english.draft || english.published)?.fields,
+          ...resolveProofFields((english.draft || english.published)?.fields),
         }
       : null;
     const [a, b] = editKeys();
@@ -443,6 +480,8 @@ async function loadPage() {
     }
     pageSelect.value = page;
     extraEditor.replaceChildren();
+    reviewToggle.checked = state.content.testimonialsEnabled === true;
+    for (const [slot, input] of Object.entries(reviewMediaFields)) input.value = state.content.media[slot] || "";
     const groups = new Map();
     for (const [key, value] of Object.entries(base.fields || {})) {
       if ([a, b].includes(key) || result.fieldSchema?.[key]?.editable === false)
@@ -451,6 +490,7 @@ async function loadPage() {
         name = schema?.group || "Page sections";
       if (!groups.has(name)) {
         const details = node("details", undefined, "content-group");
+        details.open = name === "English lesson reviews";
         details.append(node("summary", name));
         extraEditor.append(details);
         groups.set(name, details);
@@ -466,6 +506,7 @@ async function loadPage() {
           ),
         );
     }
+    if (page === "home") groups.get("English lesson reviews")?.append(reviewSettings);
     const seo = node("details", undefined, "content-group");
     seo.append(node("summary", "Search and sharing"));
     for (const key of ["title", "description"]) {

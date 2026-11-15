@@ -227,3 +227,99 @@ for _locale, _copy in COPY.items():
         _copy[f'translation_step_{_index}_body'] = _body
     _sentences = _copy['privacy_body'].split('. ')
     _copy['privacy_body'] = '\n\n'.join('. '.join(_sentences[_i:_i+2]) + ('.' if _i+2<len(_sentences) else '') for _i in range(0,len(_sentences),2))
+
+# Owner-approved teaching background and review excerpts supplied 2026-11-15.
+# Screenshot publication is separate; no student portraits or originals are bundled.
+_LEARNERS={
+'en':{
+ 'proof_age':'Teaching experience with ages 5–65',
+ 'proof_levels':'Experience with A1 and B2 learners',
+ 'proof_formats':'Individual and group teaching experience',
+ 'teaching_experience':'My teaching experience includes learners aged 5 to 65, with different starting levels including A1 and B2. I have taught Russian in person to international students in Ukraine, including Arabic-speaking learners, and English online to Ukrainian learners in Ukraine and elsewhere in Europe. My experience includes individual lessons and group teaching. Current age suitability, levels, formats and availability are confirmed before booking.',
+ 'english_experience':'My online English teaching experience includes individual lessons and groups, supporting Ukrainian learners in Ukraine and elsewhere in Europe. Current formats and availability are confirmed before booking.',
+ 'russian_experience':'My Russian teaching experience includes in-person lessons for international students in Ukraine, including Arabic-speaking learners, as well as online tutoring. This describes my experience; current location and formats are confirmed before booking.',
+ 'testimonials_title':'What English learners say',
+ 'testimonials_intro':'Patience, clear explanations and the confidence to speak — in learners’ own words.',
+ 'testimonials_rating':'Preply: 5.0/5 from 4 student reviews',
+ 'testimonials_snapshot':'Screenshot supplied 15 November 2026. Platform figures can change.',
+ 'review_yura_quote':'I am not afraid to speak English anymore.',
+ 'review_m_quote':'she is a clever teacher who explains information very clearly',
+ 'review_serg_quote':'The lessons are clear, interesting and well-organised.',
+ 'review_yura_date':'2 May 2026','review_m_date':'24 April 2026','review_serg_date':'15 November 2026',
+ 'review_attribution':'Excerpt from an English lesson review on Preply',
+ 'review_view_source':'View source screenshot','review_source_title':'Source review screenshot',
+ 'review_source_alt':'Cropped source screenshot of the Preply review by',
+ 'review_close':'Close screenshot','review_loading':'Loading source screenshot…',
+ 'review_image_error':'The source image could not load. The review excerpt and Preply link are still available.'
+},
+'uk':{
+ 'proof_age':'Досвід викладання учням віком 5–65 років',
+ 'proof_levels':'Досвід роботи з учнями рівнів A1 і B2',
+ 'proof_formats':'Досвід індивідуальних і групових занять',
+ 'teaching_experience':'Мій викладацький досвід охоплює учнів віком від 5 до 65 років із різним початковим рівнем, зокрема A1 і B2. Я викладала російську очно іноземним студентам в Україні, серед яких були арабомовні учні, та англійську онлайн українським учням в Україні й інших країнах Європи. Маю досвід індивідуальних і групових занять. Відповідний вік, рівні, формати та актуальну доступність уточнюємо перед записом.',
+ 'english_experience':'Мій досвід викладання англійської онлайн включає індивідуальні та групові заняття з українськими учнями в Україні й інших країнах Європи. Актуальні формати й доступність уточнюємо перед записом.',
+ 'russian_experience':'Мій досвід викладання російської включає очні заняття з іноземними студентами в Україні, зокрема арабомовними, а також онлайн-викладання. Це опис досвіду; актуальне місце та формати уточнюємо перед записом.',
+ 'testimonials_title':'Що кажуть учні англійської',
+ 'testimonials_intro':'Терпіння, зрозумілі пояснення та впевненість у розмові — словами самих учнів.',
+ 'testimonials_rating':'Preply: 5,0/5 на основі 4 відгуків учнів',
+ 'testimonials_snapshot':'Знімок екрана надано 15 листопада 2026 року. Показники платформи можуть змінюватися.',
+ 'review_yura_quote':'Я більше не боюся говорити англійською.',
+ 'review_m_quote':'Вона розумна викладачка, яка дуже зрозуміло пояснює інформацію',
+ 'review_serg_quote':'Заняття зрозумілі, цікаві та добре організовані.',
+ 'review_yura_date':'2 травня 2026','review_m_date':'24 квітня 2026','review_serg_date':'15 листопада 2026',
+ 'review_attribution':'Уривок відгуку про заняття англійською на Preply · переклад з англійської',
+ 'review_view_source':'Переглянути знімок відгуку','review_source_title':'Знімок оригінального відгуку',
+ 'review_source_alt':'Обрізаний знімок відгуку на Preply від',
+ 'review_close':'Закрити знімок','review_loading':'Завантаження знімка відгуку…',
+ 'review_image_error':'Не вдалося завантажити знімок. Уривок відгуку та посилання на Preply залишаються доступними.'
+},
+'ar':{
+ 'proof_age':'خبرة في تعليم متعلّمين من 5 إلى 65 سنة',
+ 'proof_levels':'خبرة مع متعلّمين بمستويَي A1 وB2',
+ 'proof_formats':'خبرة في الدروس الفردية والجماعية',
+ 'teaching_experience':'تشمل خبرتي التعليمية متعلّمين تتراوح أعمارهم بين 5 و65 سنة، بمستويات بداية مختلفة منها A1 وB2. درّست الروسية حضورياً لطلبة دوليين في أوكرانيا، من بينهم ناطقون بالعربية، والإنجليزية عبر الإنترنت لمتعلّمين أوكرانيين في أوكرانيا ودول أوروبية أخرى. تشمل خبرتي الدروس الفردية والجماعية. يتم تأكيد الأعمار والمستويات والصيغ المناسبة والتوفر الحالي قبل الحجز.',
+ 'english_experience':'تشمل خبرتي في تدريس الإنجليزية عبر الإنترنت دروساً فردية وجماعية لمتعلّمين أوكرانيين في أوكرانيا ودول أوروبية أخرى. يتم تأكيد الصيغ والتوفر الحالي قبل الحجز.',
+ 'russian_experience':'تشمل خبرتي في تدريس الروسية دروساً حضورية لطلبة دوليين في أوكرانيا، من بينهم ناطقون بالعربية، إضافة إلى التدريس عبر الإنترنت. يصف ذلك خبرتي؛ ويتم تأكيد الموقع الحالي والصيغ المتاحة قبل الحجز.',
+ 'testimonials_title':'ماذا يقول متعلّمو الإنجليزية',
+ 'testimonials_intro':'الصبر والشرح الواضح والثقة في التحدّث — بكلمات المتعلّمين أنفسهم.',
+ 'testimonials_rating':'Preply: تقييم 5.0 من 5 بناءً على 4 مراجعات للطلبة',
+ 'testimonials_snapshot':'لقطة الشاشة مقدّمة في 15 نوفمبر 2026. قد تتغيّر أرقام المنصة.',
+ 'review_yura_quote':'لم أعد أخاف من التحدّث بالإنجليزية.',
+ 'review_m_quote':'إنها معلّمة ذكية تشرح المعلومات بوضوح شديد',
+ 'review_serg_quote':'الدروس واضحة وممتعة ومنظّمة جيداً.',
+ 'review_yura_date':'2 مايو 2026','review_m_date':'24 أبريل 2026','review_serg_date':'15 نوفمبر 2026',
+ 'review_attribution':'مقتطف من مراجعة لدروس الإنجليزية على Preply · مترجم من الإنجليزية',
+ 'review_view_source':'عرض لقطة المراجعة الأصلية','review_source_title':'لقطة المراجعة الأصلية',
+ 'review_source_alt':'لقطة مقتصّة من مراجعة على Preply بواسطة',
+ 'review_close':'إغلاق الصورة','review_loading':'جارٍ تحميل لقطة المراجعة…',
+ 'review_image_error':'تعذّر تحميل الصورة. يبقى مقتطف المراجعة ورابط Preply متاحَين.'
+},
+'ru':{
+ 'proof_age':'Опыт обучения учеников от 5 до 65 лет',
+ 'proof_levels':'Опыт работы с учениками уровней A1 и B2',
+ 'proof_formats':'Опыт индивидуальных и групповых занятий',
+ 'teaching_experience':'Мой преподавательский опыт охватывает учеников от 5 до 65 лет с разными начальными уровнями, в том числе A1 и B2. Я преподавала русский очно иностранным студентам в Украине, включая арабоязычных учеников, и английский онлайн украинским ученикам в Украине и других странах Европы. У меня есть опыт индивидуальных и групповых занятий. Подходящий возраст, уровни, форматы и текущая доступность уточняются до записи.',
+ 'english_experience':'Мой опыт преподавания английского онлайн включает индивидуальные и групповые занятия с украинскими учениками в Украине и других странах Европы. Текущие форматы и доступность уточняются до записи.',
+ 'russian_experience':'Мой опыт преподавания русского включает очные занятия с иностранными студентами в Украине, в том числе арабоязычными, а также онлайн-занятия. Это описание опыта; текущее место и форматы уточняются до записи.',
+ 'testimonials_title':'Что говорят ученики английского',
+ 'testimonials_intro':'Терпение, понятные объяснения и уверенность в разговоре — словами самих учеников.',
+ 'testimonials_rating':'Preply: 5,0/5 на основе 4 отзывов учеников',
+ 'testimonials_snapshot':'Снимок экрана предоставлен 15 ноября 2026 года. Показатели платформы могут меняться.',
+ 'review_yura_quote':'Я больше не боюсь говорить по-английски.',
+ 'review_m_quote':'Она умный преподаватель, который очень понятно объясняет информацию',
+ 'review_serg_quote':'Уроки понятные, интересные и хорошо организованные.',
+ 'review_yura_date':'2 мая 2026','review_m_date':'24 апреля 2026','review_serg_date':'15 ноября 2026',
+ 'review_attribution':'Отрывок отзыва об уроках английского на Preply · перевод с английского',
+ 'review_view_source':'Посмотреть снимок отзыва','review_source_title':'Снимок оригинального отзыва',
+ 'review_source_alt':'Обрезанный снимок отзыва на Preply от',
+ 'review_close':'Закрыть снимок','review_loading':'Загрузка снимка отзыва…',
+ 'review_image_error':'Не удалось загрузить снимок. Отрывок отзыва и ссылка на Preply остаются доступны.'
+}
+}
+for _locale,_learner_copy in _LEARNERS.items():
+    COPY[_locale].update(_learner_copy)
+    COPY[_locale].update(review_yura_author='Юра',review_m_author='M',review_serg_author='Serg')
+
+for _locale in LOCALES:
+    for _index,_key in enumerate(("proof_age","proof_levels","proof_formats")):
+        COPY[_locale][f"proof_{_index}"] = COPY[_locale][_key]
