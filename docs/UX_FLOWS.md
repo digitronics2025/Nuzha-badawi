@@ -40,3 +40,6 @@ Change Vimeo URL → validate allowed provider/id/hash → preview play → publ
 Disable service → immediately prevent invalid booking CTA while preserving content history.
 Replace media → validate MIME/size, license and alt → preview → publish; prevent deletion of referenced media.
 See `docs/ADMIN.md` for permissions, implementation and publishing transitions.
+
+## Live-host and preview behavior
+When deployed, visitor routes should use `https://nozha-badavi.com/{en|ar|ru}/...`; `www.nozha-badavi.com` should redirect consistently to apex without losing permitted paths/queries. Admin UX should be isolated on `https://admin.nozha-badavi.com` and require Access plus server-side roles. Preview/draft links must be authenticated/noindex/no-store, not exposed through the public site. A changed published URL needs correct redirects and localized canonical references. These are requirements, not claims of live implementation; see `CLOUDFLARE_DEPLOYMENT.md`.
