@@ -9,7 +9,7 @@ import defaults from '../../shared/defaults.js';
 const current=()=>new Date().toISOString();
 const statuses=new Set(['new','reviewing','awaiting_customer','quoted','booked','completed','closed','spam']);
 const editId=/^[a-z0-9_-]{8,80}$/i;
-function needLocale(url){const loc=url.searchParams.get('locale')||'en';if(!isLocale(loc))throw new HttpError(400,'VALIDATION_FAILED','Unknown locale.');return loc;}
+function needLocale(url){const loc=url.searchParams.get('locale')||'uk';if(!isLocale(loc))throw new HttpError(400,'VALIDATION_FAILED','Unknown locale.');return loc;}
 function pageSummary(states){const map=new Map(states.map(s=>[s.page_key+':'+s.locale,s]));return PAGE_KEYS.map(key=>({key,route:`/${key==='home'?'':key+'/'}`,locales:Object.fromEntries(LOCALES.map(loc=>{
  const row=map.get(key+':'+loc);return [loc,{locale:loc,revision:row?.draft_revision||0,publishedRevision:row?.published_revision||0,status:row?.review_status||'needs_review',title:defaults?.[loc]?.[key]?.fields?.title||''}];
  }))}));}
