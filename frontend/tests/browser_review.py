@@ -69,6 +69,13 @@ with sync_playwright() as p:
     page.once('dialog',lambda d:d.dismiss());page.locator('#admin-page-select').select_option('about')
     assert page.locator('#admin-page-select').input_value()=='home'
     assert page.locator('#hero-title').input_value()=='Unsaved change'
+    discard_dialogs=[]
+    def accept_discard(dialog):
+        discard_dialogs.append(dialog.message);dialog.accept()
+    page.on('dialog',accept_discard)
+    page.locator('[data-view=overview]').click()
+    page.locator('[data-view=enquiries]').click()
+    assert len(discard_dialogs)==1,'Confirmed discard left the editor dirty'
     assert not errors,errors
     browser.close()
 print('PASS: 84 responsive page checks, four-language screenshots, unique form IDs, preselection, immutable retry, readable inbox, Ukrainian review and unsaved-edit protection')
