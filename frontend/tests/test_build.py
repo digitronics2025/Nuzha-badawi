@@ -154,4 +154,25 @@ class FrontendBuildTests(unittest.TestCase):
             self.assertIn('method="post" action="/api/v1/enquiries"',contact)
             self.assertIn('type="submit" disabled',contact)
 
+    def test_experience_periods_survive_localized_prose(self):
+        class Dates(HTMLParser):
+            def __init__(self):super().__init__();self.values={};self.current=None
+            def handle_starttag(self,tag,attrs):
+                attrs=dict(attrs)
+                if tag=='bdi' and attrs.get('data-nusya-field','').startswith('journey_'):
+                    self.current=attrs['data-nusya-field'];self.values[self.current]=[attrs.get('dir'),'']
+            def handle_data(self,data):
+                if self.current:self.values[self.current][1]+=data
+            def handle_endtag(self,tag):
+                if tag=='bdi':self.current=None
+        expected={2:'2023–2026',3:'2019–2022',4:'2021–2022',5:'2013–2018 · 2019–2021'}
+        for locale in LOCALES:
+            dates=Dates();dates.feed((DIST/locale/'about/index.html').read_text())
+            for index,period in expected.items():
+                self.assertEqual(COPY[locale][f'journey_{index}_date'],period)
+                self.assertEqual(dates.values[f'journey_{index}_date'],['ltr',period])
+                if index!=5:self.assertIn(period,(DIST/locale/'index.html').read_text())
+            self.assertEqual(COPY[locale]['journey_0_date'],'')
+            self.assertEqual(COPY[locale]['journey_1_date'],'')
+
 if __name__=='__main__':unittest.main()

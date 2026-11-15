@@ -206,12 +206,14 @@ for locale, values in EXPERIENCE.items():
         COPY[locale][f'process_{index}_title'] = heading
         COPY[locale][f'process_{index}_body'] = body
 
+# Approved biography periods are structured once, independent of translated prose.
+# Education has two distinct periods; do not imply continuous study between them.
+JOURNEY_DATES = ('', '', '2023–2026', '2019–2022', '2021–2022', '2013–2018 · 2019–2021', '')
+
 # Flat, bounded fields keep historical CMS revisions compatible with structured visuals.
-import re as _re
 for _locale, _copy in COPY.items():
     for _index, (_heading, _body) in enumerate(_copy['journey']):
-        _dates = _re.findall(r'20\d{2}[–—-]20\d{2}|20\d{2}', _body)
-        _copy[f'journey_{_index}_date'] = _dates[0] if _dates else ''
+        _copy[f'journey_{_index}_date'] = JOURNEY_DATES[_index]
     for _index, (_question, _answer) in enumerate(_copy['faq']):
         _copy[f'faq_{_index}_question'] = _question
         _copy[f'faq_{_index}_answer'] = _answer

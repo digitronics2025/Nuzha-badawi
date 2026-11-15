@@ -9,13 +9,13 @@
 - Localized missing-page documents return 404 and noindex. Server-rendered service status removes closed enquiry actions, while the API continues to validate availability and directed pairs independently.
 - `GET /api/v1/admin/media?status=private|published|all&limit=20&cursor=...` returns up to 50 protected metadata records in insertion order: `id`, `contentType`, `byteSize`, `altText`, `source`, `published`, `createdAt`, with `nextCursor`. Default status is `private`; opaque pagination cursors come from the previous response. Saved provenance and pending uploads survive browser sessions; approval remains owner-only. An additive publication index bounds filtered reads without rewriting media records.
 
-**Status:** Code implemented locally, integration tested. Cloudflare bindings, production domain, live authentication and email remain unconfigured.
+**Status:** This contract describes the implemented platform. Existing Worker/resource inventory and deployment evidence are recorded in [PRODUCTION](../../docs/PRODUCTION.md) and the associated release PR; this API document is not a deployment receipt.
 
 ## Public Worker
 
 | Endpoint | Method | Behaviour |
 | --- | --- | --- |
-| `/en/...`, `/ar/...`, `/ru/...` | GET | Prerendered pages with published D1 plain-text/SEO/media overrides, 90-second edge cache, no draft content |
+| `/uk/...`, `/en/...`, `/ar/...`, `/ru/...` | GET | Prerendered pages with published D1 plain-text/SEO/media overrides, 90-second edge cache, no draft content |
 | `/api/v1/config` | GET | Only safe public site key, accepting-status and approved language directions; no secrets |
 | `/api/v1/enquiries` | POST | Strict schema, approved service/directed pair, valid Turnstile, HMAC IP rate limit, idempotent D1 + outbox transaction; HTTP 201 only after stored |
 | `/media/:id` | GET | Only explicitly approved media records from bound R2; unapproved files return 404 |
@@ -52,7 +52,7 @@ The reference and timestamp shown above are examples, not live records. HTTP 201
 | --- | --- | --- | --- |
 | `/api/v1/admin/me` | GET | Editor/owner | Verified identity and role |
 | `/api/v1/admin/summary` | GET | Editor/owner | Live open-enquiry and translation-review counts |
-| `/api/v1/admin/pages` | GET | Editor/owner | All seven page keys, three locales and statuses |
+| `/api/v1/admin/pages` | GET | Editor/owner | All seven page keys, four locales and statuses |
 | `/api/v1/admin/pages/:key?locale=..` | GET | Editor/owner | Default, draft and published structured data, revision pointers |
 | `/api/v1/admin/pages/:key?locale=..` | PUT | Editor/owner | Save validated draft with `baseRevision` optimistic lock |
 | `/api/v1/admin/pages/:key/revisions` | GET | Editor/owner | Latest 20 revisions |
@@ -73,7 +73,7 @@ The content payload is a schema-bounded structure `{fields:{...},seo:{title,desc
 
 ## Source-of-truth settings
 
-All new services default to `acceptingRequests=false` until Nozha approves current availability. The `approvedTranslationPairs` list is **directed**, e.g. `en:ru` does not imply `ru:en`. There is no Korean service or fourth public locale. The video is the supplied Vimeo ID/hash and can be updated to another allowlisted privacy-hashed Vimeo URL.
+All new services default to `acceptingRequests=false` until Nozha approves current availability. The `approvedTranslationPairs` list is **directed**, e.g. `en:ru` does not imply `ru:en`. Public locales are exactly UK/EN/AR/RU, with no Korean service or locale. The video is the supplied Vimeo ID/hash and can be updated to another allowlisted privacy-hashed Vimeo URL.
 
 ## Failure and cost contract
 
