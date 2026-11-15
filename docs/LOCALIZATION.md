@@ -25,3 +25,6 @@ The UI locale does not imply a service is taught. Lessons in English, Russian an
 
 ## Acceptance
 No untranslated key, accidental Korean content, broken RTL layout, incorrect canonical/hreflang or inaccessible language switcher; admin shows review statuses and source-linked versions. Test 320px, 390px, desktop and 200% zoom.
+
+## Canonical domain and multilingual SEO
+Use `https://nozha-badavi.com/en/...`, `https://nozha-badavi.com/ar/...`, `https://nozha-badavi.com/ru/...` as planned canonical production URLs, after domain deployment. Sitemap and reciprocal `hreflang` must use the canonical apex, not temporary `workers.dev` or preview URLs. Root behavior and default language must be tested, `www` redirects to apex, and drafts/previews stay noindex. Revalidate after DNS/Worker rollout. Never add a fourth interface locale.
