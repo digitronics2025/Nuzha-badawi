@@ -41,9 +41,28 @@ class FrontendBuildTests(unittest.TestCase):
         self.assertIn('data-video',s)
     def test_no_contact_success_before_backend(self):
         s=(DIST/'en'/'contact'/'index.html').read_text()
-        self.assertIn('Frontend preview:',s)
+        self.assertIn(COPY['en']['form_info'],s)
+        self.assertNotIn('Frontend preview:',s)
+        self.assertNotIn('backend service is not yet connected',s)
         self.assertIn('id="enquiry-form"',s)
         self.assertIn('role="status"',s)
+    def test_cv_experience_is_present_without_private_contact_data(self):
+        from html import unescape
+        institutions=('GoSchool','Mozhlyvist','ABC All About Children','Alsafir Group')
+        for loc in LOCALES:
+            about=unescape((DIST/loc/'about'/'index.html').read_text(encoding='utf8'))
+            self.assertEqual(len(COPY[loc]['journey']),7)
+            for item in institutions:
+                self.assertIn(item,about,(loc,item))
+            for year in ('2019','2021','2022','2023','2026'):
+                self.assertIn(year,about,(loc,year))
+            self.assertNotIn('nusyagemini@gmail.com',about)
+            self.assertNotIn('+46 707 454 395',about)
+            self.assertNotIn('+380 955 247 536',about)
+            contact=unescape((DIST/loc/'contact'/'index.html').read_text(encoding='utf8'))
+            self.assertIn(COPY[loc]['form_info'],contact)
+            self.assertNotIn(COPY[loc]['form_error'],about)
+
     def test_social_links_are_external_safe(self):
         s=(DIST/'en'/'index.html').read_text()
         self.assertIn('rel="noopener noreferrer"',s)
