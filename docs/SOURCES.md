@@ -42,3 +42,6 @@ Original CVs may include personal phone/email/address. Do **not** commit those o
 6. Approve publication; mark revisits for time-sensitive details.
 
 Maintain an internal approval record outside public documentation if it contains private information. Never invent proofs or claim these approvals already exist.
+
+## Cloudflare domain evidence (user-supplied, 2026-11-15)
+The user provided a screenshot of Cloudflare Dashboard > Domains > Registrations showing **`nozha-badavi.com`** with a green check and “Your domain is ready.” This supports **domain registration** and the chosen spelling only; it does **not** verify zone activation, nameservers, DNS records, SSL certificate, ownership permissions, email routing, Workers or a live application. Public canonical choice is `https://nozha-badavi.com` (planned). The agent must separately inspect Cloudflare after authorisation and record evidence before deployment. Never expose Cloudflare account IDs, API keys or private records in this public repository.
