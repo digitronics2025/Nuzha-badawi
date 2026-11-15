@@ -45,3 +45,9 @@ Measure actual 1440/768/390/320px screenshots, Arabic mirroring without flipping
 ## Review hardening — 2026-11-15
 
 Review regressions: npm run check --prefix workers (26 Worker tests plus SQL checks); python3 -m unittest discover -s frontend/tests -v (13 tests); python3 frontend/tests/browser_review.py (84 responsive page checks plus inbox/retry/unsaved-edit flows). Optional browser dependencies are pinned in frontend/tests/requirements-browser.txt. Both CI validation and deployment tests run a dry-run public bundle through tools/review-runtime.mjs using native HTMLRewriter and disposable D1. These local/mocked checks do not substitute for authenticated staging writes, production Turnstile, email delivery or field performance measurements.
+
+## Icon and SEO regression coverage
+
+The additional static tests cover all 28 canonical pages, reciprocal UK/EN/AR/RU plus Ukrainian x-default, unique metadata, versioned localized image references, OG/Twitter consistency, identity/page JSON-LD, real PNG dimensions, ICO bitmap frames, manifest/device references and error-page exclusion. Worker tests compare binary responses against built source bytes, including HEAD/304, require binary ICO encoding, and assert 404/API indexing rules. Native HTMLRewriter tests verify CMS metadata and JSON-LD with quotes, literal character references, Cyrillic, Arabic and script-closing text. Never replace these native checks with a mock rewriter.
+
+Release smoke checks additionally fetch all four sharing PNGs, device icons, the ICO and manifest, validate schema on all 28 actual HTML responses, and check authenticated admin icon privacy on staging. Preserve the mandatory staging enquiry/email/CMS/media/publish/rollback suite. Browser checks and visual previews establish Chromium rendering; they do not establish native iOS home-screen appearance, search indexing or a third-party sharing cache refresh.

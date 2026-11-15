@@ -27,7 +27,7 @@ async function previewHtml(request,env,loc,key){
  const asset=await env.ASSETS.fetch(new Request(base));
  if(!asset.ok)throw new HttpError(404,'NOT_FOUND','Preview not found.');
  const st=await state(env.DB,key,loc);const requested=new URL(request.url).searchParams.get('revision');if(requested&&!/^[1-9][0-9]*$/.test(requested))throw new HttpError(400,'VALIDATION_FAILED','Invalid revision.');const draft=await revision(env.DB,requested?Number(requested):st?.draft_revision);if(requested&&(!draft||draft.page_key!==key||draft.locale!==loc))throw new HttpError(404,'NOT_FOUND','Revision not found.');const conf=await settings(env.DB);
- let res=renderPublished(asset,draft?.payload||{},conf,{locale:loc,mediaBase:'/api/v1/admin/media/'});
+ let res=renderPublished(asset,draft?.payload||{},conf,{locale:loc,pageKey:key,mediaBase:'/api/v1/admin/media/'});
  res=noStore(res);return secureHeaders(res,true);
 }
 async function handleMedia(req,env,user,path){

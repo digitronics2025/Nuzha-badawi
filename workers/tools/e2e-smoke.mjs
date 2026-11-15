@@ -21,7 +21,26 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 // ---- Public site
 for(const loc of ['uk','en','ar','ru'])for(const page of ['','about/','lessons/','coaching/','translation/','contact/','privacy/']){
- const r=await pub(`/${loc}/${page}`);check(`GET /${loc}/${page}`,r.status===200&&r.body.includes(`lang="${loc}"`)&&(loc!=='ar'||r.body.includes('dir="rtl"')),String(r.status));}
+ const r=await pub(`/${loc}/${page}`);check(`GET /${loc}/${page}`,r.status===200&&r.body.includes(`lang="${loc}"`)&&(loc!=='ar'||r.body.includes('dir="rtl"')),String(r.status));
+ const canonical=`https://nozha-badavi.com/${loc}/${page}`;
+ check(`SEO /${loc}/${page}`,r.body.includes(`rel="canonical" href="${canonical}"`)&&r.body.includes('hreflang="x-default"')&&r.body.includes('property="og:image:width" content="1200"')&&r.body.includes('name="twitter:image:alt"'));
+ try{const schema=JSON.parse(r.body.match(/<script id="nusya-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);check(`JSON-LD /${loc}/${page}`,schema['@graph'][2].url===canonical&&schema['@graph'][2].inLanguage===loc);}catch{check(`JSON-LD /${loc}/${page}`,false);}
+}
+for(const loc of ['uk','en','ar','ru']){
+ const asset=await fetch(PUBLIC_URL+`/assets/social-card-${loc}.png`);const bytes=new Uint8Array(await asset.arrayBuffer());const view=new DataView(bytes.buffer);
+ check(`PNG social card ${loc}`,asset.status===200&&asset.headers.get('content-type')==='image/png'&&Buffer.from(bytes.slice(0,8)).toString('hex')==='89504e470d0a1a0a'&&view.getUint32(16)===1200&&view.getUint32(20)===630);
+}
+for(const [path,size] of [['/apple-touch-icon.png',180],['/assets/icon-192.png',192],['/assets/icon-512.png',512]]){
+ const asset=await fetch(PUBLIC_URL+path);const bytes=new Uint8Array(await asset.arrayBuffer());const view=new DataView(bytes.buffer);
+ check(`device icon ${path}`,asset.status===200&&asset.headers.get('content-type')==='image/png'&&Buffer.from(bytes.slice(0,8)).toString('hex')==='89504e470d0a1a0a'&&view.getUint32(16)===size&&view.getUint32(20)===size);
+}
+{
+ const asset=await fetch(PUBLIC_URL+'/favicon.ico');const bytes=new Uint8Array(await asset.arrayBuffer());
+ check('real ICO fallback',asset.status===200&&asset.headers.get('content-type')==='image/x-icon'&&Buffer.from(bytes.slice(0,6)).toString('hex')==='000001000300');
+ const manifest=await pub('/site.webmanifest');check('minimal Ukrainian device manifest',manifest.status===200&&manifest.body.start_url==='/uk/'&&manifest.body.display==='browser');
+ const robots=await pub('/robots.txt');check('production sitemap in robots',robots.body.includes('Sitemap: https://nozha-badavi.com/sitemap.xml'));
+ const sitemap=await pub('/sitemap.xml');check('28 canonical sitemap entries',(sitemap.body.match(/<loc>/g)||[]).length===28&&!sitemap.body.includes('admin.')&&!sitemap.body.includes('workers.dev'));
+}
 let r;
 for(const language of ['', 'en-US,en;q=0.9', 'ar', 'ru', 'fr-FR', 'uk-UA']){
  r=await pub('/',{headers:{'accept-language':language}});
@@ -40,7 +59,8 @@ check('search indexing matches environment',new URL(PUBLIC_URL).hostname.endsWit
 for(const path of ['/404.html','/uk/index.html']){
  const response=await pub(path);
  const canonical=path==='/uk/index.html';
- check(`direct HTML indexing ${path}`,response.status===(canonical?308:200)&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?response.headers.get('x-robots-tag')?.includes('noindex'):!response.headers.get('x-robots-tag')?.includes('noindex')),String(response.status));
+ const noindex=!canonical||new URL(PUBLIC_URL).hostname.endsWith('.workers.dev');
+ check(`direct HTML indexing ${path}`,response.status===(canonical?308:404)&&(noindex?response.headers.get('x-robots-tag')?.includes('noindex'):!response.headers.get('x-robots-tag')?.includes('noindex')),String(response.status));
  if(canonical){check('direct index redirects to canonical Ukrainian page',response.headers.get('location')==='/uk/');const target=await pub('/uk/');check('canonical redirect destination is localized and has correct indexing',target.status===200&&target.body.includes('lang="uk"')&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?target.headers.get('x-robots-tag')?.includes('noindex'):!target.headers.get('x-robots-tag')?.includes('noindex')));}
 }
 check('Vimeo ID + privacy hash present',r.body.includes('player.vimeo.com/video/1171310337?h=3416a6f4f5'));
@@ -58,6 +78,8 @@ r=await fetch(ADMIN_URL+'/api/v1/admin/me',{redirect:'manual',headers:{'Cf-Acces
 if(auth){
  r=await admin('/api/v1/admin/me');check('service token authenticates as owner',r.body.role==='owner',JSON.stringify(r.body));
  r=await admin('/');check('admin UI served no-store',r.status===200&&r.headers.get('cache-control')==='no-store');
+ check('admin shares branded favicon',r.body.includes('href="/favicon.ico"')&&r.body.includes('sizes="180x180"'));
+ const adminIcon=await fetch(ADMIN_URL+'/favicon.ico',{headers:auth});const adminBytes=new Uint8Array(await adminIcon.arrayBuffer());check('authenticated admin ICO stays private',adminIcon.status===200&&adminIcon.headers.get('cache-control')==='no-store'&&Buffer.from(adminBytes.slice(0,6)).toString('hex')==='000001000300');
  r=await admin('/api/v1/admin/summary');check('admin summary',r.body.ok===true,JSON.stringify(r.body));
  r=await admin('/api/v1/admin/pages');check('admin lists 7 pages × 4 locales',r.body.pages?.length===7&&r.body.pages.every(p=>['uk','en','ar','ru'].every(loc=>p.locales[loc])));
  r=await admin('/api/v1/admin/settings');check('admin settings readable',r.body.ok===true);

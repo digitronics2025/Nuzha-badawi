@@ -6,6 +6,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'frontend'/'src'/'content'))
 from site_copy import COPY
+from seo import metadata
 mapping={
  'home':['hero','hero_desc','video_title','video_desc','lessons_title','lessons_desc','coaching_title','coaching_desc','services_title','about_title','about_desc','faq_title','closing_title','closing_desc','english','english_desc','russian','russian_desc','arabic','arabic_desc','translation_title','translation_desc','interpretation_title','interpretation_desc'],
  'about':['about_page_title','about_page_desc','story_heading','story_body','journey_title','video_title','video_desc','closing_title','closing_desc'],
@@ -23,7 +24,7 @@ for loc,copy in COPY.items():
   desc_key='hero_desc' if page=='home' else (page+'_page_desc' if page not in ('privacy',) else 'privacy_desc')
   out[loc][page]={
    'fields':dict({k:str(copy[k]) for k in keys if k in copy and isinstance(copy[k],str)},**({'title':copy.get(title_key,copy['hero']),'description':copy.get(desc_key,copy['hero_desc'])} if page!='home' else {})),
-   'seo':{'title':copy.get(title_key,copy['hero']),'description':copy.get(desc_key,copy['hero_desc'])},
+   'seo':metadata(loc,page),
    'media':{}
   }
 destination=ROOT/'workers'/'shared'/'defaults.js'
