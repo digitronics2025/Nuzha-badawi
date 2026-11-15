@@ -1,0 +1,38 @@
+# Operations, Cost, Release, Rollback and Incident Response
+
+**This document is a runbook proposal, not proof of any deployed Cloudflare resources.** Inspect actual repository workflows and account settings before creating environments.
+
+## Environments
+Local/development and isolated preview/staging before production. Separate credentials and databases; never use production PII for routine tests. Verify account/domain ownership with Nozha or authorized owner.
+
+## Release workflow
+1. Confirm approved design screens and content sign-off; inspect active branch, existing user changes and CI.
+2. Run lint/type/build/tests, test localized routes and admin; review migration and data impacts.
+3. Back up/export relevant data, validate migration against staging/synthetic sample and document rollback.
+4. Require explicit approval for production launch, paid commitments, DNS changes, sensitive migration or irreversible action.
+5. Deploy via controlled CI only when authorized; run public/EN-AR-RU and private admin smoke tests.
+6. Verify video, forms, notification, live publish/rollback and SEO; record release SHA, cost/usage baseline and known gaps.
+7. Roll back to prior known-good release if critical criteria fail; preserve enquiries and media integrity.
+
+## Recovery
+- App failure: switch traffic/release back without destructive resets.
+- Content mistake: restore prior published immutable revision.
+- Failed migration: stop writes if necessary, restore from tested safe backup or forward-fix with verification; don't rerun destructive scripts blindly.
+- Email outage: keep stored enquiries; retry idempotently; show notification state honestly.
+- Vimeo outage: show static poster, transcript where approved, link and service CTA.
+- D1/R2 budget/limits: fall back to cached published content; never expose drafts; throttle non-critical work and alert operator.
+- Account/credential compromise: revoke affected access/secrets, audit, rotate and report.
+
+## Cloudflare resource safety
+Static assets should be CDN cached using versioned URLs. Published HTML uses **verified** edge cache strategy with bounded TTL/invalidation; never assume `Cache-Control` always suffices. Private admin/enquiry routes are no-store. Avoid per-view D1 reads, N+1 queries, full-table scans, gratuitous writes and excess indexes. R2 only for needed assets; bound upload sizes. Avoid KV/Queues/cron/LLM integrations unless measured needs justify them. Rate-limit public forms, dedupe notifications, limit logs, avoid unnecessary CI runs.
+
+## Spend approvals and observability
+Before enabling paid features, inspect current pricing/allowances; estimate baseline/expected traffic, email, storage and API costs. Define thresholds, alerting and safeguards. Never promise permanently zero charges. Use privacy-respecting metrics: performance, availability, lead delivery failures, cache hit, D1 read/write usage and cost; don't log sensitive customer text.
+
+## Handover
+Document access ownership, renewals (domain/email), how to update three locales, replace video, manage services/enquiries, export data and restore a release. Nozha should be able to complete daily tasks without a developer.
+
+## Registered domain and future production Worker runbook
+The user-supplied Cloudflare screenshot lists `nozha-badavi.com` as ready at the Registrar. This **does not** confirm active DNS, SSL, deployed Workers, D1, R2, Access, billing or mail. Planned production public host is `https://nozha-badavi.com`; `www` permanently redirects to apex; owner admin is `https://admin.nozha-badavi.com`.
+
+Before any cloud action, explicitly verify account/zone, DNS and existing resources; inventory plan limits; map custom-domain registration and admin isolation; calculate variable/fixed costs. Require **separate approval** for first Worker provisioning/deployment, DNS/redirect/TLS changes, D1/R2 migrations, Access policies, email setup, paid features and automated GitHub deploys. Use one CI/CD mechanism only; stage in isolated environments with synthetic content, never production credentials/data. At authorized launch verify TLS, redirects, three locales, video, contact submissions/email outages, protected admin, content publish/cache refresh, rollback, backups, spend/usage alarms and noindex previews. Retain last good Worker deployment and content revision; do not rollback DB destructively. Treat Email Routing as inbound forwarding, not proof of arbitrary outbound transactional sending. Detailed Worker configuration, optional service matrix and acceptance gates: [CLOUDFLARE_DEPLOYMENT.md](CLOUDFLARE_DEPLOYMENT.md).
