@@ -2,8 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import defaults from '../shared/defaults.js';
 import {validatePagePayload} from '../shared/validation.js';
-import {insertDraft,publishDraft,published,rollBack,markReviewed,state,revision} from '../shared/store.js';
-import {restoreHomepageDraft} from '../tools/smoke-content.mjs';
+import {insertDraft,publishDraft,published,rollBack,markReviewed} from '../shared/store.js';
 import {MockD1} from './mock-db.mjs';
 import worker from '../public/src/index.js';
 
@@ -46,7 +45,6 @@ test('review drafts stay private, need media consent and translation review, and
     assert.equal((await published(db,'home','en')).payload.fields.hero,'Owner headline');
   }finally{db.close();}
 });
-
 test('published media without publication consent is not publicly readable',async()=>{
   const db=new MockD1();
   try{
@@ -55,30 +53,4 @@ test('published media without publication consent is not publicly readable',asyn
     const response=await worker.fetch(new Request('https://nozha-badavi.com/media/unapproved123'),{DB:db,MEDIA:{get(){reads++;throw Error('Private media must not be read');}}},{});
     assert.equal(response.status,404);assert.equal(reads,0);
   }finally{db.close();}
-});
-
-test('smoke cleanup restores an unpublished owner draft and refuses concurrent changes',async()=>{
- const db=new MockD1();
- const ownerDraft=validatePagePayload('home','en',{fields:{hero:'Unpublished owner work',review_yura_quote:'Owner draft excerpt'},testimonialsEnabled:false});
- const admin=async(path,opts={})=>{
-  if(opts.method==='PUT'){
-   const body=JSON.parse(opts.body);
-   try{const id=await insertDraft(db,'home','en',validatePagePayload('home','en',body.payload),'test',body.baseRevision);return{status:200,body:{ok:true,revision:id}};}
-   catch(error){return{status:error.status||409,body:{ok:false}};}
-  }
-  const current=await state(db,'home','en');
-  return{status:200,body:{draftRevision:current.draft_revision,publishedRevision:current.published_revision,draft:(await revision(db,current.draft_revision)).payload}};
- };
- try{
-  const original=await insertDraft(db,'home','en',{fields:{hero:'Published owner copy'}},'owner',null);await publishDraft(db,'home','en',original,'owner');
-  const owner=await insertDraft(db,'home','en',ownerDraft,'owner',original);
-  const probe=await insertDraft(db,'home','en',{fields:{hero:'Synthetic smoke draft'},testimonialsEnabled:true},'test',owner);await publishDraft(db,'home','en',probe,'test');
-  await rollBack(db,'home','en',original,'test');
-  const restored=await restoreHomepageDraft(admin,ownerDraft,probe);
-  assert.deepEqual(restored.draft.fields,ownerDraft.fields);assert.deepEqual(restored.draft.media,ownerDraft.media);assert.equal(restored.draft.testimonialsEnabled,false);assert.equal(restored.publishedRevision,original);
-  const concurrent=await insertDraft(db,'home','en',{fields:{hero:'New concurrent owner work'}},'owner',restored.draftRevision);
-  await assert.rejects(()=>restoreHomepageDraft(admin,ownerDraft,probe),/concurrent edit/);
-  assert.equal((await state(db,'home','en')).draft_revision,concurrent);
-  assert.equal((await revision(db,concurrent)).payload.fields.hero,'New concurrent owner work');
- }finally{db.close();}
 });

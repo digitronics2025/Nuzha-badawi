@@ -18,8 +18,6 @@ async function admin(path,opts={}){const r=await fetch(ADMIN_URL+path,{redirect:
  const type=r.headers.get('content-type')||'';return {status:r.status,headers:r.headers,body:type.includes('json')?await r.json():await r.text()};}
 async function pub(path,opts={}){const r=await fetch(PUBLIC_URL+path,{redirect:'manual',...opts});const type=r.headers.get('content-type')||'';return {status:r.status,headers:r.headers,body:type.includes('json')?await r.json():await r.text()};}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const defaults=(await import('../shared/defaults.js')).default;
-const {restoreHomepageDraft}=await import('./smoke-content.mjs');
 
 // ---- Public site
 for(const loc of ['uk','en','ar','ru'])for(const page of ['','about/','lessons/','coaching/','translation/','contact/','privacy/']){
@@ -145,49 +143,16 @@ if(MODE==='staging'&&auth){
  r=await admin('/api/v1/admin/media',{method:'POST',body:form});check('media upload (private)',r.status===201,JSON.stringify(r.body));
  const mid=r.body.id;
  r=await pub(`/media/${mid}`);check('unpublished media hidden publicly',r.status===404);
- // Exercise the new revision fields through the supported admin API only.
- let home=(await admin('/api/v1/admin/pages/home?locale=en')).body;
- const previousHome=structuredClone(home.published||home.defaultContent);
- const previousHomeDraft=structuredClone(home.draft||previousHome);
- let previousHomeRevision=home.publishedRevision;
- let verificationDraftRevision=null;
- let reviewRevision=null;
- try{
- if(!previousHomeRevision){
-  const baseline=await admin('/api/v1/admin/pages/home?locale=en',{method:'PUT',body:JSON.stringify({baseRevision:home.draftRevision,payload:previousHome})});
-  verificationDraftRevision=baseline.body.revision||null;
-  const baselinePublish=await admin('/api/v1/admin/pages/home/publish?locale=en',{method:'POST',body:JSON.stringify({revision:baseline.body.revision})});
-  check('establish rollback baseline for review verification',baselinePublish.body.ok===true);
-  previousHomeRevision=baseline.body.revision;
-  home=(await admin('/api/v1/admin/pages/home?locale=en')).body;
+ // The new homepage contract is inspected without altering shared owner drafts,
+ // publications or translation provenance. Full review writes use disposable D1
+ // in platform.test.mjs and the native runtime checks before staging promotion.
+ for(const locale of ['uk','en','ar','ru']){
+  const home=(await admin(`/api/v1/admin/pages/home?locale=${locale}`)).body;
+  check(`review editor schema ${locale}`,['proof_age','proof_levels','proof_formats','testimonials_title','testimonials_rating','testimonials_snapshot','review_yura_quote','review_m_quote','review_serg_quote'].every(key=>home.fieldSchema?.[key]));
+  check(`review fallback is opt-in and localized ${locale}`,home.defaultContent?.testimonialsEnabled===false&&Boolean(home.defaultContent?.fields?.testimonials_snapshot)&&Boolean(home.defaultContent?.fields?.review_yura_quote));
  }
- const reviewMarker=`Staging review verification ${Date.now()}`;
- const reviewContent={...previousHome,fields:{...defaults.en.home.fields,...previousHome.fields,review_yura_quote:reviewMarker,review_yura_author:'Automated test'},testimonialsEnabled:true,media:{...previousHome.media,reviewYuraScreenshot:mid}};
- const savedHome=await admin('/api/v1/admin/pages/home?locale=en',{method:'PUT',body:JSON.stringify({baseRevision:home.draftRevision,payload:reviewContent})});
- check('save testimonial draft with existing owner fields preserved',savedHome.body.ok===true);
- reviewRevision=savedHome.body.revision;
- verificationDraftRevision=reviewRevision||verificationDraftRevision;
- r=await admin('/preview/en/home/');check('private review preview uses protected screenshot link',r.body.includes(reviewMarker)&&r.body.includes(`/api/v1/admin/media/${mid}`)&&!r.body.includes('data-nusya-testimonials hidden'));
- r=await admin('/api/v1/admin/pages/home/publish?locale=en',{method:'POST',body:JSON.stringify({revision:reviewRevision})});
- check('unapproved review screenshot blocks page publication',r.status===409&&r.body.code==='MEDIA_APPROVAL_REQUIRED');
  r=await admin(`/api/v1/admin/media/${mid}/publish`,{method:'POST',body:JSON.stringify({consentConfirmed:true})});check('media publish with consent',r.body.published===true);
  r=await pub(`/media/${mid}`);check('published media served publicly',r.status===200&&r.headers.get('content-type')==='image/png');
-  r=await admin('/api/v1/admin/pages/home/publish?locale=en',{method:'POST',body:JSON.stringify({revision:reviewRevision})});check('publish enabled reviews after screenshot approval',r.body.ok===true);
-  let visible=false;
-  for(let i=0;i<14&&!visible;i++){const result=await pub('/en/');visible=result.body.includes(reviewMarker)&&result.body.includes(`/media/${mid}`)&&!result.body.includes('data-nusya-testimonials hidden');if(!visible)await sleep(10000);}
-  check('enabled review and source link reach public staging',visible);
- }finally{
-  try{
-   const current=(await admin('/api/v1/admin/pages/home?locale=en')).body;
-   if(previousHomeRevision&&[previousHomeRevision,reviewRevision].includes(current.publishedRevision)){
-    r=await admin('/api/v1/admin/pages/home/rollback?locale=en',{method:'POST',body:JSON.stringify({toRevision:previousHomeRevision})});check('restore previous homepage review visibility and owner content',r.body.ok===true);
-    const restored=(await admin('/api/v1/admin/pages/home?locale=en')).body;
-    check('homepage rollback preserves earlier content and visibility',restored.publishedRevision===previousHomeRevision&&restored.published?.fields?.hero===previousHome.fields.hero&&Boolean(restored.published?.testimonialsEnabled)===Boolean(previousHome.testimonialsEnabled));
-   }else check('homepage publication changed concurrently; preserve owner publication',false);
-  }finally{
-   if(verificationDraftRevision){await restoreHomepageDraft(admin,previousHomeDraft,verificationDraftRevision);check('restore the original unpublished homepage draft without replacing concurrent edits',true);}
-  }
- }
  const bad=new FormData();bad.append('file',new Blob([new TextEncoder().encode('<svg onload=alert(1)>')],{type:'image/png'}),'x.png');bad.append('altText','Malicious file');bad.append('source','test source');
  r=await admin('/api/v1/admin/media',{method:'POST',body:bad});check('spoofed image rejected',r.status===400);
 }

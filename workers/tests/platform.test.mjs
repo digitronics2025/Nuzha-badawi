@@ -7,6 +7,7 @@ import adminWorker from '../admin/src/index.js';
 import {validateEnquiry,defaultSettings,validateSettings,validateVimeo} from '../shared/validation.js';
 import {saveSettings,settings} from '../shared/store.js';
 import {verifyAccess} from '../shared/auth.js';
+import defaults from '../shared/defaults.js';
 
 const authConfig={ACCESS_TEAM_DOMAIN:'nusya-test.cloudflareaccess.com',ACCESS_AUD:'test-audience-id',OWNER_EMAILS:'owner@example.com',EDITOR_EMAILS:'editor@example.com',ADMIN_HOST:'admin.nozha-badavi.com'};
 const {privateKey,publicKey}=generateKeyPairSync('rsa',{modulusLength:2048});
@@ -125,6 +126,27 @@ test('publishing a page with an unapproved image is blocked',async(t)=>{
  const payload={fields:{hero:'Test photo caption',hero_desc:'Short intro'},media:{heroPortrait:'deadbeef1234'}};
  let r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=en',{baseRevision:null,payload},'PUT'),e,{});assert.equal(r.status,200);const rev=(await r.json()).revision;
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/publish?locale=en',{revision:rev},'POST'),e,{});assert.equal(r.status,409);
+});
+
+test('authenticated review publication and rollback use an isolated database',async(t)=>{
+ withNetworkMock();const db=new MockD1();t.after(()=>db.close());const e=env(db);
+ const request=async(path,body=null,method='GET')=>adminWorker.fetch(authReq('/api/v1/admin/'+path,body,method),e,{});
+ let res=await request('pages/home?locale=en',{baseRevision:null,payload:{fields:{hero:'Owner headline'}}},'PUT');assert.equal(res.status,200);const old=(await res.json()).revision;
+ res=await request('pages/home/publish?locale=en',{revision:old},'POST');assert.equal(res.status,200);
+ const content=structuredClone(defaults.en.home);content.fields.hero='Owner headline';content.testimonialsEnabled=true;content.media.reviewYuraScreenshot='approvedimage123';
+ res=await request('pages/home?locale=en',{baseRevision:old,payload:content},'PUT');assert.equal(res.status,200);const next=(await res.json()).revision;
+ res=await request('pages/home?locale=en');let page=await res.json();assert.equal(page.draft.testimonialsEnabled,true);assert.equal(page.publishedRevision,old);
+ res=await request('pages/home/publish?locale=en',{revision:next},'POST');assert.equal(res.status,409);assert.equal((await res.json()).code,'MEDIA_APPROVAL_REQUIRED');
+ await db.prepare("INSERT INTO media_assets(id,object_key,content_type,byte_size,alt_text,source,published,consent_confirmed,created_by) VALUES('approvedimage123','approved.png','image/png',12,'Cropped review','Test fixture',1,1,'owner')").run();
+ res=await request('pages/home/publish?locale=en',{revision:next},'POST');assert.equal(res.status,200);
+ res=await request('pages/home?locale=en');page=await res.json();assert.equal(page.published.testimonialsEnabled,true);assert.equal(page.published.fields.hero,'Owner headline');assert.equal(page.published.media.reviewYuraScreenshot,'approvedimage123');
+ res=await request('pages/home/rollback?locale=en',{toRevision:old},'POST');assert.equal(res.status,200);
+ res=await request('pages/home?locale=en');page=await res.json();assert.equal(page.published.testimonialsEnabled,false);assert.equal(page.published.fields.hero,'Owner headline');
+ const ar={...defaults.ar.home,testimonialsEnabled:true};
+ res=await request('pages/home?locale=ar',{baseRevision:null,payload:ar},'PUT');assert.equal(res.status,200);const translated=(await res.json()).revision;
+ res=await request('pages/home/publish?locale=ar',{revision:translated},'POST');assert.equal(res.status,409);
+ res=await request('pages/home/review?locale=ar',{revision:translated},'POST');assert.equal(res.status,200);
+ res=await request('pages/home/publish?locale=ar',{revision:translated},'POST');assert.equal(res.status,200);
 });
 
 test('legacy ready translations expose source review and can publish without editing content',async(t)=>{
