@@ -108,7 +108,7 @@ async function setupContactSecurity(form) {
     for(const choice of form.querySelectorAll('input[name="type"]')){const open=typeOpen[choice.value]!==false;choice.disabled=!open;choice.closest('label')?.classList.toggle('is-unavailable',!open);if(!open&&choice.checked)choice.checked=false;}
     if(!form.querySelector('input[name="type"]:checked')){const first=form.querySelector('input[name="type"]:not(:disabled)');if(first){first.checked=true;first.dispatchEvent(new Event('change'));}}
     const lessonSelect=form.querySelector('.form-detail[data-for="lesson"] [name="language"]');
-    if(lessonSelect)for(const option of lessonSelect.options)if(option.value)option.disabled=!accepting(option.value);
+    if(lessonSelect){for(const option of lessonSelect.options)if(option.value)option.disabled=!accepting(option.value);if(lessonSelect.selectedOptions[0]?.disabled)lessonSelect.value='';}
     target.className='cf-turnstile';
     target.dataset.sitekey=config.turnstileSiteKey;
     target.dataset.action='nusya_enquiry';

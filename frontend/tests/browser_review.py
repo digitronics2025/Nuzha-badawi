@@ -11,13 +11,14 @@ with sync_playwright() as p:
     page=browser.new_page(viewport={'width':390,'height':844},reduced_motion='reduce')
     errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     requests=[]
+    unavailable=set()
     def serve(route):
         url=route.request.url
         if not url.startswith('http://public.test') and not url.startswith('http://admin.test'):
             route.abort();return
         admin=url.startswith('http://admin.test');path=url.split('.test',1)[1].split('?')[0]
         if path=='/api/v1/config':
-            route.fulfill(json={'ready':True,'turnstileSiteKey':'test','approvedTranslationPairs':['en:ru'],'services':{k:{'visible':True,'acceptingRequests':True} for k in ['english','russian','arabic','coaching','translation','interpretation']}});return
+            route.fulfill(json={'ready':True,'turnstileSiteKey':'test','approvedTranslationPairs':['en:ru'],'services':{k:{'visible':True,'acceptingRequests':k not in unavailable} for k in ['english','russian','arabic','coaching','translation','interpretation']}});return
         if path=='/api/v1/enquiries':
             requests.append(json.loads(route.request.post_data))
             if len(requests)==1:route.fulfill(status=503,json={'ok':False,'message':'Try again'})
@@ -48,6 +49,13 @@ with sync_playwright() as p:
             if width==390:
                 page.goto(f'http://public.test/{locale}/')
                 page.screenshot(path=str(OUT/f'{locale}-mobile.png'),full_page=True)
+    unavailable.add('arabic')
+    page.goto('http://public.test/en/contact/?service=lesson&language=arabic')
+    page.wait_for_function('document.querySelector("form").dataset.backendReady==="true"')
+    assert page.locator('[name=language]').input_value()==''
+    assert page.locator('[name=language] option[value=arabic]').evaluate('(option)=>option.disabled')
+    assert not page.locator('[name=language]').evaluate('(el)=>el.checkValidity()')
+    unavailable.clear()
     page.goto('http://public.test/en/contact/?service=lesson&language=arabic')
     page.wait_for_function('document.querySelector("form").dataset.backendReady==="true"')
     assert page.locator('[name=language]').input_value()=='arabic'
