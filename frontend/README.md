@@ -8,8 +8,8 @@ Frontend-only implementation for the multilingual NUSYA website and separate adm
 - Cinematic Editorial Luxury visual design, restrained globe/flight-line graphics, responsive desktop/mobile layouts and reduced-motion support.
 - On-demand Vimeo intro player (`1171310337`, hash `3416a6f4f5`) with no player requests before interaction.
 - Language lessons, coaching, translation/interpreting, About, FAQs, contact forms and official external profiles.
-- Service-aware form frontend targeting a documented API; error states remain truthful when the backend does not exist.
-- Separate admin UI preview for overview, content, translations, services, media/video, and enquiries. Editing previews are in memory only.
+- Service-aware form frontend now targets the implemented public Worker API in `../workers/public/src/index.js`; submission remains disabled and shows an honest error until domain, D1, Turnstile and service settings are configured.
+- Separate admin UI for overview, content, translations, services, media/video, and enquiries; its secure D1/Access backend is implemented in `../workers/` but requires deployment and configuration.
 - Metadata, canonical/hreflang, sitemap, favicon, OG imagery, accessibility-focused navigation.
 
 ## Build & preview
@@ -40,15 +40,19 @@ The repository's earlier plan preferred Astro/Tailwind if the repo started empty
 | `tests/browser_qa.py` | Chromium visual and interaction QA (isolated page rendering) |
 | `dist-public/`, `dist-admin/` | Generated outputs, deliberately not committed |
 
+## Source-implemented backend and deployment boundaries
+
+See `../workers/README.md`, `../workers/docs/WORKER_API.md` and `../workers/docs/RELEASE_READINESS.md`. Cloudflare Workers, D1 migration, Access identity verification, Turnstile enforcement, durable enquiry storage/outbox, structured CMS and admin routes have now been **implemented and tested locally**. They are not yet configured or verified in Cloudflare.
+
 ## Scope boundaries and release gates
 
-- **No real auth, D1, email, media storage, API, content persistence, Cloudflare Worker or deployment** is implemented.
+- Real Worker API, D1 schema, access verification and publishing source exist in `../workers/`; **no cloud resources are provisioned, no live email has been sent, and production deployment is unapproved.**
 - The admin UI **must never be published openly**; create a separate protected Worker and verify Cloudflare Access and API authorization first.
-- Frontend contacts do not falsely confirm delivery. The API must persist an enquiry before returning `201`.
+- Frontend contacts do not falsely confirm delivery. The API is designed and locally tested to persist an enquiry before returning `201`; test again in Cloudflare staging.
 - All professional claims, approved service availability, legal/privacy copy, translations, real photographs and the Vimeo embedding rights require owner approval before public launch.
 - No fabricated person images, prices, reviews or certified-translation claims. No Korean content.
 - Existing Preply students must continue using authorized platform bookings and payments.
 
 ## Next agent
 
-Read `docs/BACKEND_HANDOFF.md` and `types/api.d.ts`, then implement backend services without redesigning the public frontend. Use the user's separately approved Cloudflare plan and mandatory production/security authorization gates.
+Review `../workers/` and `docs/BACKEND_HANDOFF.md` before configuring any resources. The outstanding responsibility is authorized Cloudflare staging/production integration, security and billing approval, owner content approvals, and live end-to-end verification—not a second parallel backend implementation.

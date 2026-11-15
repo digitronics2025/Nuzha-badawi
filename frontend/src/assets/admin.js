@@ -1,20 +1,95 @@
-/* Admin UI demonstration only: no persistence, login or publishing. */
-const tabNames={overview:'Overview',pages:'Pages & content',translations:'Translations',services:'Services',video:'Media & video',enquiries:'Enquiries'};
-const drafts={
- en:{title:'Learn a language. Find your voice. Connect with the world.',description:'Personalised English, Russian and Arabic lessons, professional communication coaching, translation and interpretation with Nozha Badavi.'},
- ar:{title:'تعلّم لغة. عبّر بثقة. وانفتح على العالم.',description:'دروس مخصّصة في الإنجليزية والروسية والعربية، والتواصل المهني والترجمة التحريرية والشفوية مع Nozha Badavi.'},
- ru:{title:'Изучайте языки. Обретайте уверенность. Открывайте мир.',description:'Индивидуальные уроки английского, русского и арабского, подготовка к профессиональному общению и перевод.'}
-};
-const sidebar=document.getElementById('sidebar');const menu=document.querySelector('.mobile-menu');
-menu?.addEventListener('click',()=>{let open=!sidebar.classList.contains('is-open');sidebar.classList.toggle('is-open',open);menu.setAttribute('aria-expanded',String(open))});
-let activeLocale='en';
-function go(name){if(!tabNames[name])return;document.querySelectorAll('.panel-view').forEach(el=>el.classList.toggle('is-visible',el.id==='view-'+name));document.querySelectorAll('.nav-item').forEach(el=>{el.classList.toggle('is-active',el.dataset.view===name);el.removeAttribute('aria-current');if(el.dataset.view===name)el.setAttribute('aria-current','page')});document.getElementById('breadcrumb').textContent=tabNames[name];sidebar.classList.remove('is-open');menu?.setAttribute('aria-expanded','false');document.querySelector('.page-top h1')?.focus?.();}
-document.querySelectorAll('[data-view],[data-go]').forEach(button=>button.addEventListener('click',()=>{go(button.dataset.view||button.dataset.go);if(button.dataset.edit)changeLocale(button.dataset.edit)}));
-const title=document.getElementById('hero-title'),description=document.getElementById('hero-description');
-function preview(){document.getElementById('preview-heading').textContent=title.value;document.getElementById('preview-description').textContent=description.value;document.getElementById('preview-heading').dir=activeLocale==='ar'?'rtl':'ltr';document.getElementById('preview-description').dir=activeLocale==='ar'?'rtl':'ltr'}
-function changeLocale(locale){if(!drafts[locale])return;activeLocale=locale;document.querySelectorAll('[data-locale]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.locale===locale)));title.value=drafts[locale].title;description.value=drafts[locale].description;title.dir=locale==='ar'?'rtl':'ltr';description.dir=locale==='ar'?'rtl':'ltr';preview()}
-document.querySelectorAll('[data-locale]').forEach(tab=>tab.addEventListener('click',()=>{drafts[activeLocale]={title:title.value,description:description.value};changeLocale(tab.dataset.locale)}));
-document.getElementById('preview-content')?.addEventListener('click',preview);
-document.getElementById('save-draft')?.addEventListener('click',()=>{drafts[activeLocale]={title:title.value,description:description.value};document.getElementById('editor-message').textContent='Saved in temporary browser memory for this demonstration only. Not published or sent to a server.';preview();const toast=document.getElementById('toast');toast.textContent='Demo draft updated in memory — not saved to backend';toast.hidden=false;setTimeout(()=>toast.hidden=true,4500)});
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&sidebar.classList.contains('is-open')){sidebar.classList.remove('is-open');menu?.setAttribute('aria-expanded','false');menu?.focus()}});
-changeLocale('en');
+/* NUSYA secure admin client. API owns persistence, authorization and publishing. */
+const $=(sel,base=document)=>base.querySelector(sel);
+const tabs={overview:'Overview',pages:'Pages & content',translations:'Translations',services:'Services',video:'Media & video',enquiries:'Enquiries'};
+const state={session:null,settings:null,pages:[],page:'home',locale:'en',revision:null,reviewStatus:'needs_review',publishedRevision:null,content:null,unsaved:false};
+const menu=$('.mobile-menu'),sidebar=$('#sidebar'),message=$('#editor-message');
+function note(text,kind='neutral'){if(message)message.textContent=text;const toast=$('#toast');if(toast){toast.textContent=text;toast.hidden=false;toast.dataset.kind=kind;setTimeout(()=>toast.hidden=true,4500);}}
+async function api(path,options={}){
+ const res=await fetch('/api/v1/admin'+path,{...options,credentials:'same-origin',headers:{accept:'application/json',...(options.body instanceof FormData?{}:{'content-type':'application/json'}),...(options.headers||{})}});
+ const body=res.headers.get('content-type')?.includes('application/json')?await res.json():null;
+ if(!res.ok||body?.ok===false){const error=new Error(body?.message||`Request failed (${res.status})`);error.status=res.status;error.code=body?.code;throw error;}
+ return body;
+}
+function go(name){if(!tabs[name])return;document.querySelectorAll('.panel-view').forEach(el=>el.classList.toggle('is-visible',el.id==='view-'+name));document.querySelectorAll('.nav-item').forEach(el=>{el.classList.toggle('is-active',el.dataset.view===name);el.removeAttribute('aria-current');if(el.dataset.view===name)el.setAttribute('aria-current','page');});$('#breadcrumb').textContent=tabs[name];sidebar?.classList.remove('is-open');menu?.setAttribute('aria-expanded','false');if(name==='enquiries')loadEnquiries();if(name==='translations')loadTranslations();if(name==='overview')loadOverview();if(name==='services')loadServices();if(name==='video')loadVideo();if(name==='pages')loadPage();}
+menu?.addEventListener('click',()=>{const visible=!sidebar.classList.contains('is-open');sidebar.classList.toggle('is-open',visible);menu.setAttribute('aria-expanded',String(visible));});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sidebar?.classList.contains('is-open')){sidebar.classList.remove('is-open');menu?.focus();}});
+document.querySelectorAll('[data-view],[data-go]').forEach(el=>el.addEventListener('click',()=>{if(el.dataset.edit)state.locale=el.dataset.edit;go(el.dataset.view||el.dataset.go);}));
+const title=$('#hero-title'),description=$('#hero-description');
+function fillPreview(){if(!title||!description)return;$('#preview-heading').textContent=title.value;$('#preview-description').textContent=description.value;$('#preview-heading').dir=state.locale==='ar'?'rtl':'ltr';$('#preview-description').dir=state.locale==='ar'?'rtl':'ltr';}
+function editKey(){return state.page==='home'?['hero','hero_desc']:['title','description'];}
+function localeLabel(v){return v==='ar'?'العربية':v==='ru'?'Русский':'English';}
+function saveLocalEditor(){if(!state.content)return;const [a,b]=editKey();state.content.fields[a]=title.value;state.content.fields[b]=description.value;for(const el of document.querySelectorAll('[data-content-key]'))state.content.fields[el.dataset.contentKey]=el.value;state.unsaved=true;fillPreview();}
+const panel=$('#view-pages .editor-card');const pageSelect=document.createElement('select');pageSelect.id='admin-page-select';pageSelect.className='admin-input';pageSelect.setAttribute('aria-label','Page to edit');
+for(const key of ['home','about','lessons','coaching','translation','contact','privacy']){const option=document.createElement('option');option.value=key;option.textContent=key[0].toUpperCase()+key.slice(1);pageSelect.append(option);}
+if(panel){const selectLabel=document.createElement('label');selectLabel.className='edit-label';selectLabel.textContent='Choose page';selectLabel.append(pageSelect);panel.querySelector('.locale-tabs')?.before(selectLabel);}
+pageSelect.addEventListener('change',()=>{state.page=pageSelect.value;state.unsaved=false;loadPage();});
+const extraEditor=document.createElement('div');extraEditor.id='extra-field-editor';extraEditor.className='extra-field-editor';description?.closest('.edit-label')?.after?.(extraEditor); // fallback below
+if(!extraEditor.isConnected)description?.after(extraEditor);
+const actions=$('.editor-actions');
+const ownerButton=(id,caption)=>{const b=document.createElement('button');b.id=id;b.type='button';b.className='soft-btn';b.textContent=caption;actions?.append(b);return b;};
+const publishBtn=$('#view-pages .editor-actions button[disabled]');if(publishBtn){publishBtn.disabled=false;publishBtn.removeAttribute('title');publishBtn.textContent='Publish';publishBtn.id='publish-page';publishBtn.classList.remove('disabled');}
+const reviewBtn=ownerButton('review-page','Approve translation');
+const historyBtn=ownerButton('history-page','History / rollback');
+const mediaField=document.createElement('input');mediaField.className='admin-input';mediaField.id='portrait-media-id';mediaField.placeholder='Published media identifier (optional)';
+const mediaLabel=document.createElement('label');mediaLabel.className='edit-label';mediaLabel.textContent='Portrait media ID';mediaLabel.append(mediaField);extraEditor.after(mediaLabel);
+function setTab(v){state.locale=v;document.querySelectorAll('[data-locale]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.locale===v)));loadPage();}
+document.querySelectorAll('[data-locale]').forEach(tab=>tab.addEventListener('click',()=>{if(state.unsaved&&!confirm('Discard unsaved changes?'))return;state.unsaved=false;setTab(tab.dataset.locale);}));
+async function loadPage(){if(!state.session)return;const [a,b]=editKey();try{
+ const result=await api(`/pages/${state.page}?locale=${state.locale}`);state.revision=result.draftRevision;state.publishedRevision=result.publishedRevision;state.reviewStatus=result.reviewStatus;state.content=structuredClone(result.draft||result.published||result.defaultContent||{fields:{},seo:{},media:{}});state.content.fields ||= {};state.content.seo ||= {};state.content.media ||= {};
+ title.value=state.content.fields[a]||result.defaultContent?.fields?.[a]||'';description.value=state.content.fields[b]||result.defaultContent?.fields?.[b]||'';
+ title.dir=state.locale==='ar'?'rtl':'ltr';description.dir=title.dir;pageSelect.value=state.page;
+ extraEditor.replaceChildren();for(const [key,value] of Object.entries(result.defaultContent.fields||{})){
+   if([a,b].includes(key))continue;
+   const label=document.createElement('label');label.className='edit-label';label.textContent=key.replaceAll('_',' ').replace(/([A-Z])/g,' $1');
+   const el=document.createElement((value.length>100)?'textarea':'input');if(el.tagName==='TEXTAREA')el.rows=2;else el.type='text';el.className='admin-input';el.value=state.content.fields[key]??value;el.dataset.contentKey=key;el.dir=title.dir;label.append(el);extraEditor.append(label);
+ }
+ mediaField.value=state.content.media?.[state.page==='about'?'aboutPortrait':'heroPortrait']||'';
+ state.unsaved=false;message.textContent=`${localeLabel(state.locale)} · Draft ${state.revision||'new'} · Published ${state.publishedRevision||'baseline'} · ${state.reviewStatus}`;
+ reviewBtn.hidden=state.reviewStatus!=='needs_review';fillPreview();
+ }catch(e){note(`Editor unavailable: ${e.message}`,'error');}}
+title?.addEventListener('input',saveLocalEditor);description?.addEventListener('input',saveLocalEditor);extraEditor.addEventListener('input',saveLocalEditor);mediaField.addEventListener('input',()=>{state.unsaved=true;});
+$('#preview-content')?.addEventListener('click',()=>{if(state.unsaved)return note('Save the draft before opening the secure preview.','error');window.open(`/preview/${state.locale}/${state.page}/`,'_blank','noopener,noreferrer');});
+$('#save-draft')?.addEventListener('click',async()=>{if(!state.session)return note('Admin login required.','error');saveLocalEditor();const key=state.page==='about'?'aboutPortrait':'heroPortrait';if(mediaField.value.trim())state.content.media[key]=mediaField.value.trim();else delete state.content.media[key];try{const r=await api(`/pages/${state.page}?locale=${state.locale}`,{method:'PUT',body:JSON.stringify({baseRevision:state.revision,payload:state.content})});state.revision=r.revision;state.unsaved=false;note(`Draft revision ${r.revision} saved. It is not published.`,'success');await loadPage();}catch(e){note(`Save failed: ${e.message}`,'error');}});
+publishBtn?.addEventListener('click',async()=>{if(!state.session)return note('Admin login required.','error');if(state.unsaved)return note('Save your draft before publishing.','error');if(!confirm(`Publish ${state.page} in ${localeLabel(state.locale)}?`))return;try{const r=await api(`/pages/${state.page}/publish?locale=${state.locale}`,{method:'POST',body:JSON.stringify({revision:state.revision})});note(`Published revision ${r.revision}. Public caches refresh within ${r.cacheRefreshWithinSeconds||90} seconds.`,'success');await loadPage();}catch(e){note(`Publish blocked: ${e.message}`,'error');}});
+reviewBtn?.addEventListener('click',async()=>{if(state.unsaved)return note('Save before review.','error');try{await api(`/pages/${state.page}/review?locale=${state.locale}`,{method:'POST',body:JSON.stringify({revision:state.revision})});note('Translation reviewed. Publish when ready.','success');await loadPage();}catch(e){note(e.message,'error');}});
+historyBtn?.addEventListener('click',async()=>{try{const data=await api(`/pages/${state.page}/revisions?locale=${state.locale}`);const ids=data.revisions.map(x=>x.id).join(', ');const input=prompt(`Available revisions: ${ids}\nEnter revision number to restore as published:`,String(state.publishedRevision||''));if(!input)return;const n=Number(input);if(!Number.isSafeInteger(n)||!data.revisions.some(x=>x.id===n))return note('Select a listed revision.','error');await api(`/pages/${state.page}/rollback?locale=${state.locale}`,{method:'POST',body:JSON.stringify({toRevision:n})});note(`Published revision restored to ${n}.`,'success');await loadPage();}catch(e){note(`Rollback unavailable: ${e.message}`,'error');}});
+async function loadOverview(){if(!state.session)return;try{const data=await api('/summary');const cards=[...document.querySelectorAll('#view-overview .attention-card .count')];if(cards[0])cards[0].textContent=data.openEnquiries;if(cards[1])cards[1].textContent=data.translationsToReview;if(cards[2])cards[2].textContent='Live';const box=$('#view-overview .news-box');if(box)box.querySelector('h2').textContent='Admin connected securely';}catch(e){note(e.message,'error');}}
+async function loadTranslations(){if(!state.session)return;try{const data=await api('/pages');const section=$('#view-translations .box');const node=document.createElement('div');for(const page of data.pages){const card=document.createElement('div');card.className='translation-row';const label=document.createElement('div');const strong=document.createElement('strong');strong.textContent=page.key;label.append(strong);for(const loc of ['en','ar','ru']){const b=document.createElement('button');b.className='soft-btn';b.textContent=`${localeLabel(loc)} — ${page.locales[loc].status}`;b.addEventListener('click',()=>{state.page=page.key;state.locale=loc;go('pages');});card.append(b);}card.prepend(label);node.append(card);}section?.replaceChildren(node);}catch(e){note(e.message,'error');}}
+async function loadSettings(){if(!state.session)return;const r=await api('/settings');state.settings=r.settings;return r.settings;}
+async function saveSettings(){if(!state.session)return;try{const r=await api('/settings',{method:'PUT',body:JSON.stringify({settings:state.settings})});state.settings=r.settings;note('Settings published. Public caches refresh shortly.','success');}catch(e){note(e.message,'error');}}
+async function loadServices(){if(!state.session)return;try{await loadSettings();const root=$('#view-services .service-admin-grid');root.replaceChildren();for(const [id,s] of Object.entries(state.settings.services)){
+ const article=document.createElement('article');article.className='box service-admin';const h=document.createElement('h2');h.textContent=id[0].toUpperCase()+id.slice(1);article.append(h);
+ for(const [flag,label] of [['visible','Show on website'],['acceptingRequests','Accept new enquiries']]){
+   const wrap=document.createElement('label');wrap.className='edit-label';const input=document.createElement('input');input.type='checkbox';input.checked=s[flag];input.addEventListener('change',()=>{s[flag]=input.checked;});wrap.append(input,document.createTextNode(' '+label));article.append(wrap);
+ }root.append(article);
+ }
+ const pairs=document.createElement('label');pairs.className='edit-label';pairs.textContent='Approved directed translation pairs (comma separated, e.g. en:ru, ru:en)';const field=document.createElement('input');field.className='admin-input';field.value=state.settings.approvedTranslationPairs.join(', ');pairs.append(field);root.append(pairs);
+ const btn=document.createElement('button');btn.className='dark-btn';btn.textContent='Save service settings';btn.addEventListener('click',()=>{state.settings.approvedTranslationPairs=field.value.split(',').map(x=>x.trim()).filter(Boolean);saveSettings();});root.append(btn);
+ }catch(e){note(e.message,'error');}}
+function installMediaUploader(){
+ const parent=$('#view-video .media-placeholder');if(!parent||$('#media-upload-form'))return;
+ const form=document.createElement('form');form.id='media-upload-form';form.className='media-upload-form';
+ const file=document.createElement('input');file.type='file';file.name='file';file.accept='image/jpeg,image/png,image/webp';file.required=true;
+ const alt=document.createElement('input');alt.type='text';alt.name='altText';alt.placeholder='Accessible image description';alt.required=true;alt.className='admin-input';
+ const source=document.createElement('input');source.type='text';source.name='source';source.placeholder='Owner / photographer and licence';source.required=true;source.className='admin-input';
+ const check=document.createElement('label');check.className='edit-label';const consent=document.createElement('input');consent.type='checkbox';check.append(consent,document.createTextNode(' I have permission to publish this media'));
+ const send=document.createElement('button');send.className='dark-btn';send.type='submit';send.textContent='Upload approved image';
+ const help=document.createElement('p');help.className='box-note';help.textContent='JPEG, PNG or WebP, max 4 MB. Uploaded images remain private until published.';
+ form.append(file,alt,source,check,send,help);parent.append(form);
+ form.addEventListener('submit',async e=>{e.preventDefault();if(!consent.checked)return note('Confirm image publication rights.','error');try{
+   const data=new FormData(form);const uploaded=await api('/media',{method:'POST',body:data});
+   await api('/media/'+uploaded.id+'/publish',{method:'POST',body:JSON.stringify({consentConfirmed:true})});
+   note('Image approved and uploaded. Media ID: '+uploaded.id+'. Add this ID in the relevant page editor.','success');form.reset();
+ }catch(err){note('Image upload failed: '+err.message,'error');}});
+}
+async function loadVideo(){if(!state.session)return;try{await loadSettings();installMediaUploader();const el=$('#video-url');el.readOnly=false;el.value=state.settings.video.url;let toggle=$('#video-enabled');if(!toggle){toggle=document.createElement('input');toggle.type='checkbox';toggle.id='video-enabled';el.after(toggle);}toggle.checked=state.settings.video.enabled;let button=$('#save-video');if(!button){button=document.createElement('button');button.id='save-video';button.className='dark-btn';button.textContent='Save video settings';toggle.after(button);}button.onclick=()=>{state.settings.video.url=el.value.trim();state.settings.video.enabled=toggle.checked;saveSettings();};}catch(e){note(e.message,'error');}}
+async function loadEnquiries(cursor=''){if(!state.session)return;try{const response=await api('/enquiries?limit=20'+(cursor?'&cursor='+encodeURIComponent(cursor):''));const root=$('#view-enquiries .empty-inbox');root.replaceChildren();const h=document.createElement('h2');h.textContent='Customer enquiries';root.append(h);
+ for(const item of response.items){const row=document.createElement('article');row.className='translation-row';const summary=document.createElement('div');const name=document.createElement('strong');name.textContent=`${item.name} · ${item.type}`;const detail=document.createElement('span');detail.textContent=`${item.email} · ${item.createdAt} · Email ${item.notificationStatus||'pending'}`;summary.append(name,detail);row.append(summary);
+ const select=document.createElement('select');select.className='admin-input';for(const id of ['new','reviewing','awaiting_customer','quoted','booked','completed','closed','spam']){const o=document.createElement('option');o.value=id;o.textContent=id;o.selected=id===item.status;select.append(o);}const submit=document.createElement('button');submit.className='soft-btn';submit.textContent='Update status';submit.addEventListener('click',async()=>{try{await api('/enquiries/'+item.reference,{method:'PATCH',body:JSON.stringify({status:select.value})});note(`${item.reference} updated`,'success');}catch(e){note(e.message,'error');}});row.append(select,submit);root.append(row);
+ }
+ if(!response.items.length){const p=document.createElement('p');p.textContent='No requests yet.';root.append(p);}
+ if(response.nextCursor){const b=document.createElement('button');b.className='soft-btn';b.textContent='Load older enquiries';b.addEventListener('click',()=>loadEnquiries(response.nextCursor));root.append(b);}
+ }catch(e){note(e.message,'error');}}
+async function init(){try{const data=await api('/me');state.session=data;const banner=$('.demo-banner');if(banner)banner.textContent=`SECURE ADMIN · ${data.email} · ${data.role.toUpperCase()}`;const badge=$('.header-badges .status-chip');if(badge)badge.textContent='Protected admin';const avatar=$('.sidebar-bottom small');if(avatar)avatar.textContent=`Verified ${data.role}`;await loadOverview();await loadPage();}
+ catch(e){const banner=$('.demo-banner');if(banner)banner.textContent='Protected administration · backend sign-in required';const badge=$('.header-badges .status-chip');if(badge)badge.textContent='Authentication required';note(`Administrative API not connected: ${e.message}`,'error');}}
+init();

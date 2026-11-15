@@ -1,0 +1,8 @@
+node_modules/
+public/wrangler.jsonc
+admin/wrangler.jsonc
+.dev.vars
+.env*
+!*.example
+.wrangler/
+coverage/
