@@ -28,3 +28,6 @@
 .developer-arrow{display:inline-block;font-size:1.05em;transition:transform .22s var(--ease)}
 .developer-link:hover .developer-arrow{transform:translate(2px,-2px)}
 @media(max-width:767px){.footer-meta{width:100%}}
+
+/* Four language options: keep the mobile header uncluttered; all options remain in the menu. */
+@media(max-width:600px){.header-right>.language-select{display:none}.mobile-langs{flex-wrap:wrap;gap:7px}.mobile-langs .lang-link{font-size:13px;padding:10px}}
