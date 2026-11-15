@@ -10,10 +10,10 @@ export default {
         "lessons_title": "Three languages. Your own path.",
         "lessons_desc": "Every learner brings different goals. Explore lessons built around your needs, level and pace.",
         "coaching_title": "Communicate when it matters.",
-        "coaching_desc": "Prepare for meetings, presentations, interviews and speeches with focused language coaching.",
+        "coaching_desc": "Prepare for business meetings, conferences, presentations, speeches and subject-specific communication through focused language coaching.",
         "services_title": "Meaning without borders.",
         "about_title": "At the heart of language is a person.",
-        "about_desc": "I’m Nozha Badavi, a multilingual language educator with experience in teaching, translation, interpretation and international student support. NUSYA brings these experiences together in one personal studio.",
+        "about_desc": "I’m Nozha Badavi. I teach English, Russian and Arabic and have experience in early-childhood education, international student support, written translation and interpretation. NUSYA brings these experiences together through individual, practical language support.",
         "faq_title": "Frequently asked questions",
         "closing_title": "Let’s start a conversation.",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
@@ -37,9 +37,9 @@ export default {
     "about": {
       "fields": {
         "about_page_title": "A personal approach to languages.",
-        "about_page_desc": "Meet the educator behind NUSYA and the experiences that shape her teaching.",
+        "about_page_desc": "Meet Nozha and explore the teaching, education, translation, interpretation and student-support experience behind her approach.",
         "story_heading": "Meet Nozha Badavi",
-        "story_body": "My background includes language education, international student support, translation and interpretation, and experience working with young children. I believe meaningful progress starts with understanding each person’s needs and building confidence through real communication.",
+        "story_body": "I teach English, Russian and Arabic through lessons shaped around each learner’s level, interests and real-life goals. My experience includes online English teaching at GoSchool, Arabic teaching at Mozhlyvist, preschool education at ABC All About Children, international student support and translation at Alsafir Group, and interpreting during migration-service interviews. I also help learners prepare their language for meetings, conferences, presentations and speeches.",
         "journey_title": "A journey through languages",
         "video_title": "A personal introduction",
         "video_desc": "Hear Nozha introduce herself and discover the person behind NUSYA Linguistic Studio.",
@@ -50,7 +50,7 @@ export default {
       },
       "seo": {
         "title": "A personal approach to languages.",
-        "description": "Meet the educator behind NUSYA and the experiences that shape her teaching."
+        "description": "Meet Nozha and explore the teaching, education, translation, interpretation and student-support experience behind her approach."
       },
       "media": {}
     },
@@ -59,11 +59,11 @@ export default {
         "lessons_page_title": "Language lessons around your world.",
         "lessons_page_desc": "Individual learning in English, Russian and Arabic, shaped around your goals.",
         "english": "English",
-        "english_long": "Practical speaking, grammar, vocabulary and confidence in everyday communication. English teaching for different learning needs.",
+        "english_long": "Practical conversation, grammar and vocabulary with individual learning plans, informed by English teaching experience at GoSchool in Ukraine.",
         "russian": "Russian",
-        "russian_long": "Individual learning for useful vocabulary, natural conversations and confident everyday use.",
+        "russian_long": "Individual Russian instruction informed by private tutoring experience with international students, in Ukraine and online. Current formats are confirmed before booking.",
         "arabic": "Arabic",
-        "arabic_long": "Personalised Arabic lessons. The variety, level and current formats are confirmed before scheduling.",
+        "arabic_long": "Arabic lessons adapted to individual levels and goals, informed by teaching experience at Mozhlyvist in Ukraine. The language variety and current formats are confirmed before booking.",
         "process_title": "Begin with a conversation.",
         "closing_title": "Let’s start a conversation.",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
@@ -79,9 +79,9 @@ export default {
     "coaching": {
       "fields": {
         "coaching_page_title": "Prepare to speak with confidence.",
-        "coaching_page_desc": "Personal language preparation for important professional conversations.",
+        "coaching_page_desc": "Personalised language preparation for business meetings, conferences, presentations, speeches and specialised professional conversations.",
         "coaching_title": "Communicate when it matters.",
-        "coaching_desc": "Prepare for meetings, presentations, interviews and speeches with focused language coaching.",
+        "coaching_desc": "Prepare for business meetings, conferences, presentations, speeches and subject-specific communication through focused language coaching.",
         "closing_title": "Let’s start a conversation.",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
         "title": "Prepare to speak with confidence.",
@@ -89,14 +89,14 @@ export default {
       },
       "seo": {
         "title": "Prepare to speak with confidence.",
-        "description": "Personal language preparation for important professional conversations."
+        "description": "Personalised language preparation for business meetings, conferences, presentations, speeches and specialised professional conversations."
       },
       "media": {}
     },
     "translation": {
       "fields": {
         "translation_page_title": "Words, meaning and understanding.",
-        "translation_page_desc": "Written translation and interpretation requests for individuals and organisations.",
+        "translation_page_desc": "Nozha’s professional background includes written translation involving Ukrainian, English, Russian and Arabic, plus interpretation during migration-service interviews. Current language pairs, formats and availability are assessed individually.",
         "translation_title": "Written translation",
         "translation_desc": "Thoughtful language support for eligible texts and correspondence. Language pairs and quotations are confirmed individually.",
         "interpretation_title": "Interpretation",
@@ -109,14 +109,14 @@ export default {
       },
       "seo": {
         "title": "Words, meaning and understanding.",
-        "description": "Written translation and interpretation requests for individuals and organisations."
+        "description": "Nozha’s professional background includes written translation involving Ukrainian, English, Russian and Arabic, plus interpretation during migration-service interviews. Current language pairs, formats and availability are assessed individually."
       },
       "media": {}
     },
     "contact": {
       "fields": {
         "contact_page_title": "Tell me how I can help.",
-        "contact_page_desc": "Choose your service and share the essential details. Contact submissions become available when the backend is connected.",
+        "contact_page_desc": "Choose a service and share the essential details. Requests can be submitted when the secure enquiry service is enabled.",
         "form_title": "Start your enquiry",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
         "title": "Tell me how I can help.",
@@ -124,7 +124,7 @@ export default {
       },
       "seo": {
         "title": "Tell me how I can help.",
-        "description": "Choose your service and share the essential details. Contact submissions become available when the backend is connected."
+        "description": "Choose a service and share the essential details. Requests can be submitted when the secure enquiry service is enabled."
       },
       "media": {}
     },
@@ -132,7 +132,7 @@ export default {
       "fields": {
         "privacy_title": "Privacy and data protection",
         "privacy_desc": "An approved legal privacy notice will be provided before the public launch.",
-        "privacy_body": "This frontend does not store customer enquiries in a database. When the backend is connected, a complete privacy policy must describe collected data, processors, retention periods and individual rights.",
+        "privacy_body": "This page needs an approved privacy notice before public launch. When the contact service is enabled, enquiry data may be processed to respond to requests. The final notice must specify collected data, processors, retention and individual rights.",
         "title": "Privacy and data protection",
         "description": "An approved legal privacy notice will be provided before the public launch."
       },
@@ -153,10 +153,10 @@ export default {
         "lessons_title": "ثلاث لغات. طريق يناسبك.",
         "lessons_desc": "لكل متعلّم أهداف مختلفة. استكشف دروساً تراعي مستواك واحتياجاتك وسرعتك.",
         "coaching_title": "تواصل بثقة في المواقف المهمة.",
-        "coaching_desc": "استعد للاجتماعات والعروض والمقابلات والخطابات من خلال تدريب لغوي مركّز.",
+        "coaching_desc": "الاستعداد لاجتماعات العمل والمؤتمرات والعروض والخطابات والتواصل المهني المتخصص من خلال تدريب لغوي مركّز.",
         "services_title": "معنى يتجاوز الحدود.",
         "about_title": "في قلب كل لغة إنسان.",
-        "about_desc": "أنا Nozha Badavi، مدرّسة متعددة اللغات بخبرة في التدريس والترجمة التحريرية والشفوية ودعم الطلبة الدوليين. تجمع NUSYA هذه الخبرات في استوديو لغوي شخصي.",
+        "about_desc": "أنا Nozha Badavi، أدرّس الإنجليزية والروسية والعربية، ولديّ خبرة في تعليم الأطفال الصغار ودعم الطلبة الدوليين والترجمة التحريرية والشفوية. تجمع NUSYA هذه الخبرات في نهج لغوي فردي وعملي.",
         "faq_title": "الأسئلة الشائعة",
         "closing_title": "لنبدأ الحديث.",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
@@ -180,9 +180,9 @@ export default {
     "about": {
       "fields": {
         "about_page_title": "نهج شخصي في تعلّم اللغات.",
-        "about_page_desc": "تعرّف على صاحبة NUSYA والخبرات التي تشكّل أسلوبها في التعليم.",
+        "about_page_desc": "تعرّف على Nozha وخبرتها في التعليم والترجمة ودعم الطلبة الدوليين التي تشكّل أسلوبها في التدريس.",
         "story_heading": "تعرّف على Nozha Badavi",
-        "story_body": "تشمل خبرتي تعليم اللغات ودعم الطلبة الدوليين والترجمة التحريرية والشفوية والعمل مع الأطفال الصغار. أؤمن بأن التقدّم يبدأ بفهم احتياجات كل شخص وبناء الثقة من خلال التواصل الحقيقي.",
+        "story_body": "أُدرّس الإنجليزية والروسية والعربية وفق دروس تراعي مستوى كل متعلّم واهتماماته وأهدافه العملية. تشمل خبرتي تدريس الإنجليزية عبر الإنترنت في GoSchool والعربية في Mozhlyvist، والعمل في روضة ABC All About Children، ودعم الطلبة الدوليين والترجمة لدى Alsafir Group، والترجمة الشفوية في مقابلات خدمات الهجرة. وأساعد المتعلّمين كذلك على الاستعداد للاجتماعات والمؤتمرات والعروض والخطابات.",
         "journey_title": "رحلة مع اللغات",
         "video_title": "رسالة تعارف شخصية",
         "video_desc": "استمع إلى Nozha وتعرّف على قصتها وعلى الشخص الذي يقف وراء NUSYA.",
@@ -193,7 +193,7 @@ export default {
       },
       "seo": {
         "title": "نهج شخصي في تعلّم اللغات.",
-        "description": "تعرّف على صاحبة NUSYA والخبرات التي تشكّل أسلوبها في التعليم."
+        "description": "تعرّف على Nozha وخبرتها في التعليم والترجمة ودعم الطلبة الدوليين التي تشكّل أسلوبها في التدريس."
       },
       "media": {}
     },
@@ -202,11 +202,11 @@ export default {
         "lessons_page_title": "دروس لغات تناسب عالمك.",
         "lessons_page_desc": "تعلّم فردي للإنجليزية والروسية والعربية بما يناسب أهدافك.",
         "english": "الإنجليزية",
-        "english_long": "محادثة عملية وقواعد ومفردات وثقة في التواصل اليومي. تدريس الإنجليزية لاحتياجات تعليمية مختلفة.",
+        "english_long": "تعلّم المحادثة والقواعد والمفردات وفق خطة فردية، بالاستفادة من خبرة تدريس الإنجليزية في GoSchool بأوكرانيا.",
         "russian": "الروسية",
-        "russian_long": "تعلّم فردي للمفردات المفيدة والمحادثة الطبيعية والاستخدام اليومي الواثق.",
+        "russian_long": "تدريس فردي للروسية بالاستفادة من خبرة التعليم لطلبة دوليين في أوكرانيا وعن بُعد. يتم تأكيد الصيغ المتاحة قبل الحجز.",
         "arabic": "العربية",
-        "arabic_long": "دروس عربية مخصّصة. تُحدّد اللهجة والمستوى والصيغة الحالية قبل الحجز.",
+        "arabic_long": "دروس عربية تراعي مستويات المتعلّمين وأهدافهم، بالاستفادة من خبرة التدريس في Mozhlyvist بأوكرانيا. يتم تأكيد نوع العربية والصيغة المتاحة قبل الحجز.",
         "process_title": "ابدأ بمحادثة.",
         "closing_title": "لنبدأ الحديث.",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
@@ -222,9 +222,9 @@ export default {
     "coaching": {
       "fields": {
         "coaching_page_title": "استعد للتحدّث بثقة.",
-        "coaching_page_desc": "إعداد لغوي شخصي لمحادثات مهنية مهمة.",
+        "coaching_page_desc": "إعداد لغوي شخصي لاجتماعات العمل والمؤتمرات والعروض والخطابات والمحادثات المهنية المتخصصة.",
         "coaching_title": "تواصل بثقة في المواقف المهمة.",
-        "coaching_desc": "استعد للاجتماعات والعروض والمقابلات والخطابات من خلال تدريب لغوي مركّز.",
+        "coaching_desc": "الاستعداد لاجتماعات العمل والمؤتمرات والعروض والخطابات والتواصل المهني المتخصص من خلال تدريب لغوي مركّز.",
         "closing_title": "لنبدأ الحديث.",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
         "title": "استعد للتحدّث بثقة.",
@@ -232,14 +232,14 @@ export default {
       },
       "seo": {
         "title": "استعد للتحدّث بثقة.",
-        "description": "إعداد لغوي شخصي لمحادثات مهنية مهمة."
+        "description": "إعداد لغوي شخصي لاجتماعات العمل والمؤتمرات والعروض والخطابات والمحادثات المهنية المتخصصة."
       },
       "media": {}
     },
     "translation": {
       "fields": {
         "translation_page_title": "الكلمات والمعنى والفهم.",
-        "translation_page_desc": "طلبات الترجمة التحريرية والشفوية للأفراد والمؤسسات.",
+        "translation_page_desc": "تشمل خبرة Nozha الترجمة التحريرية بين الأوكرانية والإنجليزية والروسية والعربية، والترجمة الشفوية خلال مقابلات خدمات الهجرة. يتم تقييم اتجاهات اللغات والصيغ والتوفر لكل طلب بصورة منفصلة.",
         "translation_title": "الترجمة التحريرية",
         "translation_desc": "مساعدة لغوية للنصوص والمراسلات المناسبة. يتم تأكيد اتجاهات الترجمة والتكلفة بشكل فردي.",
         "interpretation_title": "الترجمة الشفوية",
@@ -252,14 +252,14 @@ export default {
       },
       "seo": {
         "title": "الكلمات والمعنى والفهم.",
-        "description": "طلبات الترجمة التحريرية والشفوية للأفراد والمؤسسات."
+        "description": "تشمل خبرة Nozha الترجمة التحريرية بين الأوكرانية والإنجليزية والروسية والعربية، والترجمة الشفوية خلال مقابلات خدمات الهجرة. يتم تقييم اتجاهات اللغات والصيغ والتوفر لكل طلب بصورة منفصلة."
       },
       "media": {}
     },
     "contact": {
       "fields": {
         "contact_page_title": "أخبرني كيف أساعدك.",
-        "contact_page_desc": "اختر الخدمة وقدّم التفاصيل الأساسية. ستصبح الطلبات متاحة بعد ربط النظام الخلفي.",
+        "contact_page_desc": "اختر الخدمة وقدّم التفاصيل الأساسية. يمكن إرسال الطلب عند تفعيل خدمة استقبال الطلبات الآمنة.",
         "form_title": "ابدأ طلبك",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
         "title": "أخبرني كيف أساعدك.",
@@ -267,7 +267,7 @@ export default {
       },
       "seo": {
         "title": "أخبرني كيف أساعدك.",
-        "description": "اختر الخدمة وقدّم التفاصيل الأساسية. ستصبح الطلبات متاحة بعد ربط النظام الخلفي."
+        "description": "اختر الخدمة وقدّم التفاصيل الأساسية. يمكن إرسال الطلب عند تفعيل خدمة استقبال الطلبات الآمنة."
       },
       "media": {}
     },
@@ -275,7 +275,7 @@ export default {
       "fields": {
         "privacy_title": "الخصوصية وحماية البيانات",
         "privacy_desc": "ستضاف سياسة الخصوصية القانونية المعتمدة قبل الإطلاق العام.",
-        "privacy_body": "لا تخزّن هذه الواجهة التجريبية طلبات العملاء في قاعدة بيانات. عند ربط النظام الخلفي يجب توفير سياسة تفصيلية لجمع البيانات ومعالجتها ومدد الاحتفاظ والحقوق.",
+        "privacy_body": "تحتاج هذه الصفحة إلى سياسة خصوصية معتمدة قبل الإطلاق العام. عند تفعيل خدمة الطلبات، قد تُعالج البيانات للرد عليها. يجب أن توضّح السياسة النهائية البيانات المجمّعة والجهات المعالجة ومدد الاحتفاظ والحقوق.",
         "title": "الخصوصية وحماية البيانات",
         "description": "ستضاف سياسة الخصوصية القانونية المعتمدة قبل الإطلاق العام."
       },
@@ -296,10 +296,10 @@ export default {
         "lessons_title": "Три языка. Ваш собственный путь.",
         "lessons_desc": "У каждого свои цели. Выбирайте уроки с учётом уровня, потребностей и удобного темпа.",
         "coaching_title": "Общайтесь уверенно в важные моменты.",
-        "coaching_desc": "Готовьтесь к встречам, презентациям, собеседованиям и выступлениям с языковым коучингом.",
+        "coaching_desc": "Подготовка к деловым встречам, конференциям, презентациям, выступлениям и профессиональному общению с помощью языкового коучинга.",
         "services_title": "Смысл без границ.",
         "about_title": "В центре любого языка — человек.",
-        "about_desc": "Меня зовут Nozha Badavi. Я многоязычный преподаватель с опытом обучения, письменного и устного перевода, а также поддержки иностранных студентов. NUSYA объединяет эти направления в одну личную студию.",
+        "about_desc": "Я Нузя Бадави, преподаватель английского, русского и арабского языков. Мой опыт также включает дошкольное образование, поддержку иностранных студентов, письменный и устный перевод. NUSYA объединяет эти направления в индивидуальном практическом подходе.",
         "faq_title": "Частые вопросы",
         "closing_title": "Давайте познакомимся.",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
@@ -323,9 +323,9 @@ export default {
     "about": {
       "fields": {
         "about_page_title": "Индивидуальный подход к языкам.",
-        "about_page_desc": "Познакомьтесь с преподавателем NUSYA и опытом, который формирует её подход.",
+        "about_page_desc": "Познакомьтесь с Нузей и её опытом преподавания, образования, перевода и поддержки иностранных студентов.",
         "story_heading": "Знакомьтесь: Nozha Badavi",
-        "story_body": "Мой опыт включает языковое образование, поддержку иностранных студентов, перевод и работу с маленькими детьми. Я верю, что прогресс начинается с понимания каждого человека и уверенного общения в реальных ситуациях.",
+        "story_body": "Я преподаю английский, русский и арабский языки, подбирая занятия с учётом уровня, интересов и целей каждого ученика. В моём опыте — онлайн-преподавание английского в GoSchool, арабского в Mozhlyvist, работа в дошкольном центре ABC All About Children, поддержка иностранных студентов и письменный перевод в Alsafir Group, а также устный перевод во время собеседований в миграционной службе. Я также помогаю готовиться к встречам, конференциям, презентациям и выступлениям.",
         "journey_title": "Путь через языки",
         "video_title": "Личное видео-приветствие",
         "video_desc": "Познакомьтесь с Нузей и узнайте историю человека, который стоит за NUSYA Linguistic Studio.",
@@ -336,7 +336,7 @@ export default {
       },
       "seo": {
         "title": "Индивидуальный подход к языкам.",
-        "description": "Познакомьтесь с преподавателем NUSYA и опытом, который формирует её подход."
+        "description": "Познакомьтесь с Нузей и её опытом преподавания, образования, перевода и поддержки иностранных студентов."
       },
       "media": {}
     },
@@ -345,11 +345,11 @@ export default {
         "lessons_page_title": "Уроки языков для вашего мира.",
         "lessons_page_desc": "Индивидуальные занятия английским, русским и арабским для ваших целей.",
         "english": "Английский",
-        "english_long": "Разговорная практика, грамматика, лексика и уверенное общение. Английский для различных учебных задач.",
+        "english_long": "Практика речи, грамматика и лексика по индивидуальному плану с опорой на опыт преподавания английского в GoSchool, Украина.",
         "russian": "Русский",
-        "russian_long": "Индивидуальное обучение практической лексике, живым разговорам и повседневному русскому.",
+        "russian_long": "Индивидуальные занятия русским с опорой на опыт работы с иностранными студентами в Украине и онлайн. Доступные форматы уточняются до записи.",
         "arabic": "Арабский",
-        "arabic_long": "Персональные уроки арабского. Вариант языка, уровень и формат уточняются до записи.",
+        "arabic_long": "Уроки арабского с учётом уровня и целей ученика, основанные на опыте преподавания в Mozhlyvist, Украина. Вариант языка и актуальный формат уточняются до записи.",
         "process_title": "Начните с разговора.",
         "closing_title": "Давайте познакомимся.",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
@@ -365,9 +365,9 @@ export default {
     "coaching": {
       "fields": {
         "coaching_page_title": "Готовьтесь говорить уверенно.",
-        "coaching_page_desc": "Личная языковая подготовка к важному профессиональному общению.",
+        "coaching_page_desc": "Индивидуальная языковая подготовка к деловым встречам, конференциям, презентациям, выступлениям и профильным профессиональным обсуждениям.",
         "coaching_title": "Общайтесь уверенно в важные моменты.",
-        "coaching_desc": "Готовьтесь к встречам, презентациям, собеседованиям и выступлениям с языковым коучингом.",
+        "coaching_desc": "Подготовка к деловым встречам, конференциям, презентациям, выступлениям и профессиональному общению с помощью языкового коучинга.",
         "closing_title": "Давайте познакомимся.",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
         "title": "Готовьтесь говорить уверенно.",
@@ -375,14 +375,14 @@ export default {
       },
       "seo": {
         "title": "Готовьтесь говорить уверенно.",
-        "description": "Личная языковая подготовка к важному профессиональному общению."
+        "description": "Индивидуальная языковая подготовка к деловым встречам, конференциям, презентациям, выступлениям и профильным профессиональным обсуждениям."
       },
       "media": {}
     },
     "translation": {
       "fields": {
         "translation_page_title": "Слова, смысл и понимание.",
-        "translation_page_desc": "Запросы на письменный и устный перевод для людей и организаций.",
+        "translation_page_desc": "Профессиональный опыт Нузи включает письменные переводы с участием украинского, английского, русского и арабского языков, а также устный перевод на собеседованиях в миграционной службе. Актуальные языковые пары, форматы и доступность уточняются для каждого запроса.",
         "translation_title": "Письменный перевод",
         "translation_desc": "Внимательная работа с подходящими текстами и перепиской. Языковые направления и стоимость уточняются индивидуально.",
         "interpretation_title": "Устный перевод",
@@ -395,14 +395,14 @@ export default {
       },
       "seo": {
         "title": "Слова, смысл и понимание.",
-        "description": "Запросы на письменный и устный перевод для людей и организаций."
+        "description": "Профессиональный опыт Нузи включает письменные переводы с участием украинского, английского, русского и арабского языков, а также устный перевод на собеседованиях в миграционной службе. Актуальные языковые пары, форматы и доступность уточняются для каждого запроса."
       },
       "media": {}
     },
     "contact": {
       "fields": {
         "contact_page_title": "Расскажите, чем я могу помочь.",
-        "contact_page_desc": "Выберите услугу и основные детали. Запросы заработают после подключения серверной части.",
+        "contact_page_desc": "Выберите услугу и укажите основные детали. Отправка запросов доступна, когда защищённый сервис обращений включён.",
         "form_title": "Ваш запрос",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
         "title": "Расскажите, чем я могу помочь.",
@@ -410,7 +410,7 @@ export default {
       },
       "seo": {
         "title": "Расскажите, чем я могу помочь.",
-        "description": "Выберите услугу и основные детали. Запросы заработают после подключения серверной части."
+        "description": "Выберите услугу и укажите основные детали. Отправка запросов доступна, когда защищённый сервис обращений включён."
       },
       "media": {}
     },
@@ -418,7 +418,7 @@ export default {
       "fields": {
         "privacy_title": "Конфиденциальность и защита данных",
         "privacy_desc": "Согласованная юридическая политика конфиденциальности появится до публичного запуска.",
-        "privacy_body": "Эта демонстрационная версия не сохраняет клиентские запросы в базе данных. После подключения сервера должна быть опубликована полная политика сбора и обработки данных, сроков хранения и прав пользователей.",
+        "privacy_body": "Перед публичным запуском здесь должна быть размещена согласованная политика конфиденциальности. После включения формы данные могут обрабатываться для ответа на запросы. Окончательная политика должна описывать данные, обработчиков, сроки хранения и права пользователей.",
         "title": "Конфиденциальность и защита данных",
         "description": "Согласованная юридическая политика конфиденциальности появится до публичного запуска."
       },
