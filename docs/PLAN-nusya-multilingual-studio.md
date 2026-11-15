@@ -1,9 +1,9 @@
 # PLAN — NUSYA Multilingual Linguistic Studio Website & Admin
 
 **Filename:** `PLAN-nusya-multilingual-studio.md`  
-**Plan version:** 2.0 - Cloudflare domain and Workers implementation extension  
+**Plan version:** 3.0 - Final Cinematic Editorial Luxury design and motion specification  
 **Prepared:** 2026-11-15  
-**Status:** Updated planning specification; **NOT approved for UI implementation, infrastructure provisioning, or production deployment**  
+**Status:** Final execution-ready design specification; **high-fidelity mockups still require explicit approval before UI coding; cloud provisioning and production remain unapproved**  
 **Intended repository:** `https://github.com/digitronics2025/Nuzha-badawi.git`  
 **Project:** NUSYA Linguistic Studio — professional profile, language education, translation and interpretation enquiries, multilingual content-management dashboard.  
 **User-supplied production domain:** `nozha-badavi.com` (Cloudflare screenshot shows registration ready, **not** live website/zone/SSL).  
@@ -279,104 +279,243 @@ Produce a concise `Existing-State Assessment` in the future agent's working repo
 
 ---
 
-## 4. UX/UI system — final design direction
+## 4. Final visual art direction — Cinematic Editorial Luxury
 
-### 4.1 Positioning
+**Design decision:** NUSYA will look like a warm, sophisticated editorial portrait of Nozha, not a generic language school or motion-heavy landing page. The central theme is **The Art of Connection**: authentic portraiture, quiet paper-like ivory surfaces, strong espresso typography, and a restrained golden flight-path motif adapted from the supplied logo. These are selected design requirements for future mockups—not permission to implement UI before explicit mockup approval.
 
-**Brand:** NUSYA Linguistic Studio  
-**Professional:** Nozha Badavi (localized names subject to approval)  
-**Core proposition:** Personalised English, Russian and Arabic lessons, professional language communication coaching, and translation/interpretation enquiries.  
-**Possible headline:** “Learn a language. Find your voice. Connect with the world.”  
-**Secondary brand line from supplied artwork:** “Languages open doors. I help you cross them.”  
-**Tone:** welcoming, articulate, cultured, assured, personal, not institutional or luxury-for-luxury's-sake.
+### 4.1 Source-based visual audit
 
-### 4.2 Design tokens (proposed, adjustable in approved mockup)
-
-| Role | Token | Intended use |
+| Existing source | Retain | Improve in the final website |
 | --- | --- | --- |
-| Ivory background | `#F8F4EE` | Quiet warm canvas, breathable sections. |
-| Espresso primary | `#37231D` | Headings, primary buttons, high-contrast text. |
-| Antique gold | `#B48A57` | Thin rules, small graphic accents, limited icons; **not** regular body text on ivory. |
-| Dusty rose | `#C9A39A` | Soft highlight/secondary accents. |
-| Warm sand | `#E9DCCF` | Subtle cards and video/poster framing. |
-| Accessible body text | Choose and validate | Must meet WCAG contrast; don't assume decorative tokens satisfy AA. |
+| NUSYA script logo, globe and airplane | International identity, warm brown/gold | Clean consented/vector master, simplified small-size mark, one-time signature route animation |
+| Warm promotional collage | Color warmth, aspirational studio atmosphere | Remove duplicated portraits, tiny copy, busy decoration and excessive visual effects |
+| Nozha photos | Recognisable real individual | Lead with approved authentic photographs, consistent lighting, deliberate 4:5 crops; **no AI-generated/face-swapped portraits** |
+| Updated CV / LinkedIn | Credibility and service scope | Translate into clear biography and verified timeline rather than publishing a dense CV image |
+| QR images | Correct external destinations | Replace QR friction with accessible direct links |
+| Vimeo introduction | Strong personal trust asset | Premium click-to-play poster immediately following hero, exact Vimeo ID/hash, captions/transcript where approved |
 
-- Elegant high-quality Latin serif for editorial headings (e.g., Cormorant Garamond if approved and performance permits), clean sans for navigation/forms (e.g., Manrope), Arabic-specific readable font with appropriate optical size; retain logo script only in the logo and rare accents.
-- Consistent 8px-derived spacing scale, generous section whitespace, max content width ~1160–1240px, body reading measure ~60–75ch, meaningful headings, touch targets >=44px, visible keyboard focus.
-- Rounded corners used consistently (e.g., 12–20px), thin warm borders, subtle texture only if cheap/readable. Reusable media ratios (portrait 4:5; video 16:9; service art 4:3).
-- Motion limited to subtle purposeful transitions; honor `prefers-reduced-motion`. No continuous scroll effects, heavy WebGL, autoplaying backgrounds or layout-shifting animations.
-- Real approved Nozha photographs lead; no invented or face-swapped identity photos. Treat original collage as concept inspiration only.
-- Responsive logo system: full wordmark, short mark, favicon/app icon, vector master; preserve globe/aircraft icon without excessive small-size complexity.
+**Information restrictions remain unchanged:** UI locales EN/AR/RU only; English/Russian/Arabic lessons subject to current availability; Ukrainian may be accurately documented as translation/language background, not a fourth website locale; **no Korean**. Do not invent prices, qualifications, testimonials, translation certifications, office location or private CV contact information.
 
-### 4.3 Above-the-fold priorities
+### 4.2 Locked palette, typography and layout targets
 
-Desktop: compact navigation; logo left, language switcher & contact right; split hero with compelling real portrait and concise value proposition; one primary **Explore Lessons** CTA and secondary **Request Language Services** CTA; visible hint of video/credentials.
+| Token | Value | Purpose |
+| --- | --- | --- |
+| Ivory `--color-ivory` | `#F8F4EE` | Public page background |
+| Espresso `--color-espresso` | `#37231D` | Headlines, body/high-contrast buttons |
+| Muted ink `--color-ink-soft` | `#624C42` | Secondary paragraph text; verify AA contrast |
+| Antique gold `--color-gold` | `#B48A57` | Hairlines, emblem and micro accents—**not** small body text |
+| Dusty rose `--color-rose` | `#C9A39A` | Secondary soft accents |
+| Sand `--color-sand` | `#E9DCCF` | Cards and poster borders |
+| White `--color-white` | `#FFFFFF` | Forms and admin surfaces |
+| Divider `--color-line` | `#DFD0C2` | Thin separators |
 
-Mobile: heading + CTA before long copy, prominent portrait or light poster, quick language switcher; no blocking banners. Video just below hero, not hidden after a long scroll. Respect safe areas, mobile input labels and keyboard positioning.
+- **Heading font:** Cormorant Garamond for English and Russian, after verifying Cyrillic coverage, proper weight and licensing; **body and UI:** Manrope for Latin/Cyrillic; **Arabic:** IBM Plex Sans Arabic (or a tested accessible alternative) with proper shaping. Script appears in the actual logo only, never in paragraphs or forms.
+- **Headline scale:** H1 `clamp(3.1rem, 5.2vw, 5.6rem)`, line-height 0.99–1.06; H2 `clamp(2.35rem, 4vw, 3.8rem)`; H3 25–32px; body 17–18px desktop, 16px mobile, 1.55–1.7 line-height; mobile form inputs >=16px.
+- **Grid:** 12 columns desktop / 6 tablet / 4 mobile; content max-width 1240px, readable line length 64–72 characters; gutters 40–64px desktop, 28–36px tablet, 20px mobile (16px minimum at 320px). Use an 8px-based spacing scale.
+- **Rhythm:** section padding 112–144px desktop, 64–80px mobile; content, buttons and portrait tightly coupled in first viewport. Public card radius 18–24px, image frames 20–28px, buttons 12px; admin cards 10–14px. One light theme only; no theme toggle.
+- **Portrait art direction:** real Nozha photograph, genuine expression, neutral daylight, restrained warm tone (not an orange filter), clear face, unaltered identity. Separate desktop/mobile approved crops and intrinsically sized AVIF/WebP derivatives; approved image licenses and consent.
+- **Graphic system:** a **single** fine gold route-line/airplane emblem appears at hero and in restrained static variants elsewhere. No looping flying aircraft, 3D globes, neon, particle fields, heavy shadows, preloader or invented social proof. Decorative motifs never carry essential information.
+- **Navigation:** desktop header 72–84px, mobile 64–72px, logo + meaningful primary links + native-language switcher + contact CTA; sticky with nearly solid ivory after scroll and subtle divider. All touch targets >=44px, visible focus.
 
-### 4.4 Detailed public page blueprints
+### 4.3 Page-by-page final art direction and storyboards
 
-**Home:** brand/navigation → hero with authentic portrait and clear primary/secondary CTAs → small verified credibility strip (no invented stats) → homepage video introduction → three language-lesson cards → professional communication coaching spotlight → translation/interpretation cards → mini biography → 3-step learning process → permission-approved testimonials (if available) → FAQs → strong final contact CTA → footer/legal.
+**H01 — Hero / first 900ms:** Real portrait on right desktop (approximately 55% text / 45% portrait), editorial left text, tasteful overline, concise H1 "Learn a language. Find your voice. Connect with the world." (draft pending copy approval), one-line supporting expertise, primary espresso **Explore Lessons**, secondary outline **Request Language Services**. A thin gold arc near the portrait reveals **once**, then remains static. Text and CTA already exist/are clickable before JavaScript. No intro splash screen.
 
-**About:** first-person story + portrait → education highlights → verified experience timeline → individualised teaching approach → languages spoken vs taught (clearly separated) → introduction video or approved transcript link → CTA.
+**H02 — Proof strip:** Three *verified* evidence labels (e.g., personalised teaching, multilingual experience, education and interpreting). Thin dividers, small abstract icons, no invented counts, badges or award figures.
 
-**Language Lessons:** child- and adult-appropriate explanatory content, three selectable English/Russian/Arabic sections/pages, goals, method, suitable level and age after confirmation, format, pricing policy if available, lesson FAQ, booking or enquiry CTA. For Preply, use approved live outbound booking URL; do not misrepresent click attribution as completed booking.
+**H03 — Meet Nozha video:** Immediately following hero and proof. Premium 16:9 real still poster, framed in sand, big high-contrast Play button, introduction text, localized verified transcript link. **On click only**, instantiate Vimeo iframe `https://player.vimeo.com/video/1171310337?h=3416a6f4f5`; no autoplay audio before click, no player requests before interaction where feasible. If blocked/unavailable, show poster, fallback link, transcript if approved and lesson CTA.
 
-**Professional Communication:** scenarios (meetings, presentations, public speaking), supported language coaching, sample process (“share your goal → receive scoped programme → practise”), eligibility, consultation enquiry.
+**H04 — Three lesson cards:** English, Russian and Arabic in one row desktop and a vertical stack mobile. Each card has a carefully cropped contextual photo *if licensed*, strong serif heading, one-sentence learner outcome, and single appropriate booking/enquiry action; no flag icons, no generic school graphics. Enter viewport with one-time stagger, hover image scale max 1.02.
 
-**Translation & Interpretation:** separate on-page service areas or tabs with accessible semantics, clearly distinguish written translation vs live interpretation, supported language pairs, scope/exclusions, quotation process, secure contact; avoid fake turnaround guarantees and certified/legal claims.
+**H05 — Professional communication:** Editorial half-photo/half-text for coaching around meetings, speeches, conferences and presentations, with a three-step explanation and clear enquiry CTA. No fabricated corporate testimonials or certifications.
 
-**Contact:** minimal choice-first adaptive form; no mandatory account; contact information only with approval; response expectation without invented SLA, privacy link, success reference ID and fallback contact route.
+**H06 — Language services:** Two calm side-by-side panels for written translation vs interpretation, clearly separated and tied to verified service scope and approved language pairs. Quote enquiry route, not fake pricing calculator.
 
-**Legal:** privacy policy, terms if needed, cookie/third-party disclosure appropriate for Vimeo/analytics; avoid boilerplate that misstates actual processing.
+**H07 — About:** Second authentic Nozha image or approved still, first-person text, concise 3–5 proven milestones in a subtle mostly-static vertical timeline. CV chronology fully appears on About page, not the homepage.
 
-**Resources:** may be hidden until there is approved, original educational content; no empty placeholder pages or mass AI articles.
+**H08 — Reviews & FAQs:** Only consented, source-attributed reviews; omit entirely if none approved. Accessible accordions with short calm expansion, without layout-rattling effects.
 
-### 4.5 Three-language UX requirements
+**H09 — Final invitation:** One deep espresso full-width panel with ivory headline, two CTAs, a small static globe emblem and thin finishing gold route. Footer contains legal links, verified contact and accessible Instagram, LinkedIn, Preply links.
 
-- Routes preferably `/en/...`, `/ar/...`, `/ru/...`; root redirects to `/en/` by default or displays a non-duplicative chooser; do not forcibly change language on return visits without explicit choice.
-- Translate **every** visible string: menus, titles, CTA, all service descriptions, contact inputs, validation, errors, confirmations, ARIA labels, SEO title/description, admin-controlled headlines, social share metadata and fallback copy.
-- Arabic: `lang="ar" dir="rtl"` at appropriate scope, logical CSS properties (start/end), true RTL order for content and navigation, logical arrows, font shaping, bidirectional handling for emails/URLs/numbers and keyboard-friendly forms.
-- Russian: natural human-reviewed text, accurate terminology and professional tone, not machine-translated boilerplate.
-- User switching language should stay on an equivalent page when available; no dead ends or hidden partial translations. If a locale version is not approved, keep it unpublished and provide an explicit, accessible fallback rather than incorrect copy.
-- Use `hreflang`, canonical URLs, sitemap per public locale, `lang` attribute and correct translated slugs only if redirects/SEO-safe route management exist. Prevent duplicate content and accidental indexing of drafts/admin/preview.
+**Mobile hero (390×844):** header → heading, short description and two actions → portrait → evidence band → video poster → stacked lesson cards. The primary CTA must be visible early; do not push it below fold behind image decoration. Avoid sticky CTAs over form fields. Page is still usable at 320px.
 
-### 4.6 Accessibility
+**Other pages:** About has cinematic portrait plus a restrained career timeline; Lessons has three detailed editorial service experiences and teaching method; Coaching offers example preparation contexts; Translation & Interpretation uses two distinct quiet sections and a conditional quote form; Contact presents choice-first minimal fields and honest success reference; 404/unavailable services have still readable content and direct recovery actions. A Resources page is hidden until original approved content exists.
 
-Target WCAG 2.2 AA: heading order, meaningful alt text, focus management, keyboard operation, skip link, sufficient contrast, input labels, descriptive errors/success, accessible modal behavior, reduced motion, screen-reader language changes, text zoom to 200%, touch controls and captions/transcript alternative for video. Test RTL and mobile with assistive-tech equivalents where feasible.
+### 4.4 Motion art direction: "Quiet Cinema"
+
+The production experience must **feel** cinematic because of photography, typographic hierarchy and pace, not because every element moves. Motion should direct attention, signal a state change and then stop. Static content is the baseline. No continuous parallax, 3D tilt, scroll-jacking, custom cursor, noisy page transitions, heavy Lottie/WebGL/canvas animation or video backgrounds.
+
+#### Fixed timing and easing tokens
+
+| Token | Value | Intended use |
+| --- | --- | --- |
+| `--motion-fast` | 140ms | Hover, press, icon feedback |
+| `--motion-ui` | 220ms | Menus, accordion, modal |
+| `--motion-card` | 280ms | Service card hover/reveal |
+| `--motion-section` | 420ms | One-time section entrances |
+| `--motion-hero` | 640ms | Hero text/portrait reveal |
+| `--motion-route` | 900ms maximum | Single gold-route line draw |
+| `--ease-enter` | `cubic-bezier(.22,1,.36,1)` | Non-bouncy entrances |
+| `--ease-exit` | `cubic-bezier(.4,0,1,1)` | Exits |
+| `--stagger` | 65ms, at most 3 items | Controlled storytelling rhythm |
+| `--enter-distance` | 18px desktop / 10px mobile | Maximum section reveal travel |
+| `--hover-shift` | 4px maximum | Arrow/link feedback |
+
+#### Animation choreography matrix
+
+| ID | Trigger | Visual behavior | Time | Accessible / reduced-motion equivalent |
+| --- | --- | --- | --- | --- |
+| M01 | First paint | Header already visible; optional faint opacity reveal, no slide | 220ms | Static visible header |
+| M02 | First paint | H1 reveals by **line**, opacity + 12px translate; no letter splitting | 640ms, stagger <=65ms | Full visible headline |
+| M03 | First paint | Portrait inside stable crop: opacity 0.9→1 and scale 1.025→1 | 640ms | Full still portrait |
+| M04 | Once, hero | 1–1.5px gold flight path progressively reveals; airplane stays stationary at endpoint | <=900ms | Static full emblem or omit decoration |
+| M05 | First paint | CTAs gently appear but stay interactable immediately | 420ms | Immediate CTA |
+| M06 | Evidence enters viewport | Small opacity + up to 10px reveal; never counting animation | 320ms | Static text |
+| M07 | Vimeo poster enters viewport | Border/opacity settles, Play button hover scale <=1.03 | 220–350ms | Static poster and Play |
+| M08 | Lesson cards enter viewport once | Opacity and 18px lift, stagger max 3×65ms | 420ms | Static cards |
+| M09 | Pointer-hover | Card image scale ≤1.02 inside stable clipping; border tint only | 280ms | No scale |
+| M10 | Link hover/focus | Underline grows from **inline-start** (correct for RTL) | 180ms | Constant clear underline |
+| M11 | Supported same-origin navigation | Gentle crossfade / <=6px reveal; never full-screen wipe | 180–240ms | Immediate native navigation |
+| M12 | Menu/dialog user action | Opacity + 8px translate, correct focus and Escape handling | 220ms | Immediate state change |
+| M13 | Form conditional selection | Field content gently replaces; preserve focused control and stable layout | 120–180ms | Immediate field state |
+| M14 | Server-confirmed enquiry success | Small one-time icon/check fade + readable reference | 200ms | Static success reference |
+| M15 | Admin save/publish result | Small real-status toast opacity/6px reveal; errors persist until read | 160ms | Static status |
+| M16 | Admin sidebar toggle | 6–8px translation/opacity, no bounce or table stagger | 180ms | Instant sidebar |
+
+**Gold-route contract:** Use a simple approved, efficient SVG path; animate one stroke-draw on first reveal only if performance tests permit. The airplane icon stays still at the endpoint; don't depict fabricated country routes. Never attach a route line to every scroll position, or run an animation frame loop. For slow devices, data saver or reduced motion, use the still route or omit it.
+
+**Motion implementation hierarchy:** Native CSS for opacity/transform first; IntersectionObserver may trigger **one-time** decorative section entries with a single shared observer and safe defaults. Native same-origin View Transitions API may add the quiet page crossfade when supported, but cannot be essential and must not apply to public↔admin origin changes. CSS scroll-driven animations are progressive enhancement **only** for optional decoration, with static fallback; older browsers must see full content. Do not adopt GSAP, Framer Motion, Lottie, Lenis, Three.js, a smooth-scroll library, a large animation runtime or custom `requestAnimationFrame` loop for MVP.
+
+**No motion trapping:** Content remains visible and usable if JS, animation CSS or intersection triggers fail. Under `prefers-reduced-motion: reduce`, disable reveal, route, page crossfade, smooth scroll and hover scaling; keep instantaneous, accessible focus/state feedback. Respect motion changes during session. Never animate body text letter by letter, flash or auto-play video. Keyboard, screen readers and touch users receive the same content and service outcomes.
+
+### 4.5 Microinteractions and component behavior
+
+- **Logo/header:** logo stays sharp and still; header can acquire subtle ivory surface/border after scroll. Never animate logo continuously. The language switcher shows `English / العربية / Русский` without flags and preserves current equivalent page.
+- **Buttons:** primary espresso; secondary outlined; text link with purposeful gold hairline. Focus ring obvious, pressed state fast, hover arrow moves <=4px on hover-capable devices only. No 3D bounce or long color cycles.
+- **Menu mobile:** light panel from nav edge, readable targets, Escape/outside close, focus trapped only if implemented as a true modal, focus restored; correct AR logical direction. No overscroll/focus escape.
+- **Lesson cards:** image scale 1.02 on pointer hover; text never moves or changes position; entire card clickable only when controls do not conflict. Unavailable service card shows honest state.
+- **FAQs:** accessible button and aria-expanded; content expansion avoids large layout jank; opening state immediately readable with reduced motion.
+- **Video card:** custom poster, semantic Play, optional transcript, helpful error fallback. Validate exact Vimeo ID and privacy hash; no injected arbitrary iframe source.
+- **Enquiry forms:** selecting lesson vs coaching vs translation vs interpretation reveals only relevant fields. Use labels and inline validation; preserve input focus; no unnecessary multi-step flow. Success shown **only** after durable server save; no fake spinner progress or false email-sent claim.
+- **Content editing/admin:** stable Saved Draft / Published / Needs Review states, publish confirmation and error recovery, never auto-hide a critical error; toast is screen-reader accessible.
+- **Anchor navigation:** native href, correct sticky header offset, proper focus and history semantics; avoid forced smooth scrolling for reduced motion.
+
+### 4.6 Responsive, language and motion variations
+
+**Desktop ≥1200px:** 12-col layout, 55/45 hero, unaltered portrait crop, side-by-side coaching and language services, three lesson cards in one row. No gigantic whitespace or overly long line widths.
+
+**Tablet 768–1199px:** use 6-col grid, 50/50 hero if copy fits; otherwise stacked. Two-card service layout, faithful readable typography. Do not shrink Arabic or Russian to force Latin compositions.
+
+**Mobile ≤767px:** true one-column visual narrative; heading and main CTA visible early, portrait next, video high on page, lessons vertically stacked; 20px gutter, min 44px controls, no fixed giant CTA covering content, no full-screen decorative motion. Reduce reveal translations and image weight. Respect device safe areas and virtual keyboard.
+
+**320px and 200% zoom:** titles wrap without clipping, no horizontal overflow, all forms can be completed, language names and email addresses use bidi-safe/wrap-safe display, large touch controls remain usable.
+
+**Arabic RTL:** real semantic `lang=ar` and `dir=rtl`, logical padding/margin, mirrored directional arrows, navigation and form alignment, appropriate heading type size, correct bidi isolation of URLs/emails/phone numbers. **Never mirror Nozha's face, actual logo, social logos or Latin text.** An optional gold arc may start from RTL inline-start but the plane shape stays unchanged. Do not use Latin tracking or split Arabic letters for animation.
+
+**Russian:** check Cyrillic weight/glyph quality in chosen display font, naturally longer strings, buttons that expand without overflow, correct reviewed translation—not transliterated English placeholders.
+
+The admin can initially use English interface chrome if Nozha approves, but all **public** pages, notifications/form strings and editable site content must support EN/AR/RU. Do not mislabel admin localization as implemented before it exists.
+
+### 4.7 Admin visual system: sister product, not a marketing clone
+
+At proposed `https://admin.nozha-badavi.com`, retain espresso/ivory/logo consistency while optimizing dense everyday tasks. Prefer 14–16px UI text, clear statuses and responsive controls rather than oversized serif decorations. Admin motion durations should be 140–220ms maximum.
+
+**Desktop overview:** 240–260px left navigation, top search/account/help, short attention row for New Enquiries, Needs Translation Review, Last Published and Actual Site Status; actionable inbox and Quick Edit shortcuts for Homepage, Services, Video. Never show fake KPI numbers.
+
+**Mobile overview:** compact header, focused alerts and task list; no tiny full-width table. Enquiry states are text + icon + distinguishable color, not color alone.
+
+**Content editor:** structured block controls (heading/copy/image/CTA/order within approved templates), EN/AR/RU tabs with review badges; clearly distinct Saved Draft, Preview and Publish. Desktop may have side-by-side preview; mobile uses tabs and preserves unsaved changes. Permission checks and edit conflicts visible.
+
+**Enquiry inbox:** filter/search and service/type chips, date with timezone, real message status and safe history; no bouncing drawer or status animations. Response templates are optional after real need.
+
+**Media and video:** replace approved poster/photo, edit Vimeo ID/hash, visibility and localized caption/transcript; show file source/rights and explicit preview before publishing. Do not expose arbitrary executable HTML editing.
+
+**Accessibility:** keyboard-operable nav/dialog/editor, focus management, labelled statuses, non-flashing saving feedback, mobile editing with keyboard-safe controls and reliable recovery from errors.
+
+### 4.8 Graphic assets and production deliverables
+
+- **Identity:** SVG/approved master wordmark, simplified responsive mark, favicons/icons (16px, 32px, 180px where applicable), correct clear space, a 1–1.5px gold route icon; no illegible microscopic globe details. Inspect rights and logo source; do not unilaterally redesign NUSYA identity without mockup approval.
+- **Hero photos:** one real, licensed/consented professional portrait, a 4:5 source, subject-safe 16:9/portrait crops for desktop/mobile, neutral daylight tone. Do not generate a fictional portrait of Nozha, replace her facial features or infer private details.
+- **Social previews:** 1200×630 OG compositions localized EN/AR/RU as appropriate with actual brand/photo and accurate copy; one restrained design language across Instagram, Preply and LinkedIn outbound links (do not modify their accounts without approval).
+- **Video:** approved 16:9 poster still; large accessible Play glyph; localized intro and reviewed transcript page/accordion; fallback link if Vimeo fails. Preserve video ID `1171310337` and hash `3416a6f4f5`.
+- **Service art:** three high-quality authorized images, or typographic/line illustration alternatives when real photography is not available; never use AI-generated images to impersonate Nozha or fictitious student results.
+- **Motion handoff:** editable source path/SVG, fully static SVG fallback, M01–M16 timing sheet, motion storyboard frames, visual component states and responsive crops. No purchased animated theme dependency.
+- **Licensing/privacy:** document rights/source for images/video and testimonials; strip sensitive EXIF/geolocation from photo exports; never commit private CV material or unapproved personal contact data to public GitHub. Do not distribute font binaries.
+
+### 4.9 Measurable performance, motion and accessibility budgets
+
+These are **targets for the future implementation**, not measured current site results.
+
+| Area | Required target / decision |
+| --- | --- |
+| LCP | <= 2.5s at p75 where real field data exists |
+| INP | <= 200ms p75 |
+| CLS | <= 0.1 p75; aspirational <=0.05 for hero/form |
+| Motion latency | Decorative route <=900ms, reveals <=640ms, hover 140–280ms; no input delay caused by animation |
+| Main-thread cost | No long task >50ms introduced by motion code; smooth on representative mid-range mobile hardware |
+| JS footprint | Homepage interactive JS excluding Vimeo target <=90KB gzip, stretch <=50KB, after actual framework audit |
+| CSS footprint | Homepage initial CSS target <=45KB gzip; avoid animation framework CSS |
+| Media behavior | Explicit dimensions/aspect ratio, responsive compressed portraits/posters, lazy-load below fold |
+| Vimeo | Zero third-party player scripts/iframe requests until Play where feasible; robust blocked/unavailable fallback |
+| Fonts | Minimize variants, subset/host legally and avoid visible font-induced layout shift |
+| Accessibility | WCAG 2.2 AA, keyboard/focus order, contrast, 200% zoom, AR RTL, RU wrap and reduced motion |
+| Cost | No added Worker/D1/R2/API reads, paid animation service, cron or LLM solely to animate UI |
+
+If performance or accessibility conflicts with decoration, **remove decoration first**. Never hide text before JavaScript loads or run heavy on-scroll computation. Static composition must remain excellent; real user benefit outranks motion fidelity.
+
+### 4.10 High-fidelity mockup and prototype package — exact deliverables
+
+Before **any** public or admin UI coding, the future design/execution agent must inspect the real repository state and create inspectable high-fidelity artboards (not text-only wireframes):
+
+| Board | Size and state | Required composition |
+| --- | --- | --- |
+| V01 | Home EN desktop ~1440px | Complete page, hero, portrait, evidence, Vimeo, services, footer |
+| V02 | Home EN mobile ~390px plus 320px stress | Full mobile page, CTA first, portrait, video, menu and cards |
+| V03 | Home Arabic desktop + mobile | Real RTL layout, Arabic font, directional navigation and mixed-data cases |
+| V04 | Home Russian desktop + mobile | Cyrillic font, realistic long-label and wrapping behavior |
+| V05 | Lessons desktop + mobile | All 3 lesson cards, individual service details and disabled state |
+| V06 | About desktop + mobile | Human story, verified timeline, portrait treatment |
+| V07 | Translation/coaching and contact mobile | Conditional form, error, loading, server success and accessible reference |
+| V08 | Admin overview desktop + mobile | Inbox, review queue, real statuses, quick actions |
+| V09 | Admin editor desktop + mobile | EN/AR/RU tabs, Saved Draft vs Published, preview, conflict and rollback |
+| V10 | Vimeo poster/play/failure | Poster and real iframe treatment, transcript and fallback |
+| V11 | Motion storyboard | 6–10 sequential frames for hero route, card reveals and page transition; timings keyed M01–M16 |
+| V12 | Accessibility alternate | Static reduced-motion, keyboard focus, 200% zoom and no-animation fallbacks |
+
+Include exact typography/color/style references, approved asset manifest, interactive prototype or motion clip representing the intended behavior, responsive breakpoints, microinteraction table, and a concise rationale. **Full-page** compositions must be inspectable, not only one cropped hero image. Show the differences between proposed style and source collage without claiming the visuals already exist.
+
+**HARD STOP:** Present mockups, motion storyboard and alternatives only where necessary; then **STOP until the user explicitly approves them**. This finished plan chooses the design direction and no longer needs routine stylistic questions, but it **does not waive the previously required mockup approval**. If the owner requests changes, update mockups and record approval in `docs/DECISIONS.md`. No public/admin UI code, styling, routes, preview deployment or production deployment before that gate. Changes to real personal claims, assets, domain/account operations, paid services and high-risk actions require their own approvals.
+
+## 5. Visual implementation & design verification after approval
+
+### 5.1 Preparatory inspection and sign-off (read-only)
+
+1. Review exact GitHub repository, current instructions, actual stack/pages if any, current design assets/fonts and real performance/test baselines. Documents and a registered domain do **not** prove an app or Cloudflare resources exist.
+2. Validate which Nozha photos/logo/video stills may be publicly used, reconcile professional facts, and confirm source/target translation pairs and service availability; omit unapproved elements rather than inventing them.
+3. Create V01–V12 high-fidelity boards including Arabic RTL, mobile, admin and motion storyboard. Present them and **STOP for explicit owner design approval**.
+4. Once approved, lock the approved tokens, assets, component variants and motion changes in `design.md`, `docs/DECISIONS.md` and the relevant source/content register.
+
+### 5.2 Ordered visual implementation (only after mockup approval)
+
+1. Implement approved tokens, fonts, logo variants, responsive grid and accessible public shells in the **verified actual** stack. Keep static content accessible without JS.
+2. Implement hero/portrait, evidence, Vimeo poster, lesson cards, coaching, translation/interpreting, About, FAQs, Contact and footer, matched against V01–V07.
+3. Add M01–M16 **progressive enhancements** using native CSS/appropriate browser APIs only. Keep reduced-motion variants from V12 and instant safe navigation fallback. Do not block/slow interactions for cinematics.
+4. Implement protected structured admin UI with its practical motion rules and measured saved/published/locale-review states; compare to V08–V09.
+5. Test every page at 1440px, 768px, 390px and 320px in EN/AR/RU where relevant, 200% zoom, keyboard-only and reduced-motion, phone-like network/CPU throttling; inspect real rendered screenshots and interaction recordings, not text-only assertions.
+6. Audit Vimeo play/failure, form conditional/failure/success, service unavailable, menu focus/Escape, layout shifts, page transition fallbacks, SSR/caching and API usage. Remove expensive or problematic effects, don't hide failures.
+7. Record measured JS/CSS/media sizes, web vitals, known deviations, approvals, visual regression results and Cloudflare usage impact in documentation and test report.
+8. Request separate production/cloud account/DNS/paid/irreversible authorization; this plan and approved mockups do **not** authorize infrastructure changes.
+
+### 5.3 Final visual definition of done
+
+- First viewport clearly identifies Nozha, English/Russian/Arabic lesson offerings and the primary action on desktop and mobile; video remains prominent immediately after opening hero.
+- Full public and admin compositions are demonstrably faithful to **approved** V01–V12 visual designs and usable under EN/AR/RU, including true RTL and long Cyrillic copy.
+- Motion M01–M16 is implemented only where supported and performant; reduced-motion is equally complete and functional. No animation scroll hijacking, unapproved 3D/GSAP/Lottie or looping decorative scripts.
+- Real unmodified identity photos and legal assets only. No artificial credential, testimonial, price or customer statistic; no Korean anywhere.
+- Forms and admin show accurate live status; no edit/publish confusion, focus loss, visual jank or customer-data leakage.
+- Tests actually run and pass or have explicit documented waivers; budget targets checked. Release and cloud action remain subject to independent approval.
 
 ---
-
-## 5. **MANDATORY UI APPROVAL GATE — STOP BEFORE IMPLEMENTATION**
-
-This phase occurs **after read-only repository/UI inspection and before writing or replacing any UI code**. Even if the user has approved this strategic plan, that does **not** waive this checkpoint.
-
-### 5.1 Mockup deliverables required from future agent
-
-Produce **high-fidelity** (not wireframe-only) visuals, using verified existing style/assets and proposed design system:
-
-1. **Public homepage desktop** at 1440px width: hero, portrait, navigational hierarchy, Vimeo section, services and CTA.
-2. **Public homepage mobile** around 390px width: actual stacking, language switcher, video, CTAs and footer.
-3. **Full public service page desktop/mobile** representing lessons and translation flows.
-4. **Arabic RTL mobile + desktop** variants demonstrating real typography, alignment and content direction; sample Russian desktop/mobile copy should be included or shown in parallel previews.
-5. **Admin dashboard desktop/mobile** showing attention-focused overview, enquiry list and main editing navigation.
-6. **Admin page editor desktop/mobile** showing locale tabs, translation-review indicators, draft/preview/publish, media and video controls.
-7. **Enquiry UX** at least one mobile state each for lesson and translation quote, including validation and confirmation.
-8. Short **design rationale**: layout, imagery source/permissions, tokens, fonts, interactions, responsive behavior, accessibility checks, key departures from existing UI and any risks.
-
-Use legitimate assets; distinguish true Nozha photos from placeholders. Show loading/empty/error states where relevant. Mockups must be inspectable visually by the user (images/artboards or explicit shareable preview, not only written descriptions).
-
-### 5.2 Approval protocol
-
-- Present the mockups and rationale. Ask for explicit design approval.
-- **STOP. Do not implement UI, update components, alter CSS, build admin UI, modify the repo to approximate the mockups, or deploy until affirmative user approval.**
-- If user requests changes, revise mockups and present again. Repeat until approved.
-- Record design approval (date, approved screens, exceptions). Freeze major aesthetic decisions as the approved visual baseline.
-- Any later major visual divergence requires a renewed gate; routine responsive/accessibility fixes within the approved system do not.
-- Separately request approval for large spend or irreversible external actions; do not treat design approval as payment/production-credential consent.
-
----
-
 ## 6. Video strategy and media handling
 
 **Required Vimeo reference:**
