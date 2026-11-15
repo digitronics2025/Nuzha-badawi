@@ -1,7 +1,7 @@
 /* NUSYA secure admin client. API owns persistence, authorization and publishing. */
 const $=(sel,base=document)=>base.querySelector(sel);
 const tabs={overview:'Overview',pages:'Pages & content',translations:'Translations',services:'Services',video:'Media & video',enquiries:'Enquiries'};
-const state={session:null,settings:null,pages:[],page:'home',locale:'en',revision:null,reviewStatus:'needs_review',publishedRevision:null,content:null,unsaved:false};
+const state={session:null,settings:null,pages:[],page:'home',locale:'uk',revision:null,reviewStatus:'needs_review',publishedRevision:null,content:null,unsaved:false};
 const menu=$('.mobile-menu'),sidebar=$('#sidebar'),message=$('#editor-message');
 function note(text,kind='neutral'){if(message)message.textContent=text;const toast=$('#toast');if(toast){toast.textContent=text;toast.hidden=false;toast.dataset.kind=kind;setTimeout(()=>toast.hidden=true,4500);}}
 async function api(path,options={}){
@@ -17,7 +17,7 @@ document.querySelectorAll('[data-view],[data-go]').forEach(el=>el.addEventListen
 const title=$('#hero-title'),description=$('#hero-description');
 function fillPreview(){if(!title||!description)return;$('#preview-heading').textContent=title.value;$('#preview-description').textContent=description.value;$('#preview-heading').dir=state.locale==='ar'?'rtl':'ltr';$('#preview-description').dir=state.locale==='ar'?'rtl':'ltr';}
 function editKey(){return state.page==='home'?['hero','hero_desc']:['title','description'];}
-function localeLabel(v){return v==='ar'?'العربية':v==='ru'?'Русский':'English';}
+function localeLabel(v){return v==='uk'?'Українська':v==='ar'?'العربية':v==='ru'?'Русский':'English';}
 function saveLocalEditor(){if(!state.content)return;const [a,b]=editKey();state.content.fields[a]=title.value;state.content.fields[b]=description.value;for(const el of document.querySelectorAll('[data-content-key]'))state.content.fields[el.dataset.contentKey]=el.value;state.unsaved=true;fillPreview();}
 const panel=$('#view-pages .editor-card');const pageSelect=document.createElement('select');pageSelect.id='admin-page-select';pageSelect.className='admin-input';pageSelect.setAttribute('aria-label','Page to edit');
 for(const key of ['home','about','lessons','coaching','translation','contact','privacy']){const option=document.createElement('option');option.value=key;option.textContent=key[0].toUpperCase()+key.slice(1);pageSelect.append(option);}
