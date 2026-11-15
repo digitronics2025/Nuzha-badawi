@@ -31,3 +31,8 @@ Before enabling paid features, inspect current pricing/allowances; estimate base
 
 ## Handover
 Document access ownership, renewals (domain/email), how to update three locales, replace video, manage services/enquiries, export data and restore a release. Nozha should be able to complete daily tasks without a developer.
+
+## Registered domain and future production Worker runbook
+The user-supplied Cloudflare screenshot lists `nozha-badavi.com` as ready at the Registrar. This **does not** confirm active DNS, SSL, deployed Workers, D1, R2, Access, billing or mail. Planned production public host is `https://nozha-badavi.com`; `www` permanently redirects to apex; owner admin is `https://admin.nozha-badavi.com`.
+
+Before any cloud action, explicitly verify account/zone, DNS and existing resources; inventory plan limits; map custom-domain registration and admin isolation; calculate variable/fixed costs. Require **separate approval** for first Worker provisioning/deployment, DNS/redirect/TLS changes, D1/R2 migrations, Access policies, email setup, paid features and automated GitHub deploys. Use one CI/CD mechanism only; stage in isolated environments with synthetic content, never production credentials/data. At authorized launch verify TLS, redirects, three locales, video, contact submissions/email outages, protected admin, content publish/cache refresh, rollback, backups, spend/usage alarms and noindex previews. Retain last good Worker deployment and content revision; do not rollback DB destructively. Treat Email Routing as inbound forwarding, not proof of arbitrary outbound transactional sending. Detailed Worker configuration, optional service matrix and acceptance gates: [CLOUDFLARE_DEPLOYMENT.md](CLOUDFLARE_DEPLOYMENT.md).
