@@ -56,3 +56,9 @@
 - [Complete updated execution plan](PLAN-nusya-multilingual-studio.md): self-contained implementation strategy including registration evidence, architecture, approval gates, full lifecycle and test criteria.
 - Registered domain evidence: `nozha-badavi.com`, shown ready in the user's Cloudflare Registrar screenshot. **Registered does not mean live.**
 - Future cloud resources are hypothetical until separately inspected/approved. No agent may silently provision paid features or deploy from a documentation update.
+
+## Final cinematic design and motion specification (2026-11-15)
+- The **final visual direction** is *Cinematic Editorial Luxury*, the human-first *Art of Connection* concept.
+- [design.md](../design.md) is the canonical design and motion contract: detailed tokens, hero storyboard, 16 motion IDs M01–M16, RTL/mobile/admin adaptations, reduced-motion accessibility, image/asset policy and high-fidelity approval requirements.
+- [Full implementation plan v3](PLAN-nusya-multilingual-studio.md) now includes the finished art direction, motion/transition choreography, exact responsive scenarios, performance budgets and V01–V12 design review boards.
+- The design direction is chosen; **high-fidelity screens/motion prototype are still NOT approved**. Stop before UI coding, even with these documents. Cloudflare/dns/production actions require separate approval.
