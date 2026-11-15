@@ -11,7 +11,7 @@ export function renderPublished(htmlResponse,payload={},settings={},opts={}){
  rewriter=rewriter.on('.video-fallback',{element(el){const raw=settings.video?.url;if(raw){const v=new URL(raw);el.setAttribute('href',`https://vimeo.com${v.pathname.replace('/video','')}`);}}});
  rewriter=rewriter.on('[data-nusya-video-section]',{element(el){if(settings.video?.enabled===false)el.remove();}});
  rewriter=rewriter.on('[data-nusya-media]',{element(el){const id=media[el.getAttribute('data-nusya-media')];if(id&&isSafeKey(id)){
-   const safe=id.replace(/[^a-z0-9_-]/gi,'');el.setAttribute('data-image-id',safe);el.setAttribute('aria-label',({en:'Portrait of Nozha Badavi',ar:'صورة نزهة بدوي',ru:'Портрет Нузи Бадави'})[opts.locale] || 'Portrait of Nozha Badavi');
+   const safe=id.replace(/[^a-z0-9_-]/gi,'');el.setAttribute('data-image-id',safe);el.setAttribute('aria-label',({uk:'Портрет Нозхи Бадаві',en:'Portrait of Nozha Badavi',ar:'صورة نزهة بدوي',ru:'Портрет Нузи Бадави'})[opts.locale] || 'Portrait of Nozha Badavi');
    el.append(`<img class="managed-portrait" alt="" loading="lazy" src="/media/${safe}" />`,{html:true});
  }}});
  if(seo.title){rewriter=rewriter.on('title',{element(el){el.setInnerContent(seo.title+' · NUSYA Linguistic Studio');}});rewriter=rewriter.on('meta[property="og:title"]',{element(el){el.setAttribute('content',seo.title);}});}
