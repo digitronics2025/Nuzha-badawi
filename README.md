@@ -42,3 +42,9 @@ The updated professional CV and user-provided visuals support the content strate
 ## Development setup
 
 Not documented yet because the repository did not contain a verified application at bootstrap. When an implementation is approved, add the actual package manager, scripts, environment variables **names only**, local test instructions, build/deploy instructions and operational runbook updates. Never invent commands or credentials.
+
+## Production domain and Cloudflare plan (not deployed)
+- **Registered domain (user's Cloudflare dashboard screenshot):** `nozha-badavi.com`. Registration is confirmed visually; active DNS zone, SSL and Workers deployment are **not** confirmed.
+- Planned canonical site: `https://nozha-badavi.com`; planned protected admin: `https://admin.nozha-badavi.com`; `www` redirects to apex when authorised.
+- Proposed Cloudflare implementation: a public Worker + separately Access-protected admin Worker, D1 for content/enquiries, R2 **only if** admin media uploads require it, Turnstile and a cost-reviewed email transport. Actual resources do not exist as far as this documentation can verify.
+- Read [Cloudflare deployment and domain blueprint](docs/CLOUDFLARE_DEPLOYMENT.md) and [full execution plan](docs/PLAN-nusya-multilingual-studio.md) before provisioning anything. The high-fidelity desktop/mobile design approval gate remains mandatory.
