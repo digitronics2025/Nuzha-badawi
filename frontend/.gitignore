@@ -1,0 +1,10 @@
+dist-public/
+dist-admin/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+.DS_Store
+playwright-report/
+test-results/
