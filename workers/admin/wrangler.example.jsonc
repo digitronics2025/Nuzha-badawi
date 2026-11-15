@@ -1,0 +1,28 @@
+{
+  // TEMPLATE ONLY — admin must not be accessible until Cloudflare Access is configured.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "nusya-admin",
+  "main": "./src/index.js",
+  "compatibility_date": "2026-11-15",
+  "workers_dev": false,
+  "assets": {
+    "directory": "../../frontend/dist-admin",
+    "binding": "ASSETS",
+    "run_worker_first": ["/*"]
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "nusya-platform",
+    "database_id": "REPLACE_WITH_VERIFIED_D1_DATABASE_UUID",
+    "migrations_dir": "../migrations"
+  }],
+  "vars": {
+    "ADMIN_HOST": "admin.nozha-badavi.com",
+    "ACCESS_TEAM_DOMAIN": "REPLACE_WITH_TEAM.cloudflareaccess.com",
+    "ACCESS_AUD": "REPLACE_WITH_APP_AUDIENCE_TAG",
+    "OWNER_EMAILS": "REPLACE_WITH_APPROVED_OWNER_ADDRESS",
+    "EDITOR_EMAILS": ""
+  }
+  // Optional: add R2 binding MEDIA to the same approved bucket as public.
+  // Do not expose this Worker through workers.dev or unprotected previews.
+}
