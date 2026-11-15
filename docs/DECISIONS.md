@@ -38,3 +38,14 @@ Never write 'approved' on behalf of user without proof. When superseding, keep p
 | D-015 | 2026-11-15 | Cloudflare provisioning/DNS/production approval is distinct from design approval | User direction + safety gate | No implicit resource creation or spending |
 
 This supplement records **proposed** architecture, not confirmation that Workers, cloud bindings or an application exist. Detailed specifications: `CLOUDFLARE_DEPLOYMENT.md`.
+
+## Visual and motion design decisions (2026-11-15)
+| ID | Date | Decision | Status | Reason |
+| --- | --- | --- | --- | --- |
+| D-016 | 2026-11-15 | Adopt *Cinematic Editorial Luxury / The Art of Connection* design direction | Chosen for mockups, visual approval pending | Preserve warm original NUSYA identity while improving editorial readability and authenticity |
+| D-017 | 2026-11-15 | Signature globe/flight line reveals once, then remains static; no perpetual animation | Chosen for mockups | Distinctive but unobtrusive brand motion |
+| D-018 | 2026-11-15 | Motion tokens M01–M16, progressive CSS and reduced-motion fallbacks | Chosen for mockups | Performance, accessibility and repeatable implementation |
+| D-019 | 2026-11-15 | Real Nozha photography and a click-to-play early homepage Vimeo section | Chosen for mockups; imagery rights/captions require verification | Authenticity and trust |
+| D-020 | 2026-11-15 | Required full-page designs V01–V12 before UI code | Mandatory user approval pending | High-fidelity desktop/mobile/Arabic RTL/Russian/admin/interaction and failure-state review |
+
+These are *documented design decisions*, **not** an assertion that the user approved final mockup artboards or implementation. See [design.md](../design.md) for exact durations, typography and animation fallbacks.
