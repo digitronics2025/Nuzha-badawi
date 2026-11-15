@@ -15,6 +15,16 @@ mapping={
  'contact':['contact_page_title','contact_page_desc','form_title','closing_desc'],
  'privacy':['privacy_title','privacy_desc','privacy_body']
 }
+for page, keys in mapping.items():
+ if page in ('home','lessons'):
+  keys.extend(k for k in COPY['en'] if k.startswith('process_') and (k.endswith('_title') or k.endswith('_body')))
+ if page=='home':
+  keys.extend(['guide_title','guide_intro','lesson_share','coaching_share','translation_share','interpretation_share']+[f'journey_{i}_{part}' for i in (3,4,2) for part in ('title','body','date')])
+ if page=='about':
+  keys.extend(f'journey_{i}_{part}' for i in range(7) for part in ('title','body','date'))
+mapping['home'].extend([f'faq_{i}_{part}' for i in range(len(COPY['en']['faq'])) for part in ('question','answer')]+[f'proof_{i}' for i in range(3)]+['process_title'])
+mapping['coaching'].extend(f'topic_{i}_{part}' for i in range(len(COPY['en']['coaching_topics'])) for part in ('title','body'))
+mapping['translation'].extend(f'translation_step_{i}_{part}' for i in range(len(COPY['en']['translation_steps'])) for part in ('title','body'))
 out={}
 for loc,copy in COPY.items():
  out[loc]={}

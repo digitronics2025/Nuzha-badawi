@@ -56,10 +56,10 @@ test('unlocalized entry always opens Ukrainian regardless of browser language',a
 
 test('staging pages are noindex while production remains indexable',async()=>{
  for(const host of ['nusya-public-staging.digitronics-electro.workers.dev','nozha-badavi.com']){
-  for(const [path,status] of [['/uk/',200],['/uk/index.html',308],['/404.html',200],['/missing/',404]]){
+  for(const [path,status] of [['/uk/',200],['/uk/index.html',308],['/404.html',404],['/missing/',404]]){
    const response=await publicWorker.fetch(new Request(`https://${host}${path}`),{PUBLIC_HOST:host},{});
    assert.equal(response.status,status);
-   assert.equal(response.headers.get('x-robots-tag'),host.endsWith('.workers.dev')?'noindex, nofollow':null);
+   assert.equal(response.headers.get('x-robots-tag'),host.endsWith('.workers.dev')?'noindex, nofollow':status===404?'noindex':null);
   }
  }
 });

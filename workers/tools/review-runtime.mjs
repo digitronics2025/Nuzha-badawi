@@ -22,5 +22,17 @@ try{
  r=await runtime.dispatchFetch('https://nozha-badavi.com/en/index.html?x=1',{redirect:'manual'});assert.equal(r.status,308);assert.equal(r.headers.get('location'),'/en/?x=1');
  r=await runtime.dispatchFetch('https://nozha-badavi.com/en/',{method:'HEAD'});assert.equal(await r.text(),'');
  for(const locale of ['uk','en','ar','ru']){r=await runtime.dispatchFetch(`https://nozha-badavi.com/${locale}/`);assert.equal(r.status,200);assert.match(await r.text(),new RegExp(`lang="${locale}"`));}
+ for(const locale of ['uk','en','ar','ru']){
+  for(const path of [`/${locale}/missing-page/`,`/${locale}/404.html`]){
+   r=await runtime.dispatchFetch('https://nozha-badavi.com'+path);
+   assert.equal(r.status,404);assert.match(await r.text(),new RegExp(`lang="${locale}"`));assert.match(r.headers.get('x-robots-tag'),/noindex/);
+  }
+ }
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/assets/fonts/body-400-latin.woff2');
+ assert.equal(r.headers.get('content-type'),'font/woff2');assert.equal(new TextDecoder().decode((await r.arrayBuffer()).slice(0,4)),'wOF2');
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/translation/');
+ const services=await r.text();assert.doesNotMatch(services,/data-nusya-enquiry="translation"/);assert.match(services,/Not accepting online enquiries/);
+ // Old partial CMS revisions keep their override and use new infographic defaults.
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/');const infographic=await r.text();assert.match(infographic,/Native runtime CMS heading/);assert.match(infographic,/data-nusya-field="journey_3_body"/);
  console.log('Native HTMLRewriter, D1 migrations, CMS rendering, conditional requests, canonical redirects, HEAD and four locales: PASS');
 }finally{await runtime.dispose();}

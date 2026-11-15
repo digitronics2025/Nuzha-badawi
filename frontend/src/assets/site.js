@@ -60,39 +60,41 @@ if (!reduced() && 'IntersectionObserver' in window) {
   });
 }
 
+// One configuration request per page; server-rendered availability needs no extra read.
+let configPromise;
+function getConfiguration(){return configPromise ||= fetch('/api/v1/config',{headers:{accept:'application/json'},credentials:'same-origin',signal:AbortSignal.timeout(5000)}).then(response=>{if(!response.ok)throw Error('Configuration unavailable');return response.json();});}
+function syncServices(config){
+ const open=id=>config.services?.[id]?.visible===true&&config.services[id].acceptingRequests===true&&(!['translation','interpretation'].includes(id)||config.approvedTranslationPairs?.length>0);
+ for(const el of document.querySelectorAll('[data-nusya-service]'))if(config.services?.[el.dataset.nusyaService]?.visible===false)el.hidden=true;
+ for(const el of document.querySelectorAll('[data-nusya-status]')){el.textContent=open(el.dataset.nusyaStatus)?el.dataset.openLabel:el.dataset.closedLabel;el.dataset.configured='true';}
+ for(const el of document.querySelectorAll('[data-nusya-enquiry]'))el.hidden=!open(el.dataset.nusyaEnquiry);
+}
+if(document.querySelector('[data-nusya-status]:not([data-configured])'))getConfiguration().then(syncServices).catch(()=>{});
+// Only service context is carried between locales; visitor-entered personal data is never in links.
+for(const link of document.querySelectorAll('.lang-link'))if(document.querySelector('#enquiry-form')){
+ const url=new URL(link.href);for(const key of ['service','language']){const value=new URLSearchParams(location.search).get(key);if(value&&({service:['lesson','coaching','translation','interpretation'],language:['english','russian','arabic']})[key].includes(value))url.searchParams.set(key,value);}link.href=url.pathname+url.search;
+}
 for (const poster of document.querySelectorAll('[data-video]')) {
-  const play = poster.querySelector('.video-play');
-  if (!play) continue;
-  play.addEventListener('click', () => {
-    const raw = poster.getAttribute('data-vimeo') || '';
-    let url;
-    try {
-      url = new URL(raw);
-      if (url.protocol !== 'https:' || url.hostname !== 'player.vimeo.com' || !/^\/video\/\d+$/.test(url.pathname) || !/^[a-zA-Z0-9]+$/.test(url.searchParams.get('h') || '')) throw new Error('Invalid video source');
-    } catch {
-      const error = document.createElement('p'); error.textContent = 'Video could not be loaded.';
-      poster.append(error); return;
-    }
-    url.searchParams.set('autoplay', '0');
-    const iframe = document.createElement('iframe');
-    iframe.src = url.toString(); iframe.title = poster.dataset.videoTitle || 'Introduction video';
-    iframe.allow = 'fullscreen; picture-in-picture; encrypted-media; web-share';
-    iframe.allowFullscreen = true; iframe.loading = 'lazy'; iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-    poster.classList.add('is-playing');
-    const fallback=poster.querySelector('.video-fallback');if(fallback){fallback.style.display='block';fallback.style.zIndex='4';fallback.style.background='#38251e';}
-    poster.append(iframe);
-  }, { once: true });
+ const play=poster.querySelector('.video-play');if(!play)continue;
+ const failed=()=>{if(poster.querySelector('.video-error'))return;const error=document.createElement('p');error.className='video-error';error.setAttribute('role','alert');error.textContent=poster.dataset.videoError;poster.append(error);const fallback=poster.querySelector('.video-fallback');if(fallback){fallback.style.zIndex='6';fallback.style.display='block';}};
+ play.addEventListener('click',()=>{
+  let url;try{url=new URL(poster.dataset.vimeo);if(url.protocol!=='https:'||url.hostname!=='player.vimeo.com'||!/^\/video\/\d+$/.test(url.pathname)||!/^[a-zA-Z0-9]+$/.test(url.searchParams.get('h')||''))throw Error('Invalid video');}catch{failed();return;}
+  url.searchParams.set('autoplay','0');const iframe=document.createElement('iframe');iframe.src=url.toString();iframe.title=poster.dataset.videoTitle;iframe.allow='fullscreen; picture-in-picture; encrypted-media; web-share';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';
+  const timeout=setTimeout(failed,12000);iframe.addEventListener('load',()=>clearTimeout(timeout),{once:true});iframe.addEventListener('error',()=>{clearTimeout(timeout);failed();},{once:true});poster.classList.add('is-playing');poster.append(iframe);
+ },{once:true});
 }
 
 async function setupContactSecurity(form) {
   const target=document.getElementById('nusya-turnstile');
   if(!target)return;
   try {
-    const response=await fetch('/api/v1/config',{headers:{accept:'application/json'},credentials:'same-origin',signal:AbortSignal.timeout(5000)});
-    if(!response.ok)throw Error('not ready');
-    const config=await response.json();
+    const config=await getConfiguration();
+    syncServices(config);
     if(!config.ready||!config.turnstileSiteKey)throw Error('not ready');
     const permittedPairs=new Set(config.approvedTranslationPairs||[]);
+    const readiness=form.querySelector('#enquiry-readiness');
+    const messages=JSON.parse(form.dataset.messages||'{}');
+    readiness.hidden=true;
     for(const kind of ['translation','interpretation']){
       const source=form.querySelector(`.form-detail[data-for="${kind}"] [name="sourceLanguage"]`);
       const targetLanguage=form.querySelector(`.form-detail[data-for="${kind}"] [name="targetLanguage"]`);
@@ -115,10 +117,13 @@ async function setupContactSecurity(form) {
     const script=document.createElement('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js';script.async=true;script.defer=true;
     document.head.append(script);
     form.dataset.backendReady='true';
-  }catch { form.dataset.backendReady='false'; }
+    const anyOpen=Object.values(typeOpen).some(Boolean);form.querySelector('[type=submit]').disabled=!anyOpen;
+    const wanted=new URLSearchParams(location.search).get('service');if(!anyOpen||wanted&&typeOpen[wanted]===false){readiness.hidden=false;readiness.textContent=messages.service_error;}
+  }catch { form.dataset.backendReady='false';const readiness=form.querySelector('#enquiry-readiness');readiness.hidden=false;readiness.textContent=form.dataset.error; }
 }
 const form = document.querySelector('#enquiry-form');
 if (form) {
+  const messages=JSON.parse(form.dataset.messages||'{}');
   setupContactSecurity(form);
   const typeChoices = [...form.querySelectorAll('input[name="type"]')];
   const panels = [...form.querySelectorAll('.form-detail')];
@@ -141,12 +146,14 @@ if (form) {
   if (kind) { const wanted = typeChoices.find(choice => choice.value === kind); if (wanted) wanted.checked = true; }
   updatePanels();
   const activeField = name => form.querySelector(`.form-detail:not([hidden]) [name="${name}"]`)?.value || '';
-  function show(text,success=false) { feedback.textContent=text; feedback.classList.toggle('success',success); feedback.hidden=false; feedback.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'}); }
+  function show(text,success=false) { feedback.textContent=text; feedback.classList.toggle('success',success);feedback.setAttribute('role',success?'status':'alert');feedback.tabIndex=-1;feedback.hidden=false;if(success)feedback.focus({preventScroll:true});feedback.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'}); }
+  function fieldError(field){if(field.hasAttribute('aria-invalid'))return;const error=document.createElement('span');error.className='field-error';error.id='error-'+(field.id||field.name);error.textContent=messages.validation_error;field.dataset.originalDescription=field.getAttribute('aria-describedby')||'';field.setAttribute('aria-invalid','true');field.setAttribute('aria-describedby',[field.dataset.originalDescription,error.id].filter(Boolean).join(' '));field.after(error);}
+  const codeMessage=(code,status)=>status>=500?messages.request_error:messages[({VALIDATION_FAILED:'validation_error',BOT_CHECK_FAILED:'security_error',RATE_LIMITED:'rate_error',EDIT_CONFLICT:'conflict_error',SERVICE_UNAVAILABLE:'service_error'})[code]]||messages.request_error;
   const retryFields=new Map();function lockRetry(lock){for(const el of form.querySelectorAll('input:not([name=cf-turnstile-response]),select,textarea')){if(lock){if(!retryFields.has(el))retryFields.set(el,el.disabled);el.disabled=true;}else if(retryFields.has(el)){el.disabled=retryFields.get(el);}}if(!lock)retryFields.clear();}
   const newRequest=document.createElement('button');newRequest.type='button';newRequest.className='btn btn-outline';newRequest.hidden=true;newRequest.textContent=({uk:'Почати новий запит',en:'Start a new request',ar:'بدء طلب جديد',ru:'Начать новый запрос'})[form.dataset.locale];newRequest.addEventListener('click',()=>{lockRetry(false);form._pendingRequest=null;delete form.dataset.idempotencyKey;newRequest.hidden=true;feedback.hidden=true;});submit.after(newRequest);
   form.addEventListener('submit',async event => {
-    event.preventDefault(); feedback.hidden=true;for(const e of form.querySelectorAll('.field-error'))e.remove();for(const e of form.querySelectorAll('[aria-invalid]')){e.removeAttribute('aria-invalid');e.removeAttribute('aria-describedby');}
-    if (!form.checkValidity()) { form.reportValidity(); return; }
+    event.preventDefault(); feedback.hidden=true;for(const e of form.querySelectorAll('.field-error'))e.remove();for(const e of form.querySelectorAll('[aria-invalid]')){e.removeAttribute('aria-invalid');if(e.dataset.originalDescription)e.setAttribute('aria-describedby',e.dataset.originalDescription);else e.removeAttribute('aria-describedby');delete e.dataset.originalDescription;}
+    if (!form.checkValidity()) {const fields=[...form.querySelectorAll('input,select,textarea')].filter(field=>!field.disabled&&!field.checkValidity());fields.forEach(fieldError);show(messages.validation_error);fields[0]?.focus();return;}
     if(form.dataset.backendReady!=='true') { show(form.dataset.error || 'The contact system is not configured yet.'); return; }
     const token=form.querySelector('[name="cf-turnstile-response"]')?.value;
     if(!token) { show(({uk:'Пройдіть перевірку безпеки перед надсиланням.',en:'Complete the security challenge before submitting.', ar:'أكمل التحقق الأمني قبل الإرسال.', ru:'Пройдите проверку безопасности перед отправкой.'})[form.dataset.locale] || form.dataset.error); return; }
@@ -162,16 +169,16 @@ if (form) {
       privacyAcknowledged: form.elements.namedItem('privacyAcknowledged')?.checked || false, turnstileToken:token
     };
     request=form._pendingRequest?{...form._pendingRequest,turnstileToken:token}:request;form._pendingRequest={...request};
-    submit.disabled=true;
+    const submitHTML=submit.innerHTML;submit.disabled=true;submit.textContent=messages.request_loading;form.setAttribute('aria-busy','true');
     try {
       const response = await fetch('/api/v1/enquiries', {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(request),credentials:'same-origin',signal:AbortSignal.timeout(10000)});
       const json = response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
       if (response.status===201 && json?.ok===true && json.reference) {
         show(`${form.dataset.success || 'Received:'} ${json.reference}`,true);
         lockRetry(false);form.reset();form._pendingRequest=null;newRequest.hidden=true; delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false; window.turnstile?.reset?.();
-      } else { if(response.status<500){lockRetry(false);form._pendingRequest=null;delete form.dataset.idempotencyKey;}else lockRetry(true);newRequest.hidden=false;for(const key of Object.keys(json?.fieldErrors||{})){const field=form.querySelector(`[name="${CSS.escape(key)}"]:not(:disabled)`);if(!field)continue;const error=document.createElement('span');error.className='field-error';error.id='error-'+key;error.textContent=({uk:'Перевірте це поле.',en:'Please check this field.',ar:'يرجى التحقق من هذا الحقل.',ru:'Проверьте это поле.'})[form.dataset.locale];field.setAttribute('aria-invalid','true');field.setAttribute('aria-describedby',error.id);field.after(error);}show(json?.message || form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.(); }
+      } else { if(response.status<500){lockRetry(false);form._pendingRequest=null;delete form.dataset.idempotencyKey;}else lockRetry(true);newRequest.hidden=false;for(const key of Object.keys(json?.fieldErrors||{})){const names=key==='languagePair'?['sourceLanguage','targetLanguage']:[key];for(const name of names){const field=form.querySelector(`[name="${CSS.escape(name)}"]:not(:disabled)`);if(field)fieldError(field);}}show(codeMessage(json?.code,response.status));form.querySelector('[aria-invalid=true]')?.focus(); window.turnstile?.reset?.(); }
     } catch {
-      lockRetry(true);newRequest.hidden=false;show(form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.();
-    } finally { submit.disabled=false; }
+      lockRetry(true);newRequest.hidden=false;show(messages.request_error); window.turnstile?.reset?.();
+    } finally { submit.disabled=false;submit.innerHTML=submitHTML;form.removeAttribute('aria-busy'); }
   });
 }

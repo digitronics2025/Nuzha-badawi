@@ -71,7 +71,19 @@ async function serveMedia(request,env){
 function pageFromPath(path){const match=path.match(/^\/(uk|en|ar|ru)\/(about|lessons|coaching|translation|contact|privacy)?\/?$/);if(!match)return null;return {locale:match[1],key:match[2]||'home'};}
 async function servePublished(request,env,ctx){
  const parsed=pageFromPath(new URL(request.url).pathname);
- if(!parsed||!env.ASSETS)return env.ASSETS?publicSecurity(await env.ASSETS.fetch(request),env):problem(503,'SERVICE_UNAVAILABLE','Static assets are not configured.');
+ if(!env.ASSETS)return problem(503,'SERVICE_UNAVAILABLE','Static assets are not configured.');
+ if(!parsed){
+  let asset=await env.ASSETS.fetch(request);
+  const path=new URL(request.url).pathname,locale=path.match(/^\/(uk|en|ar|ru)(?:\/|$)/)?.[1]||'uk';
+  if((asset.status===404&&asset.headers.get('content-type')?.includes('text/html'))||/^\/(?:(?:uk|en|ar|ru)\/)?404\.html$/.test(path)){
+   const url=new URL(request.url);url.pathname=`/${locale}/404.html`;url.search='';
+   const headers=new Headers(request.headers);headers.delete('if-none-match');headers.delete('if-modified-since');
+   asset=await env.ASSETS.fetch(new Request(url,{method:request.method,headers}));
+   const resultHeaders=new Headers(asset.headers);resultHeaders.delete('etag');resultHeaders.set('x-robots-tag','noindex');
+   asset=new Response(asset.body,{status:404,headers:resultHeaders});
+  }
+  return publicSecurity(asset,env);
+ }
  const cache=globalThis.caches?.default;
  const cacheKey=new Request(`https://${env.PUBLIC_HOST||new URL(request.url).hostname}/cms-v2`+new URL(request.url).pathname);
  if(cache){const saved=await cache.match(cacheKey);if(saved)return publicSecurity(saved,env);}

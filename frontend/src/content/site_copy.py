@@ -194,3 +194,34 @@ _PRIVACY={
 for _locale,(_description,_body) in _PRIVACY.items():
     COPY[_locale]['privacy_desc']=_description
     COPY[_locale]['privacy_body']=_body
+
+# Interface explanations and structured, approved experience/process entries.
+from experience_copy import EXPERIENCE
+for locale, values in EXPERIENCE.items():
+    COPY[locale].update(values)
+    for index, (heading, body) in enumerate(COPY[locale]['journey']):
+        COPY[locale][f'journey_{index}_title'] = heading
+        COPY[locale][f'journey_{index}_body'] = body
+    for index, (_, heading, body) in enumerate(COPY[locale]['process']):
+        COPY[locale][f'process_{index}_title'] = heading
+        COPY[locale][f'process_{index}_body'] = body
+
+# Flat, bounded fields keep historical CMS revisions compatible with structured visuals.
+import re as _re
+for _locale, _copy in COPY.items():
+    for _index, (_heading, _body) in enumerate(_copy['journey']):
+        _dates = _re.findall(r'20\d{2}[–—-]20\d{2}|20\d{2}', _body)
+        _copy[f'journey_{_index}_date'] = _dates[0] if _dates else ''
+    for _index, (_question, _answer) in enumerate(_copy['faq']):
+        _copy[f'faq_{_index}_question'] = _question
+        _copy[f'faq_{_index}_answer'] = _answer
+    for _index, _fact in enumerate(_copy['proof']):
+        _copy[f'proof_{_index}'] = _fact
+    for _index, (_heading, _body) in enumerate(_copy['coaching_topics']):
+        _copy[f'topic_{_index}_title'] = _heading
+        _copy[f'topic_{_index}_body'] = _body
+    for _index, (_heading, _body) in enumerate(_copy['translation_steps']):
+        _copy[f'translation_step_{_index}_title'] = _heading
+        _copy[f'translation_step_{_index}_body'] = _body
+    _sentences = _copy['privacy_body'].split('. ')
+    _copy['privacy_body'] = '\n\n'.join('. '.join(_sentences[_i:_i+2]) + ('.' if _i+2<len(_sentences) else '') for _i in range(0,len(_sentences),2))
