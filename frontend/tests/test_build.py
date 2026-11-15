@@ -63,6 +63,21 @@ class FrontendBuildTests(unittest.TestCase):
             self.assertIn(COPY[loc]['form_info'],contact)
             self.assertNotIn(COPY[loc]['form_error'],about)
 
+    def test_editorial_media_assets_exist_and_are_localized(self):
+        assets=DIST/'assets'
+        for name in ('nozha-portrait-optimized.webp','nusya-introduction-cover-optimized.webp'):
+            self.assertTrue((assets/name).is_file(),name)
+            self.assertLess((assets/name).stat().st_size,120_000,name)
+        for loc in LOCALES:
+            for page in ('home','about'):
+                target=DIST/loc/(page if page!='home' else '')/'index.html'
+                html=target.read_text(encoding='utf8')
+                self.assertIn('/assets/nozha-portrait-optimized.webp',html)
+                self.assertIn('/assets/nusya-introduction-cover-optimized.webp',html)
+                self.assertIn(COPY[loc]['photo_note'],html)
+                self.assertIn('data-video',html)
+                self.assertIn('data-nusya-media',html)
+
     def test_social_links_are_external_safe(self):
         s=(DIST/'en'/'index.html').read_text()
         self.assertIn('rel="noopener noreferrer"',s)
