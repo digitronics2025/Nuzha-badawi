@@ -93,3 +93,5 @@ Review-hardening decision: keep the existing lightweight stack; use explicit con
 
 
 | D-033 | 2026-11-15 | Always open `/uk/` from the main URL, irrespective of browser Accept-Language; other languages require their explicit locale URLs or the switcher | User clarification | The user reported an English incognito landing page and reiterated Ukrainian must be the default. Supersedes browser-language negotiation at `/` and `/index.html`; retains all four localized routes. |
+
+| D-034 | 2026-11-15 | Improve existing icon exports, localized sharing metadata and technical SEO through the existing reviewed release pipeline | User approved implementation plan | Preserve the existing N/globe mark and all four card compositions; no visual redesign. Add compatible binary icon formats, a minimal browser manifest, CMS-consistent metadata and verified identity/page JSON-LD. Preserve D-031, D-032, D-033, staging writes, recovery bookmarks and rollback. No database schema, DNS, Access, paid service or production-content overwrite is authorized by this change. |
