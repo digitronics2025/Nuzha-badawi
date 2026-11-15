@@ -67,3 +67,6 @@ Before UI coding, the execution agent MUST inspect the existing UI (if any) and 
 
 ## Review checklist
 Does a first-time visitor understand who Nozha is, three documented teaching subjects, services and next action? Is the video prominent but not blocking? Can a user change locale without losing the page? Can the admin safely edit and reverse changes? Does every visual element earn its space?
+
+## Production hostname and public-link design
+The intended canonical public URL is `https://nozha-badavi.com`; owner-facing admin will be protected at `https://admin.nozha-badavi.com` after explicit deployment approval. Include fully branded OG/social previews, favicon and locale-specific canonical references under the apex, not arbitrary Worker preview URLs. On mockups, show a visually coherent authenticated admin experience without suggesting the domain is already live. No website UI is authorized merely because the domain was registered.
