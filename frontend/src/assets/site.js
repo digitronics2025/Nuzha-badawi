@@ -114,7 +114,7 @@ if (form) {
     const type=selectedType();
     if ((type==='translation'||type==='interpretation') && activeField('sourceLanguage') && activeField('sourceLanguage')===activeField('targetLanguage')) { show(form.dataset.same || 'Source and target must differ.'); return; }
     const request = {
-      idempotencyKey: crypto.randomUUID?.() || String(Date.now())+'-'+Math.random().toString(36).slice(2),
+      idempotencyKey: form.dataset.idempotencyKey || (form.dataset.idempotencyKey = (crypto.randomUUID?.() || String(Date.now())+'-'+Math.random().toString(36).slice(2))),
       locale: form.dataset.locale || 'en', type,
       name: form.elements.namedItem('name')?.value?.trim() || '',
       email: form.elements.namedItem('email')?.value?.trim() || '',
@@ -128,7 +128,7 @@ if (form) {
       const json = response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
       if (response.status===201 && json?.ok===true && json.reference) {
         show(`${form.dataset.success || 'Received:'} ${json.reference}`,true);
-        form.reset(); updatePanels(); feedback.hidden=false;
+        form.reset(); delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false;
       } else show(json?.message || form.dataset.error || 'The contact system is not available yet.');
     } catch {
       show(form.dataset.error || 'The contact system is not available yet.');
