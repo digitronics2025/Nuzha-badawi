@@ -38,3 +38,10 @@ These rules apply to the entire repository and to **all** coding agents. Read th
 
 ## Document precedence and conflicts
 Direct user instructions and safety requirements take precedence. For repository guidance, this file governs agent conduct; `design.md` governs approved UI; `docs/PRODUCT.md` governs scope; `docs/SOURCES.md` governs factual claims; `docs/DECISIONS.md` records approved architecture decisions. On conflict, stop and record the discrepancy rather than making a silent guess.
+
+## Domain, Workers and infrastructure controls (2026-11-15)
+- The user supplied evidence of **registered** `nozha-badavi.com` on Cloudflare, NOT proof that a DNS zone/Worker/app/admin/SSL is configured. Intended public apex: `https://nozha-badavi.com`; intended protected owner admin: `https://admin.nozha-badavi.com`.
+- Before building or deploying, consult `docs/CLOUDFLARE_DEPLOYMENT.md` and `docs/PLAN-nusya-multilingual-studio.md`; inspect the actual Cloudflare account/resources **only after appropriate permission**. Do not touch other sites or accounts.
+- Candidate architecture: separate public and admin Workers for least privilege, domain routing via Custom Domains, app-level authz plus Access, D1 only where needed, optional R2, Turnstile, and cost-reviewed email. Names, bindings and IDs are proposals, never deployed facts.
+- DO NOT create resources, edit DNS, secrets, Cloudflare plans or production infrastructure without explicit approval; do not confuse domain registration with deploy authorization.
+- Maintain **one** safe CI/CD mechanism with isolated preview resources; never let preview access production D1/R2/secrets. Verify SSL, redirects, privacy/caching, and custom-domain reachability before claiming success.
