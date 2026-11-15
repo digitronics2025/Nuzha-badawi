@@ -60,7 +60,7 @@ async function serveMedia(request,env){
  const obj=await env.MEDIA.get(row.object_key);if(!obj)return problem(404,'NOT_FOUND','Asset not found.');
  return new Response(obj.body,{headers:{'content-type':row.content_type,'cache-control':'public, max-age=300, s-maxage=300','x-content-type-options':'nosniff'}});
 }
-function pageFromPath(path){const match=path.match(/^\/(en|ar|ru)\/(about|lessons|coaching|translation|contact|privacy)?\/?$/);if(!match)return null;return {locale:match[1],key:match[2]||'home'};}
+function pageFromPath(path){const match=path.match(/^\/(uk|en|ar|ru)\/(about|lessons|coaching|translation|contact|privacy)?\/?$/);if(!match)return null;return {locale:match[1],key:match[2]||'home'};}
 async function servePublished(request,env,ctx){
  const parsed=pageFromPath(new URL(request.url).pathname);
  if(!parsed||!env.ASSETS)return env.ASSETS?env.ASSETS.fetch(request):problem(503,'SERVICE_UNAVAILABLE','Static assets are not configured.');
