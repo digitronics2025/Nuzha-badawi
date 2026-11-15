@@ -43,3 +43,12 @@ Measure expected page requests, cache hit ratio, D1 operations, media bytes, ema
 
 ## Architecture decision record
 Before implementation, log selected stack/rendering method, data schema, auth provider, privacy/retention policy, backup and cache strategy in `DECISIONS.md`; link tests and rollback.
+
+## Domain and concrete Cloudflare Workers target (not deployed)
+The user supplied a Cloudflare Registrar screenshot showing **nozha-badavi.com** registered/ready. It does **not** prove zone activation, DNS, TLS, Worker deployment, email or cloud-resource configuration. The intended canonical public origin is `https://nozha-badavi.com`, with `https://admin.nozha-badavi.com` for a protected admin Worker and a `www` redirect to the apex.
+
+The recommended design—subject to authorized codebase and vendor inspection—is **two purpose-separated Workers** in one repository: a public Worker (Astro/TypeScript/Tailwind, three locale routes, published-only content and service-aware form endpoint) and a separately protected admin Worker (structured CMS, reviews, translation status, revisions, enquiry inbox and private APIs). Cloudflare Access on admin **plus server-side JWT/role authorization**; no generic admin APIs on public host. Validate whether current plans support all chosen features. Worker names `nusya-public` and `nusya-admin` are suggested, not existing.
+
+D1 supports immutable content revisions and persisted enquiries; R2 only if admin-uploaded photos need object storage. Use approved Cloudflare Custom Domains (not unreviewed Workers routes), static assets on edge, explicit published HTML cache strategy/invalidation or an intentional rebuild-on-publish flow. Isolated staging bindings, secrets, noindex preview, controlled form anti-spam, privacy-safe logs and verified rollback. Avoid unnecessary KV, cron, DO, Queues, AI, Stream and extra Workers. Cloudflare email sending and confirmed mailbox availability require vendor/pricing/ownership verification: Email Routing is not automatically an outbound transactional provider.
+
+Full configuration, approval gates, resource matrix, DNS, SSL, GitHub Builds, staging, migration, cost controls and recovery procedures are in [CLOUDFLARE_DEPLOYMENT.md](CLOUDFLARE_DEPLOYMENT.md) and [updated execution plan](PLAN-nusya-multilingual-studio.md). No cloud resources are known to have been created; user must approve actual infrastructure changes separately from UI design.
