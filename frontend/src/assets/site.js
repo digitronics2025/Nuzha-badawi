@@ -141,12 +141,12 @@ if (form) {
     if (!form.checkValidity()) { form.reportValidity(); return; }
     if(form.dataset.backendReady!=='true') { show(form.dataset.error || 'The contact system is not configured yet.'); return; }
     const token=form.querySelector('[name="cf-turnstile-response"]')?.value;
-    if(!token) { show(({en:'Complete the security challenge before submitting.', ar:'أكمل التحقق الأمني قبل الإرسال.', ru:'Пройдите проверку безопасности перед отправкой.'})[form.dataset.locale] || form.dataset.error); return; }
+    if(!token) { show(({uk:'Пройдіть перевірку безпеки перед надсиланням.',en:'Complete the security challenge before submitting.', ar:'أكمل التحقق الأمني قبل الإرسال.', ru:'Пройдите проверку безопасности перед отправкой.'})[form.dataset.locale] || form.dataset.error); return; }
     const type=selectedType();
     if ((type==='translation'||type==='interpretation') && activeField('sourceLanguage') && activeField('sourceLanguage')===activeField('targetLanguage')) { show(form.dataset.same || 'Source and target must differ.'); return; }
     const request = {
       idempotencyKey: form.dataset.idempotencyKey || (form.dataset.idempotencyKey = (crypto.randomUUID?.() || String(Date.now())+'-'+Math.random().toString(36).slice(2))),
-      locale: form.dataset.locale || 'en', type,
+      locale: form.dataset.locale || 'uk', type,
       name: form.elements.namedItem('name')?.value?.trim() || '',
       email: form.elements.namedItem('email')?.value?.trim() || '',
       message: form.elements.namedItem('message')?.value?.trim() || '',
