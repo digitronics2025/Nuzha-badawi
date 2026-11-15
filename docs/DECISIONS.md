@@ -27,3 +27,14 @@ Log decisions here so successive AI agents do not silently reverse choices.
 - **Explicit approval reference (when required):**
 
 Never write 'approved' on behalf of user without proof. When superseding, keep prior decision and link the replacement. Design mockup approval must record actual approved screens and date.
+
+## Domain/Cloudflare decisions recorded 2026-11-15
+| ID | Date | Decision | Status | Rationale / approval |
+| --- | --- | --- | --- | --- |
+| D-011 | 2026-11-15 | Domain is `nozha-badavi.com` | Confirmed user evidence | Cloudflare Registrar screenshot shows registered/ready; not evidence of deployment |
+| D-012 | 2026-11-15 | Public canonical host `https://nozha-badavi.com` with `www` redirect | Proposed | Avoid SEO duplication; requires DNS/SSL/Worker verification and production approval |
+| D-013 | 2026-11-15 | Private admin at `https://admin.nozha-badavi.com` with Access and app-level authorization | Proposed | Separate least-privilege public and private surfaces |
+| D-014 | 2026-11-15 | Two Workers (`nusya-public`, `nusya-admin`), D1 if needed, R2 optional, Turnstile, approved email transport | Proposed, not deployed | Reliability and low Cloudflare operating costs |
+| D-015 | 2026-11-15 | Cloudflare provisioning/DNS/production approval is distinct from design approval | User direction + safety gate | No implicit resource creation or spending |
+
+This supplement records **proposed** architecture, not confirmation that Workers, cloud bindings or an application exist. Detailed specifications: `CLOUDFLARE_DEPLOYMENT.md`.
