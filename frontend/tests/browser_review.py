@@ -40,7 +40,7 @@ with sync_playwright() as p:
         route.fulfill(path=str(file)) if file.is_file() else route.fulfill(status=404,body='Not found')
     page.route('**/*',serve)
     for locale in ['uk','en','ar','ru']:
-        for width in [320,390,1440]:
+        for width in [320,390,768,1440]:
             page.set_viewport_size({'width':width,'height':900})
             for route in ['', 'about/','lessons/','coaching/','translation/','contact/','privacy/']:
                 page.goto(f'http://public.test/{locale}/{route}')
@@ -75,9 +75,9 @@ with sync_playwright() as p:
     page.wait_for_function('document.querySelector(".demo-banner").textContent.includes("SECURE ADMIN")')
     page.locator('[data-view=enquiries]').click();page.get_by_role('button',name='Read enquiry').click()
     page.get_by_text('Message: Customer message is readable').wait_for(state='visible')
-    assert page.get_by_text('goal: Professional meetings').is_visible()
+    assert page.get_by_text('Goal: Professional meetings').is_visible()
     page.screenshot(path=str(OUT/'admin-enquiry-mobile.png'),full_page=True)
-    page.locator('[data-view=translations]').click();page.get_by_role('button',name='Українська — needs_review').wait_for(state='visible')
+    page.locator('[data-view=translations]').click();page.get_by_role('button',name='Українська — Needs review').wait_for(state='visible')
     page.locator('[data-view=pages]').click();page.wait_for_function('document.querySelector("#hero-title").value==="Test heading"&&!document.querySelector("#hero-title").disabled');page.locator('#hero-title').fill('Unsaved change')
     page.once('dialog',lambda d:d.dismiss());page.locator('#admin-page-select').select_option('about')
     assert page.locator('#admin-page-select').input_value()=='home'
@@ -99,4 +99,4 @@ with sync_playwright() as p:
         assert len(discard_dialogs)==before+1,'Video change did not warn on navigation'
     assert not errors,errors
     browser.close()
-print('PASS: 84 responsive page checks, four-language screenshots, unique form IDs, preselection, immutable retry, readable inbox, Ukrainian review and unsaved-edit protection')
+print('PASS: 112 responsive page checks, four-language screenshots, unique form IDs, preselection, immutable retry, readable inbox, Ukrainian review and unsaved-edit protection')

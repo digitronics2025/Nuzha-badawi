@@ -61,3 +61,17 @@ jobs:
           pip install -r frontend/tests/requirements-browser.txt
           python3 -m playwright install --with-deps chromium
           python3 frontend/tests/browser_review.py
+          python3 frontend/tests/experience_review.py
+          python3 frontend/tests/design_capture.py --output /tmp/nusya-design
+
+      - name: Retain inspectable visual and accessibility evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nusya-experience-evidence
+          retention-days: 7
+          path: |
+            /tmp/nusya-design
+            /tmp/nusya-verified
+            /tmp/nusya-review/verified
+          if-no-files-found: warn

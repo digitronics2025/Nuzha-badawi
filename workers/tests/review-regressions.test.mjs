@@ -28,7 +28,7 @@ test('translation edits stay unreviewed and Ukrainian persists through full sche
  const db=new MockD1();try{
  let uk=await insertDraft(db,'home','uk',{fields:{hero:'Українська'}},'owner',null);
  await assert.rejects(()=>publishDraft(db,'home','uk',uk,'owner'),e=>e.code==='REVIEW_REQUIRED');
- await markReviewed(db,'home','uk',uk,'reviewer');await publishDraft(db,'home','uk',uk,'owner');
+ await markReviewed(db,'home','uk',uk,'reviewer',null);await publishDraft(db,'home','uk',uk,'owner');
  await insertDraft(db,'home','en',{fields:{hero:'Changed source'}},'owner',null);
  uk=await insertDraft(db,'home','uk',{fields:{hero:'Оновлено'}},'owner',uk);
  assert.equal((await state(db,'home','uk')).review_status,'needs_review');

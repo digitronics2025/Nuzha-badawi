@@ -109,6 +109,7 @@ if(MODE==='staging'&&auth){
  // CMS: draft → preview → publish → public → rollback
  const marker=`Verification ${Date.now()}`;
  let page=(await admin('/api/v1/admin/pages/about?locale=uk')).body;
+ const sourceRevision=(await admin('/api/v1/admin/pages/about?locale=en')).body.draftRevision;
  const content=structuredClone(page.draft||page.published||page.defaultContent);content.fields.title=marker;
  r=await admin('/api/v1/admin/pages/about?locale=uk',{method:'PUT',body:JSON.stringify({baseRevision:page.draftRevision,payload:content})});check('save UK draft',r.body.ok===true,JSON.stringify(r.body));
  const rev=r.body.revision;
@@ -116,7 +117,8 @@ if(MODE==='staging'&&auth){
  r=await pub('/uk/about/');check('draft NOT public before publish',!r.body.includes(marker));
  r=await admin('/preview/uk/about/');check('private preview shows draft',r.body.includes(marker)&&r.headers.get('cache-control')==='no-store');
  r=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('unreviewed translation cannot publish',r.status===409);
- r=await admin('/api/v1/admin/pages/about/review?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('approve UK translation',r.body.ok===true);
+ r=await admin('/api/v1/admin/pages/about/review?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('translation review requires displayed source revision',r.status===400);
+ r=await admin('/api/v1/admin/pages/about/review?locale=uk',{method:'POST',body:JSON.stringify({revision:rev,sourceRevision})});check('approve UK translation against displayed source',r.body.ok===true);
  r=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('publish UK about',r.body.ok===true,JSON.stringify(r.body));
  let seen=false;for(let i=0;i<14&&!seen;i++){await sleep(10000);seen=(await pub(`/uk/about/?cb=${i}`)).body.includes(marker)||(await pub('/uk/about/')).body.includes(marker);}
  check('published copy live on public site (≤140s)',seen);
@@ -125,7 +127,7 @@ if(MODE==='staging'&&auth){
  if(prior){r=await admin('/api/v1/admin/pages/about/rollback?locale=uk',{method:'POST',body:JSON.stringify({toRevision:prior})});check('rollback to prior revision',r.body.ok===true);}
  else{const base2=(await admin('/api/v1/admin/pages/about?locale=uk')).body;const orig=structuredClone(base2.defaultContent);
   r=await admin('/api/v1/admin/pages/about?locale=uk',{method:'PUT',body:JSON.stringify({baseRevision:base2.draftRevision,payload:orig})});
-  await admin('/api/v1/admin/pages/about/review?locale=uk',{method:'POST',body:JSON.stringify({revision:r.body.revision})});
+  await admin('/api/v1/admin/pages/about/review?locale=uk',{method:'POST',body:JSON.stringify({revision:r.body.revision,sourceRevision})});
   const r2=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:r.body.revision})});
   const hist=(await admin('/api/v1/admin/pages/about/revisions?locale=uk')).body.revisions;
   const r3=await admin('/api/v1/admin/pages/about/rollback?locale=uk',{method:'POST',body:JSON.stringify({toRevision:rev})});
@@ -142,8 +144,10 @@ if(MODE==='staging'&&auth){
  const form=new FormData();form.append('file',new Blob([png],{type:'image/png'}),'probe.png');form.append('altText','Verification pixel');form.append('source','Generated test image, owner licence');
  r=await admin('/api/v1/admin/media',{method:'POST',body:form});check('media upload (private)',r.status===201,JSON.stringify(r.body));
  const mid=r.body.id;
+ r=await admin('/api/v1/admin/media?status=private&limit=20');check('private media discoverable with saved provenance',r.body.items?.some(item=>item.id===mid&&item.source==='Generated test image, owner licence'&&item.published===false));
  r=await pub(`/media/${mid}`);check('unpublished media hidden publicly',r.status===404);
  r=await admin(`/api/v1/admin/media/${mid}/publish`,{method:'POST',body:JSON.stringify({consentConfirmed:true})});check('media publish with consent',r.body.published===true);
+ r=await admin('/api/v1/admin/media?status=published&limit=20');check('approved media discoverable in owner library',r.body.items?.some(item=>item.id===mid&&item.published===true));
  r=await pub(`/media/${mid}`);check('published media served publicly',r.status===200&&r.headers.get('content-type')==='image/png');
  const bad=new FormData();bad.append('file',new Blob([new TextEncoder().encode('<svg onload=alert(1)>')],{type:'image/png'}),'x.png');bad.append('altText','Malicious file');bad.append('source','test source');
  r=await admin('/api/v1/admin/media',{method:'POST',body:bad});check('spoofed image rejected',r.status===400);

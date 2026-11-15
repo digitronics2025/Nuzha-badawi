@@ -41,3 +41,10 @@ Before any cloud action, explicitly verify account/zone, DNS and existing resour
 ## Review hardening — 2026-11-15
 
 Retention workflow: at least every six months the owner reviews closed/spam enquiries and privacy requests in protected admin. Remove records no longer required, including related enquiry_events and notification_outbox rows, through a scoped, backed-up database operation; preserve records needed for ongoing services or legal obligations. No bulk deletion job or retention purge ran in this change. Honor corrections/deletion requests after proportionate identity verification. Check notification delivery and the privacy contact inbox. Do not send sensitive documents through the public form.
+
+
+## Editorial rollout and recovery
+
+The redesign uses the existing staging-first pipeline and changes no resource bindings or database schema. Record the existing public/admin versions and production Time Travel bookmark before promotion. Preserve D1 owner revisions and settings rather than replacing them with source defaults; new infographic fields fill only missing slots. The new edge-template cache namespace avoids serving pre-redesign HTML with new scripts. CSS/JS links include content versions.
+
+Content rollback remains the normal way to restore an eligible publication. For a visual regression, public Worker rollback preserves enquiry and CMS data. If owners have saved new infographic fields, keep the compatible admin API while recovering the public UI: older admin versions' strict field allowlists may reject those newer fields. Do not strip fields or rewrite immutable revisions to make a code downgrade work; prefer a verified forward fix for admin regressions.

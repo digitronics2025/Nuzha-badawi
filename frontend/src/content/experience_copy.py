@@ -1,0 +1,97 @@
+"""Interface and explanatory copy. Service facts remain in site_copy and the CMS."""
+EXPERIENCE = {
+ 'en': {
+  'person':'Nozha Badavi', 'guide_title':'One goal. The right kind of support.',
+  'guide_intro':'Choose the support that matches your next conversation, learning goal or text.',
+  'guide_label':'FIND YOUR PATH', 'purpose_label':'Your goal', 'share_label':'What to share',
+  'lesson_goal':'Learn and practise a language', 'lesson_share':'Your language, level and learning goal',
+  'coaching_goal':'Prepare for a professional conversation', 'coaching_share':'Your meeting, presentation or speaking goal',
+  'translation_goal':'Carry meaning into a written text', 'translation_share':'Source and target languages, text and timeframe',
+  'interpretation_goal':'Support a live conversation', 'interpretation_share':'Languages, event date and format',
+  'details_link':'Explore this service', 'available':'Enquiries open', 'unavailable':'Not accepting online enquiries',
+  'availability_note':'Availability and language directions are confirmed individually. No service is booked by sending an enquiry.',
+  'language_label_short':'LANGUAGE', 'footer_label':'Footer navigation',
+  'video_error':'The video could not be loaded. You can open it on Vimeo instead.',
+  'video_static':'Open the introduction on Vimeo', 'video_disclosure':'Editorial illustration',
+  'request_loading':'Sending your request…', 'request_error':'We could not confirm receipt. Retry the same request or start a new one.',
+  'validation_error':'Please check the highlighted fields.', 'security_error':'Complete the security check and try again.',
+  'rate_error':'Too many requests. Please wait before trying again.', 'conflict_error':'This request reference has already been used. Start a new request.',
+  'service_error':'This service is not accepting online enquiries. Choose an available service.',
+  'back_home':'Back to home', 'not_found_desc':'The page may have moved. Choose a service or return to the homepage.',
+  'history_label':'EXPERIENCE, IN CONTEXT', 'history_link':'Read the full story',
+  'source_label':'Your goal → the next step', 'service_loading':'Checking available services…',
+ },
+ 'uk': {
+  'person':'Нозха Бадаві', 'guide_title':'Ваша мета. Відповідна підтримка.',
+  'guide_intro':'Оберіть підтримку для наступної розмови, навчальної мети або тексту.',
+  'guide_label':'ЗНАЙДІТЬ СВІЙ ШЛЯХ', 'purpose_label':'Ваша мета', 'share_label':'Що повідомити',
+  'lesson_goal':'Вивчати мову та практикуватися', 'lesson_share':'Мову, рівень та навчальну мету',
+  'coaching_goal':'Підготуватися до професійного спілкування', 'coaching_share':'Мету зустрічі, презентації або виступу',
+  'translation_goal':'Передати зміст письмового тексту', 'translation_share':'Мови оригіналу й перекладу, текст і термін',
+  'interpretation_goal':'Отримати підтримку під час живої розмови', 'interpretation_share':'Мови, дату події та формат',
+  'details_link':'Дізнатися про послугу', 'available':'Запити відкриті', 'unavailable':'Онлайн-запити не приймаються',
+  'availability_note':'Доступність і мовні напрями узгоджуються індивідуально. Надсилання запиту не є бронюванням послуги.',
+  'language_label_short':'МОВА', 'footer_label':'Навігація внизу сторінки',
+  'video_error':'Не вдалося завантажити відео. Ви можете відкрити його на Vimeo.',
+  'video_static':'Відкрити відеознайомство на Vimeo', 'video_disclosure':'Редакційна ілюстрація',
+  'request_loading':'Надсилаємо ваш запит…', 'request_error':'Не вдалося підтвердити отримання. Повторіть той самий запит або почніть новий.',
+  'validation_error':'Перевірте позначені поля.', 'security_error':'Пройдіть перевірку безпеки та спробуйте ще раз.',
+  'rate_error':'Забагато запитів. Зачекайте, перш ніж повторити спробу.', 'conflict_error':'Цей номер запиту вже використано. Почніть новий запит.',
+  'service_error':'Ця послуга не приймає онлайн-запити. Оберіть доступну послугу.',
+  'back_home':'На головну', 'not_found_desc':'Можливо, сторінку переміщено. Оберіть послугу або поверніться на головну.',
+  'history_label':'ДОСВІД У КОНТЕКСТІ', 'history_link':'Прочитати повну історію',
+  'source_label':'Ваша мета → наступний крок', 'service_loading':'Перевіряємо доступні послуги…',
+ },
+ 'ar': {
+  'person':'نزهة بدوي', 'guide_title':'هدفك. والدعم المناسب له.',
+  'guide_intro':'اختر الدعم الذي يناسب محادثتك القادمة أو هدفك التعليمي أو نصك.',
+  'guide_label':'اختر مسارك', 'purpose_label':'هدفك', 'share_label':'ما الذي تشاركه',
+  'lesson_goal':'تعلّم لغة وممارستها', 'lesson_share':'اللغة والمستوى والهدف التعليمي',
+  'coaching_goal':'الاستعداد للتواصل المهني', 'coaching_share':'هدف الاجتماع أو العرض أو الخطاب',
+  'translation_goal':'نقل المعنى في نص مكتوب', 'translation_share':'لغتا المصدر والهدف والنص والموعد المطلوب',
+  'interpretation_goal':'دعم محادثة مباشرة', 'interpretation_share':'اللغات وتاريخ المناسبة وصيغتها',
+  'details_link':'اكتشف هذه الخدمة', 'available':'نستقبل الاستفسارات', 'unavailable':'لا نستقبل استفسارات إلكترونية حاليًا',
+  'availability_note':'يُؤكَّد التوفر واتجاه الترجمة بشكل فردي. إرسال الاستفسار لا يعني حجز الخدمة.',
+  'language_label_short':'اللغة', 'footer_label':'روابط أسفل الصفحة',
+  'video_error':'تعذّر تحميل الفيديو. يمكنك فتحه على Vimeo.',
+  'video_static':'افتح فيديو التعارف على Vimeo', 'video_disclosure':'رسم توضيحي تحريري',
+  'request_loading':'جارٍ إرسال طلبك…', 'request_error':'تعذّر تأكيد الاستلام. أعد إرسال الطلب نفسه أو ابدأ طلبًا جديدًا.',
+  'validation_error':'يرجى التحقق من الحقول المحددة.', 'security_error':'أكمل التحقق الأمني ثم حاول مجددًا.',
+  'rate_error':'طلبات كثيرة. يرجى الانتظار قبل المحاولة مجددًا.', 'conflict_error':'استُخدم مرجع الطلب هذا مسبقًا. ابدأ طلبًا جديدًا.',
+  'service_error':'لا تستقبل هذه الخدمة استفسارات إلكترونية. اختر خدمة متاحة.',
+  'back_home':'العودة للرئيسية', 'not_found_desc':'ربما نُقلت الصفحة. اختر خدمة أو عد إلى الصفحة الرئيسية.',
+  'history_label':'الخبرة في سياقها', 'history_link':'اقرأ القصة الكاملة',
+  'source_label':'هدفك والخطوة التالية', 'service_loading':'جارٍ التحقق من الخدمات المتاحة…',
+ },
+ 'ru': {
+  'person':'Нузя Бадави', 'guide_title':'Ваша цель. Подходящая поддержка.',
+  'guide_intro':'Выберите поддержку для предстоящего разговора, учебной цели или текста.',
+  'guide_label':'НАЙДИТЕ СВОЙ ПУТЬ', 'purpose_label':'Ваша цель', 'share_label':'Что сообщить',
+  'lesson_goal':'Изучать язык и практиковаться', 'lesson_share':'Язык, уровень и учебную цель',
+  'coaching_goal':'Подготовиться к профессиональному общению', 'coaching_share':'Цель встречи, презентации или выступления',
+  'translation_goal':'Передать смысл письменного текста', 'translation_share':'Языки оригинала и перевода, текст и срок',
+  'interpretation_goal':'Получить поддержку в живом разговоре', 'interpretation_share':'Языки, дату события и формат',
+  'details_link':'Узнать об услуге', 'available':'Запросы открыты', 'unavailable':'Онлайн-запросы не принимаются',
+  'availability_note':'Доступность и языковые направления согласуются индивидуально. Отправка запроса не является бронированием.',
+  'language_label_short':'ЯЗЫК', 'footer_label':'Навигация внизу страницы',
+  'video_error':'Не удалось загрузить видео. Его можно открыть на Vimeo.',
+  'video_static':'Открыть видеознакомство на Vimeo', 'video_disclosure':'Редакционная иллюстрация',
+  'request_loading':'Отправляем ваш запрос…', 'request_error':'Не удалось подтвердить получение. Повторите тот же запрос или начните новый.',
+  'validation_error':'Проверьте отмеченные поля.', 'security_error':'Пройдите проверку безопасности и попробуйте снова.',
+  'rate_error':'Слишком много запросов. Подождите перед новой попыткой.', 'conflict_error':'Этот номер запроса уже использован. Начните новый запрос.',
+  'service_error':'Эта услуга не принимает онлайн-запросы. Выберите доступную услугу.',
+  'back_home':'На главную', 'not_found_desc':'Возможно, страница перемещена. Выберите услугу или вернитесь на главную.',
+  'history_label':'ОПЫТ В КОНТЕКСТЕ', 'history_link':'Прочитать полную историю',
+  'source_label':'Ваша цель → следующий шаг', 'service_loading':'Проверяем доступные услуги…',
+ }
+}
+assert all(set(v)==set(EXPERIENCE['en']) for v in EXPERIENCE.values())
+
+for locale, value in {'en':'Availability confirmed individually','uk':'Доступність узгоджується індивідуально','ar':'يُؤكَّد التوفر بشكل فردي','ru':'Доступность согласуется индивидуально'}.items():
+    EXPERIENCE[locale]['availability_pending']=value
+
+for locale, value in {'en':'AI-generated illustration — not an authentic photograph of Nozha Badavi.','uk':'Ілюстрація, створена ШІ — не справжнє фото Нозхи Бадаві.','ar':'رسم توضيحي مولّد بالذكاء الاصطناعي — ليس صورة حقيقية لنزهة بدوي.','ru':'Иллюстрация, созданная ИИ — не настоящая фотография Нузи Бадави.'}.items():
+    EXPERIENCE[locale]['video_disclosure']=value
+
+for locale, value in {'en':'Find the right service','uk':'Обрати відповідну послугу','ar':'اختر الخدمة المناسبة','ru':'Выбрать подходящую услугу'}.items():
+    EXPERIENCE[locale]['find_service_cta']=value

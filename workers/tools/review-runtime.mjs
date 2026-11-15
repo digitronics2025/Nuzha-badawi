@@ -31,5 +31,17 @@ try{
   r=await runtime.dispatchFetch(`https://nozha-badavi.com/${locale}/${page}`);assert.equal(r.status,200);const html=await r.text();assert.match(html,new RegExp(`lang="${locale}"`));
   const schema=JSON.parse(html.match(/<script id="nusya-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);assert.equal(schema['@graph'][2].url,`https://nozha-badavi.com/${locale}/${page}`);
  }
+ for(const locale of ['uk','en','ar','ru']){
+  for(const path of [`/${locale}/missing-page/`,`/${locale}/404.html`]){
+   r=await runtime.dispatchFetch('https://nozha-badavi.com'+path);
+   assert.equal(r.status,404);assert.match(await r.text(),new RegExp(`lang="${locale}"`));assert.match(r.headers.get('x-robots-tag'),/noindex/);
+  }
+ }
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/assets/fonts/body-400-latin.woff2');
+ assert.equal(r.headers.get('content-type'),'font/woff2');assert.equal(new TextDecoder().decode((await r.arrayBuffer()).slice(0,4)),'wOF2');
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/translation/');
+ const services=await r.text();assert.doesNotMatch(services,/data-nusya-enquiry="translation"/);assert.match(services,/Not accepting online enquiries/);
+ // Old partial CMS revisions keep their override and use new infographic defaults.
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/');const infographic=await r.text();assert.match(infographic,/Native runtime CMS heading/);assert.match(infographic,/data-nusya-field="journey_3_body"/);
  console.log('Native HTMLRewriter, D1 migrations, CMS SEO/Twitter/JSON-LD escaping, canonical redirects, HEAD and 28 pages: PASS');
 }finally{await runtime.dispose();}

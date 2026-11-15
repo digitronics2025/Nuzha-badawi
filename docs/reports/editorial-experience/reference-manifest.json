@@ -1,0 +1,546 @@
+{
+  "fixture": true,
+  "boards": [
+    {
+      "name": "uk-home-1440",
+      "file": "uk-home-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-about-1440",
+      "file": "uk-about-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-lessons-1440",
+      "file": "uk-lessons-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-coaching-1440",
+      "file": "uk-coaching-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-translation-1440",
+      "file": "uk-translation-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-contact-1440",
+      "file": "uk-contact-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-privacy-1440",
+      "file": "uk-privacy-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-404-1440",
+      "file": "uk-404-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "uk-home-390",
+      "file": "uk-home-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "uk-about-390",
+      "file": "uk-about-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "uk-lessons-390",
+      "file": "uk-lessons-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "uk-coaching-390",
+      "file": "uk-coaching-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "uk-translation-390",
+      "file": "uk-translation-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "uk-contact-390",
+      "file": "uk-contact-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "uk-privacy-390",
+      "file": "uk-privacy-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "uk-404-390",
+      "file": "uk-404-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-home-1440",
+      "file": "en-home-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-about-1440",
+      "file": "en-about-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-lessons-1440",
+      "file": "en-lessons-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-coaching-1440",
+      "file": "en-coaching-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-translation-1440",
+      "file": "en-translation-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-contact-1440",
+      "file": "en-contact-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-privacy-1440",
+      "file": "en-privacy-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-404-1440",
+      "file": "en-404-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "en-home-390",
+      "file": "en-home-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-about-390",
+      "file": "en-about-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-lessons-390",
+      "file": "en-lessons-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-coaching-390",
+      "file": "en-coaching-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-translation-390",
+      "file": "en-translation-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-contact-390",
+      "file": "en-contact-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-privacy-390",
+      "file": "en-privacy-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "en-404-390",
+      "file": "en-404-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-home-1440",
+      "file": "ar-home-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-about-1440",
+      "file": "ar-about-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-lessons-1440",
+      "file": "ar-lessons-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-coaching-1440",
+      "file": "ar-coaching-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-translation-1440",
+      "file": "ar-translation-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-contact-1440",
+      "file": "ar-contact-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-privacy-1440",
+      "file": "ar-privacy-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-404-1440",
+      "file": "ar-404-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ar-home-390",
+      "file": "ar-home-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-about-390",
+      "file": "ar-about-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-lessons-390",
+      "file": "ar-lessons-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-coaching-390",
+      "file": "ar-coaching-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-translation-390",
+      "file": "ar-translation-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-contact-390",
+      "file": "ar-contact-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-privacy-390",
+      "file": "ar-privacy-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ar-404-390",
+      "file": "ar-404-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-home-1440",
+      "file": "ru-home-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-about-1440",
+      "file": "ru-about-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-lessons-1440",
+      "file": "ru-lessons-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-coaching-1440",
+      "file": "ru-coaching-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-translation-1440",
+      "file": "ru-translation-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-contact-1440",
+      "file": "ru-contact-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-privacy-1440",
+      "file": "ru-privacy-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-404-1440",
+      "file": "ru-404-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "ru-home-390",
+      "file": "ru-home-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-about-390",
+      "file": "ru-about-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-lessons-390",
+      "file": "ru-lessons-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-coaching-390",
+      "file": "ru-coaching-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-translation-390",
+      "file": "ru-translation-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-contact-390",
+      "file": "ru-contact-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-privacy-390",
+      "file": "ru-privacy-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "ru-404-390",
+      "file": "ru-404-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-overview-1440",
+      "file": "admin-overview-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-pages-1440",
+      "file": "admin-pages-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-translations-1440",
+      "file": "admin-translations-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-services-1440",
+      "file": "admin-services-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-video-1440",
+      "file": "admin-video-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-enquiries-1440",
+      "file": "admin-enquiries-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-settings-1440",
+      "file": "admin-settings-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-editor-en-1440",
+      "file": "admin-editor-en-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-editor-ar-1440",
+      "file": "admin-editor-ar-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-editor-ru-1440",
+      "file": "admin-editor-ru-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-history-1440",
+      "file": "admin-history-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-conflict-1440",
+      "file": "admin-conflict-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-connection-error-1440",
+      "file": "admin-connection-error-1440.png",
+      "width": 1440,
+      "overflow": false
+    },
+    {
+      "name": "admin-overview-390",
+      "file": "admin-overview-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-pages-390",
+      "file": "admin-pages-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-translations-390",
+      "file": "admin-translations-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-services-390",
+      "file": "admin-services-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-video-390",
+      "file": "admin-video-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-enquiries-390",
+      "file": "admin-enquiries-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-settings-390",
+      "file": "admin-settings-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-editor-en-390",
+      "file": "admin-editor-en-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-editor-ar-390",
+      "file": "admin-editor-ar-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-editor-ru-390",
+      "file": "admin-editor-ru-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-history-390",
+      "file": "admin-history-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-conflict-390",
+      "file": "admin-conflict-390.png",
+      "width": 390,
+      "overflow": false
+    },
+    {
+      "name": "admin-connection-error-390",
+      "file": "admin-connection-error-390.png",
+      "width": 390,
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

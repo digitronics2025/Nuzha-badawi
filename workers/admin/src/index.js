@@ -32,6 +32,20 @@ async function previewHtml(request,env,loc,key){
 }
 async function handleMedia(req,env,user,path){
  if(!env.MEDIA)throw new HttpError(503,'SERVICE_UNAVAILABLE','Media storage is not configured.');
+ if(path==='/api/v1/admin/media'&&req.method==='GET'){
+   const params=new URL(req.url).searchParams;
+   const status=params.get('status')||'private';
+   const cursor=params.get('cursor');
+   const limit=Number(params.get('limit')||20);
+   if(!['private','published','all'].includes(status)||!Number.isSafeInteger(limit)||limit<1||limit>50||cursor!==null&&(!/^[1-9][0-9]*$/.test(cursor)||!Number.isSafeInteger(Number(cursor))))throw new HttpError(400,'VALIDATION_FAILED','Invalid media filter or pagination.');
+   // D1 rowids provide stable insertion-order pagination; the status index also stores rowid.
+   const filtered=status!=='all';
+   const query='SELECT rowid AS position,id,content_type,byte_size,alt_text,source,published,created_at FROM media_assets WHERE rowid<?'+(filtered?' AND published=?':'')+' ORDER BY rowid DESC LIMIT ?';
+   const args=filtered?[cursor?Number(cursor):Number.MAX_SAFE_INTEGER,status==='published'?1:0,limit+1]:[cursor?Number(cursor):Number.MAX_SAFE_INTEGER,limit+1];
+   const rows=(await env.DB.prepare(query).bind(...args).all()).results||[];
+   const items=rows.slice(0,limit).map(row=>({id:row.id,contentType:row.content_type,byteSize:row.byte_size,altText:row.alt_text,source:row.source,published:row.published===1,createdAt:row.created_at}));
+   return json({ok:true,items,nextCursor:rows.length>limit?String(rows[limit-1].position):null});
+ }
  const upload=path==='/api/v1/admin/media'&&req.method==='POST';
  if(upload){
    const len=Number(req.headers.get('content-length')||0);if(len>4.5*1024*1024)throw new HttpError(413,'PAYLOAD_TOO_LARGE','File is too large.');
@@ -80,7 +94,7 @@ async function handleAPI(request,env,ctx,user){
      const rows=await env.DB.prepare("SELECT r.id,r.created_by,r.created_at,EXISTS(SELECT 1 FROM admin_audit a WHERE a.revision=r.id AND a.action='publish') AS published FROM cms_revisions r WHERE page_key=? AND locale=? ORDER BY id DESC LIMIT 20").bind(key,loc).all();return json({ok:true,revisions:rows.results||[]});
    }
    if(action==='review'&&method==='POST'){
-     const body=await readJson(request);return json({ok:true,revision:await markReviewed(env.DB,key,loc,parseIntStrict(body.revision),user.email)});
+     const body=await readJson(request);return json({ok:true,revision:await markReviewed(env.DB,key,loc,parseIntStrict(body.revision),user.email,Object.hasOwn(body,'sourceRevision')?parseIntStrict(body.sourceRevision):undefined)});
    }
    if(action==='publish'&&method==='POST'){
      requireRole(user);const body=await readJson(request);

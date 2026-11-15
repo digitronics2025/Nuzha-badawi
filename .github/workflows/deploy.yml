@@ -47,6 +47,7 @@ jobs:
           pip install -r frontend/tests/requirements-browser.txt
           python3 -m playwright install --with-deps chromium
           python3 frontend/tests/browser_review.py
+          python3 frontend/tests/experience_review.py
   gate:
     runs-on: ubuntu-latest
     steps:

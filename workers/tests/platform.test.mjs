@@ -136,7 +136,27 @@ test('legacy ready translations expose source review and can publish without edi
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=ar'),e,{});const page=await r.json();assert.equal(page.reviewStatus,'needs_review');assert.equal(page.draftRevision,rev);
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages'),e,{});assert.equal((await r.json()).pages.find(p=>p.key==='home').locales.ar.status,'needs_review');
  r=await adminWorker.fetch(authReq('/api/v1/admin/summary'),e,{});assert.equal((await r.json()).translationsToReview,1);
- r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/review?locale=ar',{revision:rev},'POST'),e,{});assert.equal(r.status,200);
+ r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/review?locale=ar',{revision:rev},'POST'),e,{});assert.equal(r.status,400);
+ const source=(await (await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=en'),e,{})).json()).draftRevision;
+ r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/review?locale=ar',{revision:rev,sourceRevision:source},'POST'),e,{});assert.equal(r.status,200);
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/publish?locale=ar',{revision:rev},'POST'),e,{});assert.equal(r.status,200);
  r=await adminWorker.fetch(authReq('/api/v1/admin/summary'),e,{});assert.equal((await r.json()).translationsToReview,0);
+});
+
+test('protected media library preserves provenance across sessions, paginates and restricts approval',async(t)=>{
+ withNetworkMock();const db=new MockD1();t.after(()=>db.close());const e={...env(db),MEDIA:{}};
+ for(let i=1;i<=55;i++)await db.prepare('INSERT INTO media_assets(id,object_key,content_type,byte_size,alt_text,source,published,consent_confirmed,created_by) VALUES(?,?,?,?,?,?,?,?,?)').bind('asset_'+String(i).padStart(3,'0'),'private/'+i,'image/png',68,'Image '+i,'Photographer <name> — licensed source',i<=5?1:0,i<=5?1:0,'editor@example.com').run();
+ const get=path=>adminWorker.fetch(authReq(path,null,'GET','owner@example.com'),e,{});
+ let response=await adminWorker.fetch(new Request('https://admin.nozha-badavi.com/api/v1/admin/media'),e,{});assert.equal(response.status,401);
+ response=await get('/api/v1/admin/media?status=private&limit=20');assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');
+ let body=await response.json();assert.equal(body.items.length,20);assert.equal(body.items[0].id,'asset_055');assert.equal(body.items[0].source,'Photographer <name> — licensed source');assert.equal(body.items[0].published,false);assert.equal('object_key' in body.items[0],false);
+ const first=new Set(body.items.map(item=>item.id));let cursor=body.nextCursor;
+ body=await (await get('/api/v1/admin/media?status=private&limit=20&cursor='+cursor)).json();assert.equal(body.items.length,20);assert.ok(body.items.every(item=>!first.has(item.id)));cursor=body.nextCursor;
+ body=await (await get('/api/v1/admin/media?status=private&limit=20&cursor='+cursor)).json();assert.equal(body.items.length,10);assert.equal(body.nextCursor,null);
+ for(const params of ['status=bad','limit=51','limit=1.5','cursor=-1','cursor=9007199254740992','cursor=1junk'])assert.equal((await get('/api/v1/admin/media?'+params)).status,400);
+ response=await adminWorker.fetch(authReq('/api/v1/admin/media/asset_055/publish',{consentConfirmed:true},'POST','editor@example.com'),e,{});assert.equal(response.status,403);
+ response=await adminWorker.fetch(authReq('/api/v1/admin/media/asset_055/publish',{consentConfirmed:false},'POST'),e,{});assert.equal(response.status,400);
+ response=await adminWorker.fetch(authReq('/api/v1/admin/media/asset_055/publish',{consentConfirmed:true},'POST'),e,{});assert.equal(response.status,200);
+ body=await (await get('/api/v1/admin/media?status=published')).json();assert.equal(body.items[0].id,'asset_055');assert.equal(body.items[0].published,true);
+ const plan=db.raw.prepare('EXPLAIN QUERY PLAN SELECT rowid,id FROM media_assets WHERE rowid<? AND published=? ORDER BY rowid DESC LIMIT ?').all(100,0,21);assert.ok(plan.some(row=>row.detail.includes('idx_media_publication')));assert.ok(plan.every(row=>!row.detail.includes('TEMP B-TREE')));
 });
