@@ -60,9 +60,11 @@ test('root negotiates all four locales with Ukrainian as the default',async()=>{
 
 test('staging pages are noindex while production remains indexable',async()=>{
  for(const host of ['nusya-public-staging.digitronics-electro.workers.dev','nozha-badavi.com']){
-  const response=await publicWorker.fetch(new Request(`https://${host}/uk/`),{PUBLIC_HOST:host},{});
-  assert.equal(response.status,200);
-  assert.equal(response.headers.get('x-robots-tag'),host.endsWith('.workers.dev')?'noindex, nofollow':null);
+  for(const [path,status] of [['/uk/',200],['/uk/index.html',200],['/404.html',200],['/missing/',404]]){
+   const response=await publicWorker.fetch(new Request(`https://${host}${path}`),{PUBLIC_HOST:host},{});
+   assert.equal(response.status,status);
+   assert.equal(response.headers.get('x-robots-tag'),host.endsWith('.workers.dev')?'noindex, nofollow':null);
+  }
  }
 });
 

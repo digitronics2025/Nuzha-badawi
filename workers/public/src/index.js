@@ -71,7 +71,7 @@ async function serveMedia(request,env){
 function pageFromPath(path){const match=path.match(/^\/(uk|en|ar|ru)\/(about|lessons|coaching|translation|contact|privacy)?\/?$/);if(!match)return null;return {locale:match[1],key:match[2]||'home'};}
 async function servePublished(request,env,ctx){
  const parsed=pageFromPath(new URL(request.url).pathname);
- if(!parsed||!env.ASSETS)return env.ASSETS?env.ASSETS.fetch(request):problem(503,'SERVICE_UNAVAILABLE','Static assets are not configured.');
+ if(!parsed||!env.ASSETS)return env.ASSETS?publicSecurity(await env.ASSETS.fetch(request),env):problem(503,'SERVICE_UNAVAILABLE','Static assets are not configured.');
  const cache=globalThis.caches?.default;
  const cacheKey=new Request('https://nusya-cache.local'+new URL(request.url).pathname);
  if(cache){const saved=await cache.match(cacheKey);if(saved)return publicSecurity(saved,env);}
