@@ -10,6 +10,12 @@ on:
     branches: [main]
     paths: ['frontend/**', 'workers/**', '.github/workflows/deploy.yml']
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Verify Access credentials only, or run the deployment pipeline
+        type: choice
+        options: [verify, deploy]
+        default: verify
 permissions:
   contents: read
 concurrency:
@@ -19,6 +25,7 @@ env:
   CLOUDFLARE_ACCOUNT_ID: 5e8dba9ffe785310eadc601c447a4ad6
 jobs:
   test:
+    if: github.event_name != 'workflow_dispatch' || inputs.mode == 'deploy'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +38,15 @@ jobs:
       - run: npm run build:frontend && npm run check
         working-directory: workers
       - run: python3 -m unittest discover -s frontend/tests -v
+      - name: Native runtime and browser regressions
+        run: |
+          cd workers
+          npx wrangler deploy --dry-run --config public/wrangler.jsonc --outdir /tmp/nusya-runtime-bundle
+          node tools/review-runtime.mjs /tmp/nusya-runtime-bundle/index.js
+          cd ..
+          pip install -r frontend/tests/requirements-browser.txt
+          python3 -m playwright install --with-deps chromium
+          python3 frontend/tests/browser_review.py
   gate:
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +64,48 @@ jobs:
             fi
           done
           exit "$missing"
+  verify-access:
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'verify'
+    needs: gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Verify rotated staging credentials without changing data
+        env:
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+        run: |
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const config=readFileSync('workers/admin/wrangler.staging.jsonc','utf8');
+          const allowed=config.match(/"SERVICE_TOKEN_OWNERS"\s*:\s*"([^"]+)"/)?.[1].split(',').map(x=>x.trim())||[];
+          if(!allowed.includes(process.env.CF_ACCESS_CLIENT_ID)){
+            console.error('GitHub CF_ACCESS_CLIENT_ID does not match the staging Worker allowlist. Update it to the Client ID of the rotated staging token.');
+            process.exit(1);
+          }
+          console.log('PASS: GitHub Client ID matches the staging Worker allowlist.');
+          const headers={
+            'CF-Access-Client-Id':process.env.CF_ACCESS_CLIENT_ID,
+            'CF-Access-Client-Secret':process.env.CF_ACCESS_CLIENT_SECRET
+          };
+          try {
+            const staging=await fetch('https://nusya-admin-staging.digitronics-electro.workers.dev/api/v1/admin/me',{headers,redirect:'manual',signal:AbortSignal.timeout(15000)});
+            if(staging.status!==200)throw Error('Staging authentication returned HTTP '+staging.status);
+            const session=await staging.json();
+            if(session.ok!==true||session.role!=='owner'||session.userId!==process.env.CF_ACCESS_CLIENT_ID)throw Error('Staging identity did not match the configured service token');
+            console.log('PASS: rotated credentials authenticate to staging as the expected service identity.');
+            const production=await fetch('https://admin.nozha-badavi.com/api/v1/admin/me',{headers,redirect:'manual',signal:AbortSignal.timeout(15000)});
+            if(![302,401,403].includes(production.status))throw Error('Production isolation check returned unexpected HTTP '+production.status);
+            console.log('PASS: staging credentials do not grant production admin access.');
+          } catch(error) {
+            console.error(error.message);
+            process.exitCode=1;
+          }
+          JS
   staging:
+    if: github.event_name != 'workflow_dispatch' || inputs.mode == 'deploy'
     needs: [test, gate]
     runs-on: ubuntu-latest
     environment: staging
@@ -77,6 +134,7 @@ jobs:
           MODE: staging
         run: node tools/e2e-smoke.mjs
   production:
+    if: github.ref == 'refs/heads/main'
     needs: staging
     runs-on: ubuntu-latest
     environment: production

@@ -86,3 +86,7 @@ Before publishing, reconcile any D1 CMS overrides with source-derived fallback c
 
 | D-031 | 2026-11-15 | Retain the two existing optimized WebP illustration assets with the AI portrait disclosure and CMS image override support | Explicit current task scope | The user requested verification of both images on Home/About/video and preservation of the AI-generated portrait disclosure. This narrowly supersedes the earlier authentic-photo-only requirement for these existing fallback assets; neither asset is evidence of Nozha's actual appearance. Future genuine portraits still require consent. |
 | D-032 | 2026-11-15 | Require completed Codex reviews and resolve findings before further release merges/promotion | User requested | Follow-up instruction: inspect Codex setup, switch release PRs to Codex review, and continue only once required reviews pass. |
+
+## Review hardening — 2026-11-15
+
+Review-hardening decision: keep the existing lightweight stack; use explicit content field metadata shared with admin, remove template ETags from CMS HTML, normalize page aliases, centralize response security, require translation source review, and restrict rollback to published audited revisions. Implement approved owner workflows and immutable enquiry retries. Preserve D-031 illustration assets/disclosure and use factual four-language privacy text. Integrate main’s staging noindex fix. No production promotion until mandatory staging Access credentials permit full write verification.

@@ -1,50 +1,35 @@
 # NUSYA Linguistic Studio
 
-**Documentation-first website project for Nozha Badavi.**
+Website and protected owner CMS for Nozha Badavi. The application implements **Ukrainian (default), English, Arabic (RTL), and Russian**. Offered lesson languages remain English, Russian, and Arabic.
 
-This repository is the controlled source for the future NUSYA personal website, three-language content system, and secure owner-operated admin.
+The public frontend is generated with Python and progressively enhanced with dependency-free JavaScript. Separate Cloudflare Workers serve public pages and the Access-protected admin; D1 stores content revisions, enquiries and audit records. R2 serves approved media. Turnstile protects enquiries, and notifications use a durable outbox.
 
-> **Current status:** **LIVE since 2026-11-15** — see [docs/PRODUCTION.md](docs/PRODUCTION.md) for deployed resources, verification evidence and the runbook. Public site https://nozha-badavi.com (EN/AR/RU), protected admin https://admin.nozha-badavi.com.
+## Local development and verification
 
-## Required website features
+```sh
+npm ci --prefix workers
+npm run build:frontend --prefix workers
+npm run check --prefix workers
+python3 -m unittest discover -s frontend/tests -v
+pip install -r frontend/tests/requirements-browser.txt
+python3 -m playwright install chromium
+python3 frontend/tests/browser_review.py
+```
 
-- **Exactly three public UI languages:** English (`en`), Arabic (`ar`, RTL), and Russian (`ru`).
-- Language lesson information for English, Russian and Arabic, with actual availability confirmed before public booking.
-- Professional communication coaching, translation, and interpretation, restricted to approved capabilities and language directions.
-- A prominent click-to-play Vimeo introduction video: `https://player.vimeo.com/video/1171310337?h=3416a6f4f5`.
-- Authentic premium brand design, mobile-first accessibility and performance.
-- Private admin dashboard for content, translations, services, media, video, customer enquiries, SEO, draft/preview/publish and rollback.
-- Practical, secure, efficient hosting and minimal operational cost. **No Korean.**
+Native runtime verification, using a local disposable database:
 
-## Documentation start points
+```sh
+cd workers
+npx wrangler deploy --dry-run --config public/wrangler.jsonc --outdir /tmp/nusya-runtime-bundle
+node tools/review-runtime.mjs /tmp/nusya-runtime-bundle/index.js
+```
 
-| Read this | Purpose |
-| --- | --- |
-| [AGENTS.md](AGENTS.md) | Canonical agent instructions, approval and safety constraints |
-| [CLAUDE.md](CLAUDE.md) | Claude Code instructions |
-| [design.md](design.md) | Proposed design language and mandatory mockup gate |
-| [Documentation index](docs/INDEX.md) | Full map of product, UX, content, architecture, data, security, admin, tests, operations and roadmap |
-| [Decision register](docs/DECISIONS.md) | Approved vs proposed technical/product decisions |
-| [Roadmap](docs/ROADMAP.md) | Ordered discovery, design approval and implementation phases |
+No secret values belong in source. See [workers/README.md](workers/README.md) for configuration names. Builds produce ignored `frontend/dist-public`, `frontend/dist-admin`, and Worker asset modules.
 
-## Non-negotiable design approval
+## Release status and ownership
 
-Before coding **any** public or admin UI, the execution agent must inspect the current repository/UI, produce high-fidelity desktop and mobile mockups including Arabic RTL, present those mockups and **STOP** until the user explicitly approves. Approval of this README, architecture or strategy does **not** approve a design.
+An older release exists at https://nozha-badavi.com; the protected admin is https://admin.nozha-badavi.com. Repository code is not proof of deployment. [PRODUCTION.md](docs/PRODUCTION.md) records release evidence and known credential blockers. The single deployment pipeline requires tests, isolated staging write verification, and production recovery safeguards. Do not bypass staging or assume migrations are applied.
 
-## Agent workflow
+Current source preserves the two existing optimized illustration assets and localized AI disclosure, as required by D-031; genuine photographs remain available through consented CMS publishing. Privacy copy describes actual processors and a manual six-month retention review; it does not claim automatic enquiry deletion or an unverified legal jurisdiction.
 
-Read `AGENTS.md` and `docs/AI_WORKFLOW.md` → verify actual repository state → map requirements to files → propose mockups → obtain approval → implement and test → update docs/decisions → seek separate authorization for production or high-risk/costly actions.
-
-## Ground truth
-
-The updated professional CV and user-provided visuals support the content strategy, but public credentials, precise dates, translation pairs, booking rules, contact details, rights and current availability must be approved. Do not publish unverified private CV data. See [docs/SOURCES.md](docs/SOURCES.md).
-
-## Development setup
-
-Not documented yet because the repository did not contain a verified application at bootstrap. When an implementation is approved, add the actual package manager, scripts, environment variables **names only**, local test instructions, build/deploy instructions and operational runbook updates. Never invent commands or credentials.
-
-## Production domain and Cloudflare (deployed — authoritative inventory in docs/PRODUCTION.md; text below is the original plan)
-- **Registered domain (user's Cloudflare dashboard screenshot):** `nozha-badavi.com`. Registration is confirmed visually; active DNS zone, SSL and Workers deployment are **not** confirmed.
-- Planned canonical site: `https://nozha-badavi.com`; planned protected admin: `https://admin.nozha-badavi.com`; `www` redirects to apex when authorised.
-- Proposed Cloudflare implementation: a public Worker + separately Access-protected admin Worker, D1 for content/enquiries, R2 **only if** admin media uploads require it, Turnstile and a cost-reviewed email transport. Actual resources do not exist as far as this documentation can verify.
-- Read [Cloudflare deployment and domain blueprint](docs/CLOUDFLARE_DEPLOYMENT.md) and [full execution plan](docs/PLAN-nusya-multilingual-studio.md) before provisioning anything. The high-fidelity desktop/mobile design approval gate remains mandatory.
+Read [AGENTS.md](AGENTS.md), [documentation index](docs/INDEX.md), [design contract](design.md), and [source provenance](docs/SOURCES.md). UI fixes in the review-hardening change were approved from desktop/mobile/RTL mockups in the implementation chat. No Korean content or services.

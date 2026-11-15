@@ -23,6 +23,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: npm ci
+        working-directory: workers
       - name: Generate localized frontend and fallback content
         run: |
           python3 workers/tools/export_default_content.py
@@ -48,3 +50,14 @@ jobs:
           test -f frontend/dist-public/ru/index.html
           test -f frontend/dist-admin/index.html
           test ! -e frontend/dist-public/admin/index.html
+
+      - name: Native Workers rendering
+        run: |
+          npx wrangler deploy --dry-run --config public/wrangler.jsonc --outdir /tmp/nusya-runtime-bundle
+          node tools/review-runtime.mjs /tmp/nusya-runtime-bundle/index.js
+        working-directory: workers
+      - name: Browser workflow regressions
+        run: |
+          pip install -r frontend/tests/requirements-browser.txt
+          python3 -m playwright install --with-deps chromium
+          python3 frontend/tests/browser_review.py

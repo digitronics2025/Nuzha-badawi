@@ -39,7 +39,9 @@ r=await pub('/en/');check('public CSP + HSTS',!!r.headers.get('content-security-
 check('search indexing matches environment',new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?r.headers.get('x-robots-tag')?.includes('noindex'):!r.headers.get('x-robots-tag')?.includes('noindex'));
 for(const path of ['/404.html','/uk/index.html']){
  const response=await pub(path);
- check(`direct HTML indexing ${path}`,response.status===200&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?response.headers.get('x-robots-tag')?.includes('noindex'):!response.headers.get('x-robots-tag')?.includes('noindex')));
+ const canonical=path==='/uk/index.html';
+ check(`direct HTML indexing ${path}`,response.status===(canonical?308:200)&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?response.headers.get('x-robots-tag')?.includes('noindex'):!response.headers.get('x-robots-tag')?.includes('noindex')),String(response.status));
+ if(canonical){check('direct index redirects to canonical Ukrainian page',response.headers.get('location')==='/uk/');const target=await pub('/uk/');check('canonical redirect destination is localized and has correct indexing',target.status===200&&target.body.includes('lang="uk"')&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?target.headers.get('x-robots-tag')?.includes('noindex'):!target.headers.get('x-robots-tag')?.includes('noindex')));}
 }
 check('Vimeo ID + privacy hash present',r.body.includes('player.vimeo.com/video/1171310337?h=3416a6f4f5'));
 r=await pub('/api/v1/config');check('public config ready',r.body.ok===true&&r.body.ready===true,JSON.stringify(r.body.services||{}).slice(0,80));
@@ -91,6 +93,8 @@ if(MODE==='staging'&&auth){
  r=await admin('/api/v1/admin/pages/about?locale=uk',{method:'PUT',body:JSON.stringify({baseRevision:page.draftRevision,payload:content})});check('stale baseRevision → 409',r.status===409);
  r=await pub('/uk/about/');check('draft NOT public before publish',!r.body.includes(marker));
  r=await admin('/preview/uk/about/');check('private preview shows draft',r.body.includes(marker)&&r.headers.get('cache-control')==='no-store');
+ r=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('unreviewed translation cannot publish',r.status===409);
+ r=await admin('/api/v1/admin/pages/about/review?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('approve UK translation',r.body.ok===true);
  r=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('publish UK about',r.body.ok===true,JSON.stringify(r.body));
  let seen=false;for(let i=0;i<14&&!seen;i++){await sleep(10000);seen=(await pub(`/uk/about/?cb=${i}`)).body.includes(marker)||(await pub('/uk/about/')).body.includes(marker);}
  check('published copy live on public site (≤140s)',seen);
@@ -99,6 +103,7 @@ if(MODE==='staging'&&auth){
  if(prior){r=await admin('/api/v1/admin/pages/about/rollback?locale=uk',{method:'POST',body:JSON.stringify({toRevision:prior})});check('rollback to prior revision',r.body.ok===true);}
  else{const base2=(await admin('/api/v1/admin/pages/about?locale=uk')).body;const orig=structuredClone(base2.defaultContent);
   r=await admin('/api/v1/admin/pages/about?locale=uk',{method:'PUT',body:JSON.stringify({baseRevision:base2.draftRevision,payload:orig})});
+  await admin('/api/v1/admin/pages/about/review?locale=uk',{method:'POST',body:JSON.stringify({revision:r.body.revision})});
   const r2=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:r.body.revision})});
   const hist=(await admin('/api/v1/admin/pages/about/revisions?locale=uk')).body.revisions;
   const r3=await admin('/api/v1/admin/pages/about/rollback?locale=uk',{method:'POST',body:JSON.stringify({toRevision:rev})});

@@ -1,10 +1,11 @@
 import {json,problem,errorResponse,HttpError,readJson,corsSameOrigin,noStore,isPageKey,isLocale,secureHeaders} from '../../shared/http.js';
 import {verifyAccess,requireRole} from '../../shared/auth.js';
-import {settings,saveSettings,state,revision,published,allPageStates,insertDraft,publishDraft,rollBack,markReviewed,loadEnquiry,counts,audit,PAGE_KEYS,LOCALES} from '../../shared/store.js';
+import {settings,saveSettings,state,revision,published,allPageStates,insertDraft,publishDraft,rollBack,markReviewed,loadEnquiry,counts,audit,PAGE_KEYS,LOCALES,needsSourceReview} from '../../shared/store.js';
 import {validateSettings,validatePagePayload} from '../../shared/validation.js';
 import {renderPublished} from '../../shared/render.js';
 import {flushOutbox} from '../../shared/notify.js';
 import defaults from '../../shared/defaults.js';
+import {fieldSchema} from '../../shared/content-schema.js';
 import {bundledAssets} from '../../shared/assets.js';
 import STATIC from './static-assets.generated.js';
 
@@ -15,18 +16,18 @@ const statuses=new Set(['new','reviewing','awaiting_customer','quoted','booked',
 const editId=/^[a-z0-9_-]{8,80}$/i;
 function needLocale(url){const loc=url.searchParams.get('locale')||'uk';if(!isLocale(loc))throw new HttpError(400,'VALIDATION_FAILED','Unknown locale.');return loc;}
 function pageSummary(states){const map=new Map(states.map(s=>[s.page_key+':'+s.locale,s]));return PAGE_KEYS.map(key=>({key,route:`/${key==='home'?'':key+'/'}`,locales:Object.fromEntries(LOCALES.map(loc=>{
- const row=map.get(key+':'+loc);return [loc,{locale:loc,revision:row?.draft_revision||0,publishedRevision:row?.published_revision||0,status:row?.review_status||'needs_review',title:defaults?.[loc]?.[key]?.fields?.title||''}];
+ const row=map.get(key+':'+loc);return [loc,{locale:loc,revision:row?.draft_revision||0,publishedRevision:row?.published_revision||0,status:needsSourceReview(row,map.get(key+':en'),loc)?'needs_review':row?.review_status||'needs_review',title:defaults?.[loc]?.[key]?.fields?.title||''}];
  }))}));}
-async function getPage(db,key,loc){const st=await state(db,key,loc),draft=await revision(db,st?.draft_revision),pub=await revision(db,st?.published_revision);
- return {ok:true,key,locale:loc,draftRevision:st?.draft_revision??null,publishedRevision:st?.published_revision??null,reviewStatus:st?.review_status||'needs_review',defaultContent:defaults?.[loc]?.[key]||{fields:{},seo:{}},draft:draft?.payload||null,published:pub?.payload||null,updatedAt:st?.updated_at||null};}
+async function getPage(db,key,loc){const st=await state(db,key,loc),draft=await revision(db,st?.draft_revision),pub=await revision(db,st?.published_revision),source=loc==='en'?null:await state(db,key,'en');
+ return {ok:true,key,locale:loc,fieldSchema:fieldSchema(loc,key),draftRevision:st?.draft_revision??null,publishedRevision:st?.published_revision??null,reviewStatus:needsSourceReview(st,source,loc)?'needs_review':st?.review_status||'needs_review',defaultContent:defaults?.[loc]?.[key]||{fields:{},seo:{}},draft:draft?.payload||null,published:pub?.payload||null,updatedAt:st?.updated_at||null};}
 function parseIntStrict(v){if(v===null||v===undefined)return null;if(typeof v!=='number'||!Number.isSafeInteger(v)||v<1)throw new HttpError(400,'VALIDATION_FAILED','Invalid revision.');return v;}
 async function previewHtml(request,env,loc,key){
  if(!env.ASSETS)throw new HttpError(503,'SERVICE_UNAVAILABLE','Preview assets not configured.');
  const base=`https://${env.ADMIN_HOST||'admin.nozha-badavi.com'}/preview-public/${loc}/${key==='home'?'':key+'/'}index.html`;
  const asset=await env.ASSETS.fetch(new Request(base));
  if(!asset.ok)throw new HttpError(404,'NOT_FOUND','Preview not found.');
- const st=await state(env.DB,key,loc),draft=await revision(env.DB,st?.draft_revision);const conf=await settings(env.DB);
- let res=renderPublished(asset,draft?.payload||{},conf);
+ const st=await state(env.DB,key,loc);const requested=new URL(request.url).searchParams.get('revision');if(requested&&!/^[1-9][0-9]*$/.test(requested))throw new HttpError(400,'VALIDATION_FAILED','Invalid revision.');const draft=await revision(env.DB,requested?Number(requested):st?.draft_revision);if(requested&&(!draft||draft.page_key!==key||draft.locale!==loc))throw new HttpError(404,'NOT_FOUND','Revision not found.');const conf=await settings(env.DB);
+ let res=renderPublished(asset,draft?.payload||{},conf,{locale:loc,mediaBase:'/api/v1/admin/media/'});
  res=noStore(res);return secureHeaders(res,true);
 }
 async function handleMedia(req,env,user,path){
@@ -76,7 +77,7 @@ async function handleAPI(request,env,ctx,user){
      return json({ok:true,revision:rev,status:'draft'});
    }
    if(action==='revisions'&&method==='GET'){
-     const rows=await env.DB.prepare('SELECT id,created_by,created_at FROM cms_revisions WHERE page_key=? AND locale=? ORDER BY id DESC LIMIT 20').bind(key,loc).all();return json({ok:true,revisions:rows.results||[]});
+     const rows=await env.DB.prepare("SELECT r.id,r.created_by,r.created_at,EXISTS(SELECT 1 FROM admin_audit a WHERE a.revision=r.id AND a.action='publish') AS published FROM cms_revisions r WHERE page_key=? AND locale=? ORDER BY id DESC LIMIT 20").bind(key,loc).all();return json({ok:true,revisions:rows.results||[]});
    }
    if(action==='review'&&method==='POST'){
      const body=await readJson(request);return json({ok:true,revision:await markReviewed(env.DB,key,loc,parseIntStrict(body.revision),user.email)});
@@ -98,6 +99,7 @@ async function handleAPI(request,env,ctx,user){
    if(method==='GET')return json({ok:true,settings:await settings(env.DB)});
    if(method==='PUT'){
      requireRole(user);const body=await readJson(request);const clean=validateSettings(body.settings);
+     if(clean.video.posterMediaId){const media=await env.DB.prepare('SELECT id FROM media_assets WHERE id=? AND published=1 AND consent_confirmed=1').bind(clean.video.posterMediaId).first();if(!media)throw new HttpError(409,'MEDIA_APPROVAL_REQUIRED','The video poster must be approved.');}
      await saveSettings(env.DB,clean,user.email);await audit(env.DB,user.email,'update_settings','site');
      return json({ok:true,settings:clean,cacheRefreshWithinSeconds:90});
    }

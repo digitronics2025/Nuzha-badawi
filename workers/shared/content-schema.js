@@ -1,0 +1,3 @@
+import defaults from './defaults.js';
+const SHORT_FIELDS=new Set(['title','hero','english','russian','arabic','story_heading','journey_title','video_title','lessons_title','coaching_title','services_title','about_title','faq_title','closing_title','translation_title','interpretation_title','process_title','form_title','privacy_title']);
+export function fieldSchema(locale,page){return Object.fromEntries(Object.keys(defaults[locale]?.[page]?.fields||{}).map(key=>[key,{maxLength:SHORT_FIELDS.has(key)||key.endsWith('_title')?260:2500,multiline:!SHORT_FIELDS.has(key)&&!key.endsWith('_title')} ]));}

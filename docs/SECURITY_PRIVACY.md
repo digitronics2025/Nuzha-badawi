@@ -30,3 +30,8 @@ Admin/API unauthenticated access, personal information leaking publicly, unappro
 
 ## Cloudflare custom-domain threat model
 Intended canonical website: `https://nozha-badavi.com`; administrative interface: `https://admin.nozha-badavi.com`. Registrar screenshot verifies registration only, not certificates, zone status, Access or security controls. Before launch check correct Cloudflare account, zone, DNS/CAA/MX, SSL certificate, www redirect, CORS, CSP and expected hostname routing. Do not leave admin accessible via `workers.dev` or previews that bypass Access. Protect entire admin hostname via Access and **independently validate signed identity and roles on every admin API**. Cache public published HTML only; private previews, responses and enquiries use no-store/noindex. Scope Worker service permissions and D1/R2 bindings minimally. Never put tokens, live account IDs, screenshots with private account information, email details or customer PII in public repo. Distinguish Email Routing from outbound email. No real infrastructure action without separate approval. See `CLOUDFLARE_DEPLOYMENT.md`.
+
+
+## Review hardening — 2026-11-15
+
+Review hardening retains Access JWT and owner/editor roles. Private revision/media previews are no-store and require the same authentication as all admin routes. Publish and rollback validate media consent; only previously published revisions can roll back. Public privacy text describes Cloudflare hosting, storage, security and notifications, Vimeo only after click, keyed IP abuse protection and manual six-month enquiry review. Privacy requests use the existing owner notification inbox contact@tenten.ma. No unverified jurisdiction is asserted. Do not describe the retention review as automatic deletion.

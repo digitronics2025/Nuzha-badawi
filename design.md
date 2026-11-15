@@ -156,3 +156,8 @@ V01 EN desktop home 1440px; V02 EN mobile 390px plus 320px stress; V03 Arabic RT
 ## Approved developer attribution (2026-11-15)
 
 The owner explicitly requested an unobtrusive developer credit and approved its visual direction. Keep it **immediately beneath the copyright text** in the footer of every EN, AR RTL, and RU public page: translated “Website designed & developed by” wording with the developer's name linked to `https://dr-badawi-abdalsalam.com/`. English/Russian link text is `Dr. Badawi Abdalsalam`; Arabic is `د. عبد السلام بدوي`. Use a small, legible warm-gold underline/hover and an external-link indicator, preserve keyboard focus and right-to-left rendering, and enforce `rel="noopener noreferrer"` on the new-tab link. This credit is part of the footer, **not** a homepage advertisement or large developer logo. Preserve it through future footer redesigns.
+
+
+## Review hardening — 2026-11-15
+
+Review-hardening desktop/mobile/RTL workflow proposals were explicitly approved in the implementation chat before UI edits. Retain the editorial palette and motion rules. The owner subsequently delegated remaining content decisions: the existing optimized portrait/video illustrations and localized AI disclosure are retained under D-031; genuine consented portraits remain configurable in CMS. Localized PNG sharing cards render the existing vector studio artwork. This approval covers these review fixes, not a future unrelated redesign.

@@ -1,5 +1,5 @@
 import {DatabaseSync} from 'node:sqlite';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {join,dirname} from 'node:path';
 const HERE=dirname(fileURLToPath(import.meta.url));
@@ -11,7 +11,7 @@ class Statement {
  async run(){const st=this.db.prepare(this.query);const r=st.run(...this.args);return{meta:{changes:r.changes}};}
 }
 export class MockD1 {
- constructor(){this.raw=new DatabaseSync(':memory:');this.raw.exec('PRAGMA foreign_keys=ON');this.raw.exec(readFileSync(join(HERE,'../migrations/0001_initial.sql'),'utf8'));}
+ constructor(){this.raw=new DatabaseSync(':memory:');this.raw.exec('PRAGMA foreign_keys=ON');for(const file of readdirSync(join(HERE,'../migrations')).filter(f=>f.endsWith('.sql')).sort())this.raw.exec('BEGIN;'+readFileSync(join(HERE,'../migrations',file),'utf8')+'COMMIT;');}
  prepare(query){return new Statement(this.raw,query);}
  async batch(statements){this.raw.exec('BEGIN');const result=[];try{for(const s of statements)result.push(await s.run());this.raw.exec('COMMIT');return result;}catch(e){this.raw.exec('ROLLBACK');throw e;}}
  close(){this.raw.close();}

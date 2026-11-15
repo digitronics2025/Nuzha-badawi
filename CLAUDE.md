@@ -12,7 +12,7 @@
 ## Helpful project references
 - `design.md`: premium visuals, components, responsive/RTL and mockup requirements.
 - `docs/UX_FLOWS.md`: customer and admin journeys.
-- `docs/LOCALIZATION.md`: only EN, AR, RU.
+- `docs/LOCALIZATION.md`: UK (default), EN, AR, RU.
 - `docs/ARCHITECTURE.md` and `docs/DATA_MODEL.md`: conditional target architecture and data.
 - `docs/ADMIN.md`: admin editor, revisions, and service enquiries.
 - `docs/SECURITY_PRIVACY.md`, `docs/QUALITY_TESTING.md`, `docs/OPERATIONS.md`: operational guardrails.
