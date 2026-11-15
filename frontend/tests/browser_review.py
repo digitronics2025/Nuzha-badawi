@@ -143,8 +143,13 @@ with sync_playwright() as p:
         assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),('admin',width)
         page.locator('.testimonial-editor').screenshot(path=str(OUT/f'admin-testimonials-{width}.png'))
     saved_pages['ru']={'fields':{'hero':'Test heading','proof_age':'Legacy owner evidence'},'media':{},'seo':{}}
+    saved_pages['en']={'fields':{'hero':'Test heading','proof_age':'English legacy source evidence'},'media':{},'seo':{}}
     page.locator('[data-locale=ru]').click()
     page.wait_for_function('document.querySelector("[data-content-key=proof_0]").value==="Legacy owner evidence"')
+    assert page.locator('[data-content-key=proof_0]').evaluate('(el)=>el.nextElementSibling.textContent')=='English legacy source evidence'
+    saved_pages['en']['fields']['proof_0']='Explicit English source evidence'
+    page.locator('[data-locale=ar]').click()
+    page.wait_for_function('document.querySelector("[data-content-key=proof_0]").nextElementSibling.textContent==="Explicit English source evidence"')
 
     # These pages were rendered by the real Workers HTMLRewriter, not edited DOM fixtures.
     review_pages=True

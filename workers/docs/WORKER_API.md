@@ -77,6 +77,8 @@ The homepage payload also accepts optional `testimonialsEnabled: boolean` (missi
 
 Home-only optional media keys `reviewYuraScreenshot`, `reviewMScreenshot` and `reviewSergScreenshot` accept existing media IDs (10–80 ASCII letters, digits, hyphen or underscore). No external image URLs are accepted. Publish/rollback require each referenced asset to be published with consent. The public media endpoint requires both publication and consent. Private previews use the authenticated media route. Review images use dedicated links and accessible labels, not the managed-portrait renderer; no source image is loaded before its link is opened. Empty quotations/authors remove their cards; absent image IDs leave text-only cards. Rating snapshots remain attributed plain text, never `AggregateRating` structured data or an automatic platform feed.
 
+Legacy proof aliases resolve consistently in the public renderer, the current editor and the English comparison shown during translation review. An explicitly saved numbered proof field always takes precedence, including an intentional empty value.
+
 ## Source-of-truth settings
 
 All new services default to `acceptingRequests=false` until Nozha approves current availability. The `approvedTranslationPairs` list is **directed**, e.g. `en:ru` does not imply `ru:en`. Public locales are exactly UK/EN/AR/RU, with no Korean service or locale. The video is the supplied Vimeo ID/hash and can be updated to another allowlisted privacy-hashed Vimeo URL.

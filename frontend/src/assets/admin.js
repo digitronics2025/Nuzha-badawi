@@ -423,6 +423,13 @@ function inputField(key, value, schema, source) {
   }
   return fragment;
 }
+function resolveProofFields(fields) {
+  const resolved = { ...fields };
+  for (const [legacy, current] of [["proof_age", "proof_0"], ["proof_levels", "proof_1"], ["proof_formats", "proof_2"]]) {
+    if (Object.hasOwn(resolved, legacy) && !Object.hasOwn(resolved, current)) resolved[current] = resolved[legacy];
+  }
+  return resolved;
+}
 async function loadPage() {
   if (!state.session) return;
   const sequence = ++state.sequence,
@@ -444,10 +451,7 @@ async function loadPage() {
     if (!current("pages", sequence)) return;
     const base = result.defaultContent || { fields: {}, seo: {}, media: {} },
       saved = result.draft || result.published || {};
-    const savedFields = { ...saved.fields };
-    for (const [legacy, current] of [["proof_age", "proof_0"], ["proof_levels", "proof_1"], ["proof_formats", "proof_2"]]) {
-      if (Object.hasOwn(savedFields, legacy) && !Object.hasOwn(savedFields, current)) savedFields[current] = savedFields[legacy];
-    }
+    const savedFields = resolveProofFields(saved.fields);
     state.content = {
       fields: { ...base.fields, ...savedFields },
       seo: { ...base.seo, ...saved.seo },
@@ -461,7 +465,7 @@ async function loadPage() {
     const source = english
       ? {
           ...english.defaultContent?.fields,
-          ...(english.draft || english.published)?.fields,
+          ...resolveProofFields((english.draft || english.published)?.fields),
         }
       : null;
     const [a, b] = editKeys();
