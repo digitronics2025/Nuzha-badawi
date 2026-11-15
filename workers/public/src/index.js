@@ -3,6 +3,10 @@ import {validateEnquiry} from '../../shared/validation.js';
 import {settings,published} from '../../shared/store.js';
 import {renderPublished} from '../../shared/render.js';
 import {flushOutbox} from '../../shared/notify.js';
+import {bundledAssets} from '../../shared/assets.js';
+import STATIC from './static-assets.generated.js';
+
+const BUNDLED=bundledAssets(STATIC,{notFound:'/404.html'});
 
 const encoder=new TextEncoder();
 async function sha256(value){const bytes=await crypto.subtle.digest('SHA-256',encoder.encode(value));return [...new Uint8Array(bytes)].map(v=>v.toString(16).padStart(2,'0')).join('');}
@@ -15,7 +19,9 @@ async function verifyTurnstile(token,request,env){
  const form=new FormData();form.append('secret',env.TURNSTILE_SECRET);form.append('response',token);
  const ip=request.headers.get('cf-connecting-ip');if(ip)form.append('remoteip',ip);
  let result;try{const response=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:form,signal:AbortSignal.timeout(5000)});if(!response.ok)throw Error('unavailable');result=await response.json();}catch{throw new HttpError(503,'SERVICE_UNAVAILABLE','Security verification is temporarily unavailable.');}
- if(result.success!==true||result.action!=='nusya_enquiry'||result.hostname!==(env.PUBLIC_HOST||'nozha-badavi.com'))throw new HttpError(400,'BOT_CHECK_FAILED','Security verification failed. Try again.');
+ const testKey=result.metadata?.result_with_testing_key===true;
+ if(testKey&&env.TURNSTILE_ALLOW_TEST_KEYS!=='true')throw new HttpError(400,'BOT_CHECK_FAILED','Security verification failed. Try again.');
+ if(result.success!==true||(result.action!=='nusya_enquiry'&&!testKey)||result.hostname!==(env.TURNSTILE_EXPECTED_HOSTNAME||env.PUBLIC_HOST||'nozha-badavi.com'))throw new HttpError(400,'BOT_CHECK_FAILED','Security verification failed. Try again.');
 }
 async function createEnquiry(request,env,ctx){
  if(!env.DB)throw new HttpError(503,'SERVICE_UNAVAILABLE','The contact service is not configured.');
@@ -51,7 +57,8 @@ async function createEnquiry(request,env,ctx){
  return formResponse(reference);
 }
 function publicSecurity(response){const r=secureHeaders(response);const h=new Headers(r.headers);
- h.set('content-security-policy',"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; frame-src https://player.vimeo.com https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; upgrade-insecure-requests");
+ h.set('strict-transport-security','max-age=31536000; includeSubDomains');
+ h.set('content-security-policy',"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; frame-src https://player.vimeo.com https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; frame-ancestors 'none'; upgrade-insecure-requests");
  return new Response(r.body,{status:r.status,headers:h});
 }
 async function serveMedia(request,env){
@@ -73,11 +80,24 @@ async function servePublished(request,env,ctx){
  let html=renderPublished(asset,revision?.payload||{},conf,{locale:parsed.locale,turnstileSiteKey:parsed.key==='contact'?env.TURNSTILE_SITE_KEY:null});
  const h=new Headers(html.headers);h.set('cache-control','public, max-age=0, s-maxage=90');h.set('content-type','text/html; charset=utf-8');
  html=new Response(html.body,{status:200,headers:h});
- if(cache&&ctx?.waitUntil)ctx.waitUntil(cache.put(cacheKey,html.clone()));
+ if(cache&&ctx?.waitUntil&&request.method==='GET')ctx.waitUntil(cache.put(cacheKey,html.clone()));
  return publicSecurity(html);
+}
+/** `/` sends visitors to their preferred supported locale (en default); never cached across languages. */
+export function preferredLocale(header){
+ const prefs=String(header||'').split(',').map((part,i)=>{const [tag,...params]=part.trim().toLowerCase().split(';');const q=params.find(x=>x.trim().startsWith('q='));return {lang:tag.split('-')[0],q:q?Number(q.trim().slice(2))||0:1,i};}).filter(x=>x.lang&&x.q>0).sort((a,b)=>b.q-a.q||a.i-b.i);
+ return prefs.find(x=>['en','ar','ru'].includes(x.lang))?.lang||'en';
+}
+function rootRedirect(request){const loc=preferredLocale(request.headers.get('accept-language'));return new Response(null,{status:302,headers:{location:`/${loc}/`,'cache-control':'private, no-store','vary':'accept-language'}});}
+async function maintenance(env){
+ if(!env.DB)return;
+ // Rate-limit buckets are 15-minute windows; anything older than a day is useless.
+ await env.DB.prepare('DELETE FROM rate_buckets WHERE time_bucket<?').bind(Math.floor(Date.now()/900000)-96).run();
+ if(env.ENABLE_OUTBOX_CRON==='true')await flushOutbox(env.DB,env);
 }
 const worker={
  async fetch(request,env,ctx){try{
+  if(!env.ASSETS)env={...env,ASSETS:BUNDLED};
   const url=new URL(request.url),p=url.pathname;
   if(p==='/api/v1/config'&&request.method==='GET'){
     const conf=env.DB?await settings(env.DB):null;
@@ -90,8 +110,9 @@ const worker={
   if(p.startsWith('/api/'))return problem(404,'NOT_FOUND','API endpoint not found.');
   if(p.startsWith('/media/')){if(request.method!=='GET'&&request.method!=='HEAD')throw new HttpError(405,'METHOD_NOT_ALLOWED','Method not allowed.');return await serveMedia(request,env);}
   if(request.method!=='GET'&&request.method!=='HEAD')throw new HttpError(405,'METHOD_NOT_ALLOWED','Method not allowed.');
+  if(p==='/'||p==='/index.html')return rootRedirect(request);
   return await servePublished(request,env,ctx);
  }catch(e){return errorResponse(e);}},
- async scheduled(event,env,ctx){if(env.DB&&env.ENABLE_OUTBOX_CRON==='true')ctx.waitUntil(flushOutbox(env.DB,env));}
+ async scheduled(event,env,ctx){ctx.waitUntil(maintenance(env));}
 };
 export default worker;

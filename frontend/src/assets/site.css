@@ -19,3 +19,7 @@
 /* Managed photo is only visible after an approved R2 asset is published. */
 .portrait-art{position:relative}.portrait-art .managed-portrait{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit;z-index:3}.portrait-art[data-image-id] .portrait-card,.portrait-art[data-image-id] .portrait-orbit,.portrait-art[data-image-id] .portrait-stamp{display:none}.portrait-art[data-image-id] .managed-portrait{display:block}
 #nusya-turnstile{margin:14px 0;min-height:4px}
+
+/* Owner-disabled enquiry services (availability set in admin). */
+.service-option.is-unavailable{opacity:.45;cursor:not-allowed}
+.service-option.is-unavailable input{cursor:not-allowed}

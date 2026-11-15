@@ -49,3 +49,12 @@ This supplement records **proposed** architecture, not confirmation that Workers
 | D-020 | 2026-11-15 | Required full-page designs V01–V12 before UI code | Mandatory user approval pending | High-fidelity desktop/mobile/Arabic RTL/Russian/admin/interaction and failure-state review |
 
 These are *documented design decisions*, **not** an assertion that the user approved final mockup artboards or implementation. See [design.md](../design.md) for exact durations, typography and animation fallbacks.
+
+## Deployment decisions (2026-11-15, executed under explicit user authorization)
+| ID | Date | Decision | Status | Reason |
+| --- | --- | --- | --- | --- |
+| D-021 | 2026-11-15 | Production deployed: two Workers on custom domains, D1, R2, Access, Turnstile, Email Sending | Live | User authorised full autopilot production launch |
+| D-022 | 2026-11-15 | Bundle static frontend into Worker modules instead of Static Assets | Live | Single deploy artifact; Static Assets upload JWT unusable behind build proxy; cost negligible |
+| D-023 | 2026-11-15 | Enquiries open for lessons + coaching; translation/interpretation closed until owner approves directed pairs | Live | SOURCES.md requires per-direction confirmation |
+| D-024 | 2026-11-15 | Access service tokens only honoured when listed in `SERVICE_TOKEN_OWNERS`; listed on staging only | Live | Automated e2e without weakening production admin |
+| D-025 | 2026-11-15 | One CI/CD pipeline (`deploy.yml`); redundant frontend-only workflow removed | Live | AGENTS.md: one deployment mechanism, staging before production |

@@ -103,6 +103,14 @@ async function setupContactSecurity(form) {
       const updateTarget=()=>{for(const option of targetLanguage.options)if(option.value)option.disabled=!permittedPairs.has(source.value+':'+option.value);if(targetLanguage.selectedOptions[0]?.disabled)targetLanguage.value='';};
       source.addEventListener('change',updateTarget);updateTarget();
     }
+    // Reflect owner-controlled availability: services not accepting enquiries cannot be chosen.
+    const services=config.services||{},accepting=id=>services[id]?.visible!==false&&services[id]?.acceptingRequests===true;
+    const lessonLangs=['english','russian','arabic'];
+    const typeOpen={lesson:lessonLangs.some(accepting),coaching:accepting('coaching'),translation:accepting('translation')&&permittedPairs.size>0,interpretation:accepting('interpretation')&&permittedPairs.size>0};
+    for(const choice of form.querySelectorAll('input[name="type"]')){const open=typeOpen[choice.value]!==false;choice.disabled=!open;choice.closest('label')?.classList.toggle('is-unavailable',!open);if(!open&&choice.checked)choice.checked=false;}
+    if(!form.querySelector('input[name="type"]:checked')){const first=form.querySelector('input[name="type"]:not(:disabled)');if(first){first.checked=true;first.dispatchEvent(new Event('change'));}}
+    const lessonSelect=form.querySelector('.form-detail[data-for="lesson"] [name="language"]');
+    if(lessonSelect)for(const option of lessonSelect.options)if(option.value)option.disabled=!accepting(option.value);
     target.className='cf-turnstile';
     target.dataset.sitekey=config.turnstileSiteKey;
     target.dataset.action='nusya_enquiry';
@@ -160,9 +168,9 @@ if (form) {
       if (response.status===201 && json?.ok===true && json.reference) {
         show(`${form.dataset.success || 'Received:'} ${json.reference}`,true);
         form.reset(); delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false; window.turnstile?.reset?.();
-      } else show(json?.message || form.dataset.error || 'The contact system is not available yet.');
+      } else { show(json?.message || form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.(); }
     } catch {
-      show(form.dataset.error || 'The contact system is not available yet.');
+      show(form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.();
     } finally { submit.disabled=false; }
   });
 }

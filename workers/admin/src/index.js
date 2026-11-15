@@ -5,6 +5,10 @@ import {validateSettings,validatePagePayload} from '../../shared/validation.js';
 import {renderPublished} from '../../shared/render.js';
 import {flushOutbox} from '../../shared/notify.js';
 import defaults from '../../shared/defaults.js';
+import {bundledAssets} from '../../shared/assets.js';
+import STATIC from './static-assets.generated.js';
+
+const BUNDLED=bundledAssets(STATIC);
 
 const current=()=>new Date().toISOString();
 const statuses=new Set(['new','reviewing','awaiting_customer','quoted','booked','completed','closed','spam']);
@@ -133,6 +137,7 @@ async function handleAPI(request,env,ctx,user){
 }
 const worker={async fetch(request,env,ctx){
  try{
+  if(!env.ASSETS)env={...env,ASSETS:BUNDLED};
   const url=new URL(request.url),host=env.ADMIN_HOST||'admin.nozha-badavi.com';
   if(url.hostname!==host)throw new HttpError(421,'WRONG_HOST','Incorrect admin hostname.');
   const user=await verifyAccess(request,env);

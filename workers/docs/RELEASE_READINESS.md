@@ -1,5 +1,7 @@
 # NUSYA Release Readiness — 2026-11-15
 
+> **Released 2026-11-15.** Gates below were executed or recorded as owner actions in [../../docs/PRODUCTION.md](../../docs/PRODUCTION.md).
+
 ## Local implementation results
 
 **Implemented:** 21 localized public pages, responsive cinematic frontend, RTL, Vimeo click-to-load, contact form integration, protected admin UI, service settings, D1 CMS revision/publish/rollback, translation review, consented media upload, secure Access token verification, Turnstile-enforced enquiry persistence, idempotency, bounded rate limits, notification outbox and Cloudflare example configurations.

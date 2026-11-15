@@ -1,0 +1,32 @@
+{
+  // PRODUCTION — admin.nozha-badavi.com, protected by Cloudflare Access app "NUSYA Admin" + in-Worker JWT verification.
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "nusya-admin",
+  "main": "./src/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "admin.nozha-badavi.com", "custom_domain": true }],
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "nusya-platform",
+    "database_id": "7d32814d-323d-45ed-8ed4-fb8c6cf56779",
+    "migrations_dir": "../migrations"
+  }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "nusya-media" }],
+  "send_email": [{
+    "name": "EMAIL",
+    "destination_address": "contact@tenten.ma",
+    "allowed_sender_addresses": ["notifications@nozha-badavi.com"]
+  }],
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "invocation_logs": false } },
+  "vars": {
+    "ADMIN_HOST": "admin.nozha-badavi.com",
+    "ACCESS_TEAM_DOMAIN": "sparkling-breeze-b580.cloudflareaccess.com",
+    "ACCESS_AUD": "3b937dc19a52a1b78d540883a547553113054270b1e756346f36382c43806aaf",
+    "OWNER_EMAILS": "contact@tenten.ma,digitronics.electro@gmail.com",
+    "EDITOR_EMAILS": "",
+    "NOTIFICATION_EMAIL": "contact@tenten.ma",
+    "EMAIL_FROM": "notifications@nozha-badavi.com"
+  }
+}

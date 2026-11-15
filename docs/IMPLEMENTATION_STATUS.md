@@ -1,6 +1,6 @@
 # NUSYA Full-Platform Implementation Status — 2026-11-15
 
-**Branch:** `feat/nusya-full-platform` (built from `feat/nusya-frontend-only`). **Release status:** Source implementation and local verification done; **not deployed**. Do not treat `nozha-badavi.com` registration as active DNS, SSL or Workers configuration.
+**Branch:** `feat/nusya-full-platform` (built from `feat/nusya-frontend-only`). **Release status: DEPLOYED TO PRODUCTION 2026-11-15** on the user's explicit full-autopilot authorization. Inventory, evidence and runbook: [PRODUCTION.md](PRODUCTION.md). Sections below describe the pre-deployment state and remaining owner actions.
 
 ## Implemented and locally tested
 - 21 public pages (7 page types × `en`/`ar` RTL/`ru`) and a separate protected-host admin frontend, preserving the approved cinematic visual design.
@@ -28,3 +28,10 @@ cd workers && npm run check
 Review `workers/README.md`, `workers/docs/WORKER_API.md`, `workers/docs/RELEASE_READINESS.md` and `frontend/docs/BACKEND_HANDOFF.md` for integration, security gates and final release steps.
 
 **No Korean** and no fourth public locale. All admin/private requests are fail-closed until Cloudflare Access and role bindings are correctly configured; new service enquiries are disabled until Nozha approves them.
+
+## 2026-11-15 production deployment summary
+- Live: `nusya-public` on nozha-badavi.com, `nusya-admin` on admin.nozha-badavi.com (Access), www→apex 301, isolated staging Workers/D1/R2.
+- Provisioned: D1, R2, Turnstile, Access apps, Email Sending domain, zone HTTPS/TLS/cache settings.
+- Code changes during deployment: bundled static assets, Accept-Language root redirect, HEAD cache-poisoning fix, rate-bucket cleanup cron, Access service-token support (explicit allowlist), `aud` string claim support, Turnstile test-key gating for staging, availability-aware form, Turnstile reset after failed submit, Web Analytics CSP allowance, email sender display name.
+- Tests: 18 Worker + 9 frontend unit tests; production smoke 31/31; staging e2e write flow passed (see PRODUCTION.md).
+- Remaining owner actions: real-token enquiry + admin login confirmation, translation directions, consented portraits, GitHub deploy secrets.
