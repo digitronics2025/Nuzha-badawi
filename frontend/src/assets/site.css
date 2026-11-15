@@ -28,3 +28,6 @@
 .developer-arrow{display:inline-block;font-size:1.05em;transition:transform .22s var(--ease)}
 .developer-link:hover .developer-arrow{transform:translate(2px,-2px)}
 @media(max-width:767px){.footer-meta{width:100%}}
+/* Owner-disabled enquiry services (availability set in admin). */
+.service-option.is-unavailable{opacity:.45;cursor:not-allowed}
+.service-option.is-unavailable input{cursor:not-allowed}

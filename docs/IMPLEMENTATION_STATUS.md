@@ -1,6 +1,6 @@
 # NUSYA Full-Platform Implementation Status — 2026-11-15
 
-**Branch:** `feat/nusya-full-platform` (built from `feat/nusya-frontend-only`). **Release status:** Source implementation and local verification done; **not deployed**. Do not treat `nozha-badavi.com` registration as active DNS, SSL or Workers configuration.
+**Branch:** `feat/nusya-full-platform` (built from `feat/nusya-frontend-only`). **Release status: DEPLOYED TO PRODUCTION 2026-11-15** on the user's explicit full-autopilot authorization. Inventory, evidence and runbook: [PRODUCTION.md](PRODUCTION.md). Sections below describe the pre-deployment state and remaining owner actions.
 
 ## Implemented and locally tested
 - 21 public pages (7 page types × `en`/`ar` RTL/`ru`) and a separate protected-host admin frontend, preserving the approved cinematic visual design.
@@ -31,3 +31,10 @@ Review `workers/README.md`, `workers/docs/WORKER_API.md`, `workers/docs/RELEASE_
 
 ## CV-based information revision under review (2026-11-15)
 A later content-review branch prepares complete EN/AR/RU professional-history summaries from the newer one-page CV, with source-document evidence in `docs/SOURCES.md`. The static copy and generated Worker fallback manifest are kept synchronized; this does not by itself update live published D1 CMS overrides or constitute permission to publish private CV data. Confirm dates, qualification wording, service availability and translations with Nozha before production publishing. No Cloudflare configuration or deployment was performed as part of the content change.
+
+## 2026-11-15 production deployment summary
+- Live: `nusya-public` on nozha-badavi.com, `nusya-admin` on admin.nozha-badavi.com (Access), www→apex 301, isolated staging Workers/D1/R2.
+- Provisioned: D1, R2, Turnstile, Access apps, Email Sending domain, zone HTTPS/TLS/cache settings.
+- Code changes during deployment: bundled static assets, Accept-Language root redirect, HEAD cache-poisoning fix, rate-bucket cleanup cron, Access service-token support (explicit allowlist), `aud` string claim support, Turnstile test-key gating for staging, availability-aware form, Turnstile reset after failed submit, Web Analytics CSP allowance, email sender display name.
+- Tests: 18 Worker + 9 frontend unit tests; production smoke 31/31; staging e2e write flow passed (see PRODUCTION.md).
+- Remaining owner actions: real-token enquiry + admin login confirmation, translation directions, consented portraits, GitHub deploy secrets.

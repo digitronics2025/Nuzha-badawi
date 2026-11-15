@@ -1,0 +1,33 @@
+{
+  // STAGING — isolated D1/R2, workers.dev only, Turnstile TEST keys. Never bind production resources here.
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "nusya-admin-staging",
+  "main": "./src/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "nusya-platform-staging",
+    "database_id": "e6e00b4e-fd9e-4b95-b1be-94e642dcc36b",
+    "migrations_dir": "../migrations"
+  }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "nusya-media-staging" }],
+  "send_email": [{
+    "name": "EMAIL",
+    "destination_address": "contact@tenten.ma",
+    "allowed_sender_addresses": ["notifications@nozha-badavi.com"]
+  }],
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "invocation_logs": false } },
+  "vars": {
+    "ADMIN_HOST": "nusya-admin-staging.digitronics-electro.workers.dev",
+    "ACCESS_TEAM_DOMAIN": "sparkling-breeze-b580.cloudflareaccess.com",
+    "ACCESS_AUD": "da820d3f40d1603d8ff402084ae97e940bd2447f62ee2698e7d50feaa5a7cf59",
+    "OWNER_EMAILS": "contact@tenten.ma,digitronics.electro@gmail.com",
+    "EDITOR_EMAILS": "",
+    "SERVICE_TOKEN_OWNERS": "ed9c5f06319080d0e01f3748087a0b33.access",
+    "EMAIL_SUBJECT_PREFIX": "[STAGING] ",
+    "NOTIFICATION_EMAIL": "contact@tenten.ma",
+    "EMAIL_FROM": "notifications@nozha-badavi.com"
+  }
+}

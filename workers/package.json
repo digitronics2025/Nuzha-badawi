@@ -4,14 +4,23 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build:frontend": "python3 ../frontend/scripts/build.py",
+    "build:frontend": "python3 ../frontend/scripts/build.py && node tools/bundle_assets.mjs",
     "test": "node --test tests/*.test.mjs",
     "test:sql": "python3 tools/check_migrations.py",
     "check": "npm run test:sql && npm test && node --check public/src/index.js && node --check admin/src/index.js",
-    "dev:public": "npx wrangler dev --config public/wrangler.jsonc",
-    "dev:admin": "npx wrangler dev --config admin/wrangler.jsonc"
+    "dev:public": "wrangler dev --config public/wrangler.jsonc",
+    "dev:admin": "wrangler dev --config admin/wrangler.jsonc",
+    "bundle": "node tools/bundle_assets.mjs",
+    "pretest": "node tools/bundle_assets.mjs",
+    "deploy:public": "wrangler deploy --config public/wrangler.jsonc",
+    "deploy:admin": "wrangler deploy --config admin/wrangler.jsonc",
+    "migrate:remote": "wrangler d1 migrations apply nusya-platform --remote --config public/wrangler.jsonc"
   },
-  "engines": { "node": ">=22" },
-  "devDependencies": { "wrangler": "^4.0.0" },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "wrangler": "4.162.0"
+  },
   "license": "UNLICENSED"
 }

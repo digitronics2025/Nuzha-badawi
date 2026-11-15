@@ -140,7 +140,9 @@ def build_public():
     if PUBLIC.exists():shutil.rmtree(PUBLIC)
     PUBLIC.mkdir(parents=True)
     source=ROOT/'src'/'assets'
-    shutil.copytree(source,PUBLIC/'assets')
+    shutil.copytree(source,PUBLIC/'assets',ignore=shutil.ignore_patterns('admin.*'))
+    # Static asset security headers (served by Workers Static Assets without invoking the Worker).
+    (PUBLIC/'_headers').write_text('/assets/*\n  X-Content-Type-Options: nosniff\n  Cache-Control: public, max-age=3600\n  Strict-Transport-Security: max-age=31536000; includeSubDomains\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Strict-Transport-Security: max-age=31536000; includeSubDomains\n',encoding='utf-8')
     pages={'home':home,'about':page_about,'lessons':page_lessons,'coaching':page_coaching,'translation':page_translation,'contact':page_contact,'privacy':page_privacy}
     for loc,c in COPY.items():
         for name,render in pages.items():
@@ -161,9 +163,9 @@ def build_admin():
     shutil.copytree(ROOT/'src'/'assets',ADMIN/'assets')
     shutil.copy2(ROOT/'src'/'admin.html',ADMIN/'index.html')
     preview=ADMIN/'preview-public'
-    shutil.copytree(PUBLIC,preview,ignore=shutil.ignore_patterns('assets'))
+    shutil.copytree(PUBLIC,preview,ignore=shutil.ignore_patterns('assets','_headers'))
     (ADMIN/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
-    print(f'Built admin UI preview (NO AUTH/BACKEND) to {ADMIN}')
+    print(f'Built protected admin UI (served only by the Access-protected admin Worker) to {ADMIN}')
 if __name__=='__main__':
     assert all(set(COPY[loc])==set(COPY['en']) for loc in LOCALES)
     build_public()

@@ -1,6 +1,6 @@
 # Cloudflare Deployment & Domain Blueprint
 
-**Status:** planned; not implemented. **Domain evidence:** user's 2026-11-15 Cloudflare Registrar screenshot displaying `nozha-badavi.com` as ready. No live website, zone activation, TLS, Workers, bindings, email or access is verified. **Do not provision, pay, modify DNS, or deploy from this documentation.**
+**Status:** DEPLOYED 2026-11-15 — actual resources in [PRODUCTION.md](PRODUCTION.md); the remainder of this file is the original blueprint (historical). Previously: **Domain evidence:** user's 2026-11-15 Cloudflare Registrar screenshot displaying `nozha-badavi.com` as ready. No live website, zone activation, TLS, Workers, bindings, email or access is verified. **Do not provision, pay, modify DNS, or deploy from this documentation.**
 
 Refer to [the complete execution plan](PLAN-nusya-multilingual-studio.md) for approval gates, tests and delivery phases; [OPERATIONS](OPERATIONS.md) for recovery/costs, and [ARCHITECTURE](ARCHITECTURE.md) for app design.
 

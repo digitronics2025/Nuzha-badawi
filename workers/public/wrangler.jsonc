@@ -1,0 +1,31 @@
+{
+  // PRODUCTION — nozha-badavi.com (deployed 2026-11-15). Secrets: TURNSTILE_SECRET, RATE_LIMIT_SALT (wrangler secret put).
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "nusya-public",
+  "main": "./src/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "nozha-badavi.com", "custom_domain": true }],
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "nusya-platform",
+    "database_id": "7d32814d-323d-45ed-8ed4-fb8c6cf56779",
+    "migrations_dir": "../migrations"
+  }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "nusya-media" }],
+  "send_email": [{
+    "name": "EMAIL",
+    "destination_address": "contact@tenten.ma",
+    "allowed_sender_addresses": ["notifications@nozha-badavi.com"]
+  }],
+  "triggers": { "crons": ["17 * * * *"] },
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "invocation_logs": false } },
+  "vars": {
+    "PUBLIC_HOST": "nozha-badavi.com",
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAGB5vc9gB1fljwRp",
+    "NOTIFICATION_EMAIL": "contact@tenten.ma",
+    "EMAIL_FROM": "notifications@nozha-badavi.com",
+    "ENABLE_OUTBOX_CRON": "true"
+  }
+}

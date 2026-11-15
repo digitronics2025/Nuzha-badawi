@@ -1,6 +1,6 @@
 # NUSYA Cloudflare Workers backend
 
-Status: **source code and local verification only; not deployed**. Intended domain: `nozha-badavi.com` and protected administration: `admin.nozha-badavi.com`. The domain registration screenshot alone does not prove any DNS, resource, email or Access configuration.
+Status: **deployed to production 2026-11-15** — see `../docs/PRODUCTION.md`. Configs: `public/wrangler.jsonc`, `admin/wrangler.jsonc` (production) and `*.staging.jsonc`. Static files are bundled into each Worker by `npm run build:frontend` (no Static Assets upload). End-to-end: `tools/e2e-smoke.mjs`. Intended domain: `nozha-badavi.com` and protected administration: `admin.nozha-badavi.com`. The domain registration screenshot alone does not prove any DNS, resource, email or Access configuration.
 
 This repository contains two separate Worker entry points (`public/src/index.js` and `admin/src/index.js`), one D1 migration set, shared validated services, unit/integration tests and example Wrangler templates. The existing frontend continues to be built separately with `python3 frontend/scripts/build.py`, producing `frontend/dist-public` and `frontend/dist-admin`. Do not serve `dist-admin` on an unprotected public origin.
 
