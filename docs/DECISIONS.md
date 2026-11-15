@@ -50,11 +50,28 @@ This supplement records **proposed** architecture, not confirmation that Workers
 
 These are *documented design decisions*, **not** an assertion that the user approved final mockup artboards or implementation. See [design.md](../design.md) for exact durations, typography and animation fallbacks.
 
+## Developer credit decision (2026-11-15)
+
+| ID | Date | Decision | Status | Rationale |
+| --- | --- | --- | --- | --- |
+| D-021 | 2026-11-15 | Add Dr. Badawi Abdalsalam as credited website designer and developer via `https://dr-badawi-abdalsalam.com/` in the discreet, localized public footer | User-requested and approved | Attribution remains visible without competing with NUSYA brand, with safe external links and RTL/mobile support |
+
+This applies to all 21 public pages (EN, AR, RU), underneath copyright. It does not give the developer account access or grant any GitHub/Cloudflare role.
+
+## Updated CV profile copy — content change under review
+
+| ID | Date | Decision | Status | Explanation |
+| --- | --- | --- | --- | --- |
+| D-022 | 2026-11-15 | Prepare a richer EN/AR/RU biography, named career milestones, education summary and accurate coaching/translation descriptions from the newer CV | **Proposed source-content update, pending public sign-off** | This is a reviewable content change; no private CV contact details, unsupported credentials or unapproved publication |
+| D-023 | 2026-11-15 | Replace hard-coded “backend not connected” contact guidance with neutral status wording | Content correction for review | Backend code exists but its live deployment state was not verified; successful enquiry must still be confirmed server-side |
+
+Before publishing, reconcile any D1 CMS overrides with source-derived fallback content and confirm all three translations; do not overwrite owner-edited published content without review.
+
 ## Deployment decisions (2026-11-15, executed under explicit user authorization)
 | ID | Date | Decision | Status | Reason |
 | --- | --- | --- | --- | --- |
-| D-021 | 2026-11-15 | Production deployed: two Workers on custom domains, D1, R2, Access, Turnstile, Email Sending | Live | User authorised full autopilot production launch |
-| D-022 | 2026-11-15 | Bundle static frontend into Worker modules instead of Static Assets | Live | Single deploy artifact; Static Assets upload JWT unusable behind build proxy; cost negligible |
-| D-023 | 2026-11-15 | Enquiries open for lessons + coaching; translation/interpretation closed until owner approves directed pairs | Live | SOURCES.md requires per-direction confirmation |
-| D-024 | 2026-11-15 | Access service tokens only honoured when listed in `SERVICE_TOKEN_OWNERS`; listed on staging only | Live | Automated e2e without weakening production admin |
-| D-025 | 2026-11-15 | One CI/CD pipeline (`deploy.yml`); redundant frontend-only workflow removed | Live | AGENTS.md: one deployment mechanism, staging before production |
+| D-024 | 2026-11-15 | Production deployed: two Workers on custom domains, D1, R2, Access, Turnstile, Email Sending | Live | User authorised full autopilot production launch |
+| D-025 | 2026-11-15 | Bundle static frontend into Worker modules instead of Static Assets | Live | Single deploy artifact; Static Assets upload JWT unusable behind build proxy; cost negligible |
+| D-026 | 2026-11-15 | Enquiries open for lessons + coaching; translation/interpretation closed until owner approves directed pairs | Live | SOURCES.md requires per-direction confirmation |
+| D-027 | 2026-11-15 | Access service tokens only honoured when listed in `SERVICE_TOKEN_OWNERS`; listed on staging only | Live | Automated e2e without weakening production admin |
+| D-028 | 2026-11-15 | One CI/CD pipeline (`deploy.yml`); redundant frontend-only workflow removed | Live | AGENTS.md: one deployment mechanism, staging before production |

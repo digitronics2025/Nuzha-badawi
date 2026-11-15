@@ -45,3 +45,27 @@ Maintain an internal approval record outside public documentation if it contains
 
 ## Cloudflare domain evidence (user-supplied, 2026-11-15)
 The user provided a screenshot of Cloudflare Dashboard > Domains > Registrations showing **`nozha-badavi.com`** with a green check and “Your domain is ready.” This supports **domain registration** and the chosen spelling only; it does **not** verify zone activation, nameservers, DNS records, SSL certificate, ownership permissions, email routing, Workers or a live application. Public canonical choice is `https://nozha-badavi.com` (planned). The agent must separately inspect Cloudflare after authorisation and record evidence before deployment. Never expose Cloudflare account IDs, API keys or private records in this public repository.
+
+## Updated CV re-review and content synchronization — 2026-11-15
+
+The user supplied a revised, one-page CV named `Nozha_Badavi_CV_изменён(1).pdf` for review. The document was **read as a source only and was not added to the public repository**. Its updated details are reflected in the content-review branch across EN/AR/RU copy and the generated Worker fallback manifest, **not automatically approved or deployed**.
+
+### Source-documented profile details
+- English, Russian and Arabic tutoring: Preply and private practice; Russian teaching for international students in Ukraine and online.
+- English language teacher at GoSchool (Ukraine); Arabic language teacher at Mozhlyvist (Ukraine). The CV does **not** specify dates for these positions.
+- Preschool teacher at ABC All About Children English Preschool, **2023–2026**, supporting children aged **1–6**. This historical experience does not itself mean lessons for children aged 1–6 are currently bookable.
+- Interpreter at the Migration Service, **2021–2022**, assisting conversations and interviews with foreign applicants.
+- Manager and translator at Alsafir Group (Educational Services), **2019–2022**, supporting university registration, enquiries and translation involving Ukrainian, English, Russian and Arabic.
+- Education: Language and Literature (English), Pedagogue *educational programme* at Luhansk Taras Shevchenko National University **2019–2021**, plus Faculty of Communication Science and Language studies **2013–2018**. The CV does not give enough detail to assert a specific awarded degree for each period.
+- Professional coaching: preparation for business meetings, conferences, presentations, public speaking and subject-specific communication.
+- Languages in the CV: English, Russian, Arabic, Ukrainian; Swedish at beginner level. Not all of these languages are currently offered as lessons.
+
+### Outstanding contradictions and explicit publication checks
+1. The earlier CV image described preschool employment ending in 2024; the updated CV says **2026**. Confirm the correct period with Nozha.
+2. LinkedIn headline describes Alsafir Group as a manager role while the CV indicates **2019–2022**; confirm whether this remains current.
+3. Confirm university awards/precise school affiliation for 2013–2018, and the public naming/spelling of Nozha.
+4. Confirm current bookable languages/ages/formats, approved directed translation pairs, interpretation location/modes and whether any special certification exists. No unsupported certification or current service claim is published automatically.
+5. Confirm public-use rights for CV facts, photos/video/testimonials, and an approved business contact address and privacy policy. **CV personal email and phone numbers remain excluded.**
+6. When connecting an existing D1-backed admin CMS, compare its published overrides and review status against the newly prepared static fallback copy; old published D1 revisions may supersede new source content. Never silently replace owner-edited content.
+
+**Release rule:** Treat the new profile copy as a proposed, source-documented update until Nozha explicitly approves the public wording, chronological discrepancies and each locale's translation. Preserve the previous published revision and provide an admin preview or staging link before going live.

@@ -2,6 +2,8 @@
 
 **Status (2026-11-15): LIVE.** Deployed on the user's explicit full-autopilot instruction. This file records what *actually exists*; planning documents remain in `CLOUDFLARE_DEPLOYMENT.md`.
 
+> **Content gate (2026-11-15):** production currently serves the copy deployed at commit `3795859` (before PR #5). `main` now also contains the CV-based biography from PR #5, which is **pending Nozha's public sign-off** (DECISIONS D-022, SOURCES.md release rule). The next production deploy (CI or manual) will publish it. Get that approval **before** adding the CI secrets or running a manual production deploy, or configure required reviewers on the `production` GitHub environment.
+
 ## URLs
 
 | URL | Serves | Protection |

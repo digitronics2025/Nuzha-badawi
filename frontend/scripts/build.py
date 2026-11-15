@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'/'content'))
 from site_copy import COPY, LOCALES, NAV_KEYS, SOCIAL
+DEVELOPER_URL='https://dr-badawi-abdalsalam.com/'
 PUBLIC=ROOT/'dist-public'
 ADMIN=ROOT/'dist-admin'
 PAGES=['home','about','lessons','coaching','translation','contact','privacy']
@@ -44,7 +45,7 @@ def header(loc,page):
 def footer(loc):
     c=COPY[loc]
     nav=''.join(f'<a href="{U(loc,k)}">{E(c["nav"][i])}</a>' for i,k in enumerate(NAV_KEYS))
-    return f'''<footer class="footer"><div class="wrap footer-grid"><div class="footer-intro">{wordmark(loc)}<p class="footer-quote">{T(loc,'tagline')}</p></div><div class="footer-links"><h3>{T(loc,'social_title')}</h3><a href="{E(SOCIAL['instagram'])}" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="{E(SOCIAL['preply'])}" target="_blank" rel="noopener noreferrer">Preply ↗</a><a href="{E(SOCIAL['linkedin'])}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div><nav class="footer-links" aria-label="Footer">{nav}</nav></div><div class="wrap footer-bottom"><span>{T(loc,'copyright')}</span><a href="{U(loc,'privacy')}">{T(loc,'privacy_title')}</a><span class="footer-dot">NUSYA · 2026</span></div></footer>'''
+    return f'''<footer class="footer"><div class="wrap footer-grid"><div class="footer-intro">{wordmark(loc)}<p class="footer-quote">{T(loc,'tagline')}</p></div><div class="footer-links"><h3>{T(loc,'social_title')}</h3><a href="{E(SOCIAL['instagram'])}" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="{E(SOCIAL['preply'])}" target="_blank" rel="noopener noreferrer">Preply ↗</a><a href="{E(SOCIAL['linkedin'])}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div><nav class="footer-links" aria-label="Footer">{nav}</nav></div><div class="wrap footer-bottom"><div class="footer-meta"><span>{T(loc,'copyright')}</span><span class="developer-credit">{T(loc,'developer_label')} <a class="developer-link" href="{E(DEVELOPER_URL)}" target="_blank" rel="noopener noreferrer"><bdi>{T(loc,'developer_name')}</bdi><span class="developer-arrow" aria-hidden="true">&#8599;</span></a></span></div><a href="{U(loc,'privacy')}">{T(loc,'privacy_title')}</a><span class="footer-dot">NUSYA · 2026</span></div></footer>'''
 def shell(loc,page,body,seo_title,seo_desc):
     c=COPY[loc];route=U(loc,page)
     alt=''.join(f'<link rel="alternate" hreflang="{l}" href="{CANONICAL}{U(l,page)}" />' for l in LOCALES)
