@@ -38,3 +38,6 @@ Per phase: changed-file map, decisions, tests/metrics, edge cases, blockers and 
 
 ## Acceptance
 Beautiful, accurate personal professional site; exact 3 public locales; robust Vimeo fallback; truthful service claims; admin control, reliable enquiries and recovery; WCAG 2.2 AA target; low resource usage. No Korean.
+
+## Cloudflare/domain rollout added to phases
+**Confirmed input:** Cloudflare Registrar screenshot shows `nozha-badavi.com` registered/ready. **Not confirmed:** zone, DNS, TLS, active Worker, plan, email, D1, R2 or Access. Before mockups perform only authorized **read-only** repo/cloud inventory. Mandatory **high-fidelity desktop/mobile design mockup STOP remains before UI coding**. After design approval, build proposed separate public/admin Workers, local D1 migrations, optional R2 media, three locales and Vimeo; then stage in isolated Workers/DB, verify Access, Turnstile and sending service with approved budget. Before production, **STOP for explicit infrastructure/DNS/spend approval**; attach custom domain apex `nozha-badavi.com`, protected admin `admin.nozha-badavi.com`, www redirect, TLS, backup, alerts and release pipeline only afterward. End-to-end release verification and rollback must prove live URLs and no private-data exposure. Full implementation steps and tools in `CLOUDFLARE_DEPLOYMENT.md` and `PLAN-nusya-multilingual-studio.md`.
