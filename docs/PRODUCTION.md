@@ -100,3 +100,9 @@ Codex review of PR #14 identified direct HTML paths (`/404.html` and locale `/in
 
 
 Codex review of the mobile contact fix also identified the inherited desktop `top: 120px` offset becoming active under relative positioning. The mobile rule now resets `top: auto`, retaining decoration containment without shifting the card into the footer. Final mobile verification must check card/footer bounds as well as horizontal overflow.
+
+## Staging Access credential rotation — 2026-11-15
+
+Both GitHub Access secrets are now present, but run `43747060066` failed staging authentication; production was skipped. Saving a replacement token does not authorize it in Cloudflare Access or the Worker. The staging application's existing Service Auth policy must include the replacement token while preserving owner access and production isolation.
+
+The staging deployment now overrides `SERVICE_TOKEN_OWNERS` from repository secret `CF_ACCESS_CLIENT_ID`, so a rotated token can be authorized by the Worker without committing its value. GitHub masks the configured secret in deployment output. This override applies only to staging; production admin retains its existing configuration and does not accept the staging token. Mandatory authenticated staging enquiry/CMS/media/publish/rollback checks still gate production.
