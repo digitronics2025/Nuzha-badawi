@@ -28,3 +28,6 @@ cd workers && npm run check
 Review `workers/README.md`, `workers/docs/WORKER_API.md`, `workers/docs/RELEASE_READINESS.md` and `frontend/docs/BACKEND_HANDOFF.md` for integration, security gates and final release steps.
 
 **No Korean** and no fourth public locale. All admin/private requests are fail-closed until Cloudflare Access and role bindings are correctly configured; new service enquiries are disabled until Nozha approves them.
+
+## CV-based information revision under review (2026-11-15)
+A later content-review branch prepares complete EN/AR/RU professional-history summaries from the newer one-page CV, with source-document evidence in `docs/SOURCES.md`. The static copy and generated Worker fallback manifest are kept synchronized; this does not by itself update live published D1 CMS overrides or constitute permission to publish private CV data. Confirm dates, qualification wording, service availability and translations with Nozha before production publishing. No Cloudflare configuration or deployment was performed as part of the content change.
