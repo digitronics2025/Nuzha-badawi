@@ -75,3 +75,11 @@ Before publishing, reconcile any D1 CMS overrides with source-derived fallback c
 | D-026 | 2026-11-15 | Enquiries open for lessons + coaching; translation/interpretation closed until owner approves directed pairs | Live | SOURCES.md requires per-direction confirmation |
 | D-027 | 2026-11-15 | Access service tokens only honoured when listed in `SERVICE_TOKEN_OWNERS`; listed on staging only | Live | Automated e2e without weakening production admin |
 | D-028 | 2026-11-15 | One CI/CD pipeline (`deploy.yml`); redundant frontend-only workflow removed | Live | AGENTS.md: one deployment mechanism, staging before production |
+
+
+## Deployment completion authorization — 2026-11-15
+
+| ID | Date | Decision | Status | Rationale / approval |
+| --- | --- | --- | --- | --- |
+| D-023 | 2026-11-15 | Publish the CV-based biography covered by D-022 | User approved | In the deployment chat the user explicitly answered “Yes, approved for publication” to the specific D-022 biography approval question. Supersedes the pending publication gate; no new biography claims or private contact details added. |
+| D-024 | 2026-11-15 | Complete staging then production deployment through existing safeguards; use Ukrainian as default and verify UK/EN/AR/RU and binary WebP assets | User requested | Deployment-completion instruction authorizes routine fixes, merging and deployment; preserve CMS overrides, production data, Access and rollback. Missing deployment credentials must fail preflight, never silently report success. |

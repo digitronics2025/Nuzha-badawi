@@ -20,9 +20,19 @@ async function pub(path,opts={}){const r=await fetch(PUBLIC_URL+path,{redirect:'
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 // ---- Public site
-for(const loc of ['en','ar','ru'])for(const page of ['','about/','lessons/','coaching/','translation/','contact/','privacy/']){
+for(const loc of ['uk','en','ar','ru'])for(const page of ['','about/','lessons/','coaching/','translation/','contact/','privacy/']){
  const r=await pub(`/${loc}/${page}`);check(`GET /${loc}/${page}`,r.status===200&&r.body.includes(`lang="${loc}"`)&&(loc!=='ar'||r.body.includes('dir="rtl"')),String(r.status));}
 let r=await pub('/',{headers:{'accept-language':'ar'}});check('root → /ar/ by Accept-Language',r.status===302&&r.headers.get('location')==='/ar/');
+for(const language of ['', 'fr-FR', 'uk-UA']){
+ r=await pub('/',{headers:{'accept-language':language}});
+ check(`root → /uk/ for ${language||'no language preference'}`,r.status===302&&r.headers.get('location')==='/uk/'&&r.headers.get('cache-control')?.includes('no-store'));
+}
+for(const name of ['nozha-portrait-optimized.webp','nusya-introduction-cover-optimized.webp']){
+ const asset=await fetch(PUBLIC_URL+'/assets/'+name);
+ const bytes=new Uint8Array(await asset.arrayBuffer());
+ const signature=new TextDecoder('ascii');
+ check(`WebP ${name}`,asset.status===200&&asset.headers.get('content-type')==='image/webp'&&signature.decode(bytes.slice(0,4))==='RIFF'&&signature.decode(bytes.slice(8,12))==='WEBP');
+}
 r=await pub('/ko/');check('no Korean locale',r.status===404);
 r=await pub('/api/v1/admin/me');check('admin API absent on public host',r.status===404);
 r=await pub('/en/');check('public CSP + HSTS',!!r.headers.get('content-security-policy')&&!!r.headers.get('strict-transport-security'));
@@ -42,7 +52,7 @@ if(auth){
  r=await admin('/api/v1/admin/me');check('service token authenticates as owner',r.body.role==='owner',JSON.stringify(r.body));
  r=await admin('/');check('admin UI served no-store',r.status===200&&r.headers.get('cache-control')==='no-store');
  r=await admin('/api/v1/admin/summary');check('admin summary',r.body.ok===true,JSON.stringify(r.body));
- r=await admin('/api/v1/admin/pages');check('admin lists 7 pages × 3 locales',r.body.pages?.length===7&&r.body.pages.every(p=>p.locales.en&&p.locales.ar&&p.locales.ru));
+ r=await admin('/api/v1/admin/pages');check('admin lists 7 pages × 4 locales',r.body.pages?.length===7&&r.body.pages.every(p=>['uk','en','ar','ru'].every(loc=>p.locales[loc])));
  r=await admin('/api/v1/admin/settings');check('admin settings readable',r.body.ok===true);
  r=await admin('/api/v1/admin/enquiries?limit=5');check('admin enquiry list',r.body.ok===true,`${r.body.items?.length} items`);
 }

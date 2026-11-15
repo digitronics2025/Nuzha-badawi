@@ -83,10 +83,10 @@ async function servePublished(request,env,ctx){
  if(cache&&ctx?.waitUntil&&request.method==='GET')ctx.waitUntil(cache.put(cacheKey,html.clone()));
  return publicSecurity(html);
 }
-/** `/` sends visitors to their preferred supported locale (en default); never cached across languages. */
+/** `/` sends visitors to their preferred supported locale (Ukrainian default); never cached across languages. */
 export function preferredLocale(header){
  const prefs=String(header||'').split(',').map((part,i)=>{const [tag,...params]=part.trim().toLowerCase().split(';');const q=params.find(x=>x.trim().startsWith('q='));return {lang:tag.split('-')[0],q:q?Number(q.trim().slice(2))||0:1,i};}).filter(x=>x.lang&&x.q>0).sort((a,b)=>b.q-a.q||a.i-b.i);
- return prefs.find(x=>['en','ar','ru'].includes(x.lang))?.lang||'en';
+ return prefs.find(x=>['uk','en','ar','ru'].includes(x.lang))?.lang||'uk';
 }
 function rootRedirect(request){const loc=preferredLocale(request.headers.get('accept-language'));return new Response(null,{status:302,headers:{location:`/${loc}/`,'cache-control':'private, no-store','vary':'accept-language'}});}
 async function maintenance(env){

@@ -2,7 +2,7 @@
 
 **Status (2026-11-15): LIVE.** Deployed on the user's explicit full-autopilot instruction. This file records what *actually exists*; planning documents remain in `CLOUDFLARE_DEPLOYMENT.md`.
 
-> **Content gate (2026-11-15):** production currently serves the copy deployed at commit `3795859` (before PR #5). `main` now also contains the CV-based biography from PR #5, which is **pending Nozha's public sign-off** (DECISIONS D-022, SOURCES.md release rule). The next production deploy (CI or manual) will publish it. Get that approval **before** adding the CI secrets or running a manual production deploy, or configure required reviewers on the `production` GitHub environment.
+> **Release status (2026-11-15):** the user explicitly approved publication of the CV-based biography in this deployment chat. This clears the D-022 content gate; it does not mean the latest code is deployed. Remote inspection found production still running the earlier release, and Actions run `43740271576` skipped staging and production because the repository Cloudflare secret was unavailable. See the verification update below.
 
 ## URLs
 
@@ -14,7 +14,7 @@
 | https://nusya-public-staging.digitronics-electro.workers.dev | Staging public (Turnstile **test** keys) | Isolated staging D1/R2 |
 | https://nusya-admin-staging.digitronics-electro.workers.dev | Staging admin | Access app **NUSYA Admin STAGING** (owners + verification service token) |
 
-`/` redirects (302, `Vary: Accept-Language`) to `/ar/`, `/ru/` or `/en/`. workers.dev and preview URLs are **disabled** for production Workers.
+The corrected Worker redirects `/` (302, `Vary: Accept-Language`, `Cache-Control: private, no-store`) to a supported preference (`uk`, `en`, `ar`, `ru`), defaulting to `/uk/` for absent or unsupported preferences. This correction still requires deployment. workers.dev and preview URLs are **disabled** for production Workers.
 
 ## Cloudflare resources (account `5e8dba9f…`, zone `nozha-badavi.com`, Free zone plan, Workers Paid)
 
@@ -57,7 +57,7 @@ Worker secrets (names only): `nusya-public`: `TURNSTILE_SECRET`, `RATE_LIMIT_SAL
 5. To give Nozha access, add her email to the Access policy **and** to `OWNER_EMAILS` (or `EDITOR_EMAILS`) in `workers/admin/wrangler.jsonc`, then redeploy.
 
 ## Deploy / rollback
-- CI: `.github/workflows/deploy.yml` runs on push to `main`: tests → staging deploy + e2e → production (GitHub environment `production`, schema backup, migrations, deploy, read-only smoke). It needs repository secrets `CLOUDFLARE_API_TOKEN`, `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`; until they exist, only the test job runs.
+- CI: `.github/workflows/deploy.yml` runs on push to `main`: tests → staging deploy + e2e → production (GitHub environment `production`, schema backup, migrations, deploy, read-only smoke). It needs repository secrets `CLOUDFLARE_API_TOKEN`, `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET`; the credential preflight now fails explicitly if any are unavailable, preventing a misleading green deployment run.
 - Manual: `cd workers && npm ci && npm run build:frontend && npm run check && npm run deploy:admin && npm run deploy:public`.
 - Code rollback: `npx wrangler rollback --config public/wrangler.jsonc` (or `admin/…`). D1 data is unaffected.
 - Content rollback: Admin → Pages → History / rollback.
@@ -66,3 +66,14 @@ Worker secrets (names only): `nusya-public`: `TURNSTILE_SECRET`, `RATE_LIMIT_SAL
 
 ## Estimated cost
 Incremental cost ≈ **US$0/month** at expected traffic. It uses the existing Workers Paid plan ($5/month, already active and shared with other projects): requests, D1 rows and storage fit the included allowances. R2 stays under 10 GB free. Access is free for ≤50 users, Turnstile is free, and Email Sending at a few owner notifications a day stays within the included allowance. The domain registration was paid separately (renewal 2028-11-15).
+
+
+## Deployment verification update — 2026-11-15
+
+- Inspected `main` at `64c492192951bdf09a9cf06dc86339e375ff7f84`. Existing full-platform CI passed, but deployment run [43740271576](https://github.com/digitronics2025/Nuzha-badawi/actions/runs/43740271576) skipped both environments.
+- Fixed Worker locale negotiation: static pages supported Ukrainian already, but the Worker still defaulted to English and ignored Ukrainian preferences.
+- Expanded deployed smoke checks to all 28 locale pages, Ukrainian redirects, binary WebP signatures and all four admin content locales. Kept mandatory staging enquiry/CMS/media/publish/rollback checks.
+- Local build, 13 frontend tests, 19 Worker tests, SQL migration constraints and npm dependency audit pass (zero reported vulnerabilities). The earlier production smoke suite passed 31/31; that suite omitted Ukrainian and the new images, so it was insufficient release evidence.
+- Available GitHub integration returns HTTP 403 for Actions secrets. `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` are absent from this execution environment. No credentials were written to source, logs or documentation.
+- Required credential setup: repository Settings → Secrets and variables → Actions. The staging Access service token must match both its Access policy and `SERVICE_TOKEN_OWNERS`; its secret cannot be recovered from Cloudflare after creation. Do not authorize it against production admin.
+- Production promotion remains contingent on the full staging write suite and a successful controlled deployment. Existing rollback commands and D1 Time Travel recovery above remain in effect.

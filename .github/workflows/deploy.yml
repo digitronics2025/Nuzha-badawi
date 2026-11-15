@@ -33,15 +33,24 @@ jobs:
       - run: python3 -m unittest discover -s frontend/tests -v
   gate:
     runs-on: ubuntu-latest
-    outputs:
-      enabled: ${{ steps.check.outputs.enabled }}
     steps:
-      - id: check
-        run: echo "enabled=${{ secrets.CLOUDFLARE_API_TOKEN != '' }}" >> "$GITHUB_OUTPUT"
+      - name: Require repository deployment credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+        run: |
+          missing=0
+          for name in CLOUDFLARE_API_TOKEN CF_ACCESS_CLIENT_ID CF_ACCESS_CLIENT_SECRET; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Required repository Actions secret $name is unavailable. Deployment cannot proceed."
+              missing=1
+            fi
+          done
+          exit "$missing"
   staging:
     needs: [test, gate]
     runs-on: ubuntu-latest
-    if: needs.gate.outputs.enabled == 'true'
     environment: staging
     steps:
       - uses: actions/checkout@v4
