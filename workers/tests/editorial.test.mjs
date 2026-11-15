@@ -42,6 +42,8 @@ test('translation review rejects an English source changed after the reviewer op
   const first=await insertDraft(db,'home','en',{fields:{hero:'First source'}},'owner',null);
   const uk=await insertDraft(db,'home','uk',{fields:{hero:'Переклад'}},'owner',null);
   const next=await insertDraft(db,'home','en',{fields:{hero:'Changed source'}},'owner',first);
+  await assert.rejects(()=>markReviewed(db,'home','uk',uk,'reviewer'),error=>error.code==='VALIDATION_FAILED');
+  await assert.rejects(()=>markReviewed(db,'home','uk',uk,'reviewer',null),error=>error.code==='EDIT_CONFLICT');
   await assert.rejects(()=>markReviewed(db,'home','uk',uk,'reviewer',first),error=>error.code==='EDIT_CONFLICT');
   assert.equal((await state(db,'home','uk')).review_status,'needs_review');
   await markReviewed(db,'home','uk',uk,'reviewer',next);

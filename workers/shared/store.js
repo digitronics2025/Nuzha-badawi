@@ -47,8 +47,9 @@ export async function rollBack(db,key,loc,toRevision,actor){
  await audit(db,actor,'rollback',`${key}:${loc}`,toRevision);
  return {revision:toRevision,publishedAt:now()};
 }
-export async function markReviewed(db,key,loc,expectedDraft,actor,expectedSourceRevision=undefined){
- const r=await db.prepare("UPDATE cms_state SET review_status='ready',source_revision_seen=(SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en'),updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? AND (?=0 OR ? IS (SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en')) RETURNING draft_revision").bind(key,now(),key,loc,expectedDraft,expectedSourceRevision===undefined?0:1,expectedSourceRevision??null,key).first();
+export async function markReviewed(db,key,loc,expectedDraft,actor,expectedSourceRevision){
+ if(loc!=='en'&&expectedSourceRevision!==null&&(!Number.isSafeInteger(expectedSourceRevision)||expectedSourceRevision<1))throw new HttpError(400,'VALIDATION_FAILED','Provide the English source revision shown during review, or explicit null when no English draft exists. Reload an older editor before reviewing.');
+ const r=await db.prepare("UPDATE cms_state SET review_status='ready',source_revision_seen=(SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en'),updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? AND (?='en' OR ? IS (SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en')) RETURNING draft_revision").bind(key,now(),key,loc,expectedDraft,loc,expectedSourceRevision??null,key).first();
  if(!r)throw new HttpError(409,'EDIT_CONFLICT','The translation or English source changed. Reload before approving.');
  await audit(db,actor,'review',`${key}:${loc}`,expectedDraft);return r.draft_revision;
 }

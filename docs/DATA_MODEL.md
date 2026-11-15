@@ -50,4 +50,6 @@ No new migration is required by review hardening. Tests apply every migration. c
 
 The subsequent editorial redesign adds `0003_media_library_index.sql`: an index on `media_assets(published)`. SQLite/D1 includes rowid in this secondary index, supporting insertion-order keyset pagination of pending/approved media without a full scan or temporary sort. No record, storage key or consent flag is rewritten; prior code remains compatible with this additive index. Protected library responses include saved descriptions and source/licence metadata, never R2 object keys.
 
+Non-English review must supply the displayed English draft revision, including explicit null for a source without a draft. Omission cannot bypass comparison; the storage operation validates the argument and compares it atomically in the update. Older open admin tabs must reload before approving; drafts and published content remain intact.
+
 Legacy ready translations with missing source provenance are reported as needing review by page/list APIs. No migration fabricates historical approvals; the existing review API records current provenance without requiring a content edit.
