@@ -4,11 +4,11 @@ These rules apply to the entire repository and to **all** coding agents. Read th
 
 ## Project identity and hard requirements
 - Brand: **NUSYA Linguistic Studio**, professional: **Nozha Badavi**.
-- Exactly three website UI locales: `en`, `ar` (true RTL), `ru`. Ukrainian may be described in documented translation/language experience, but not added as a fourth interface language.
+- Four website UI locales: `uk` (default), `en`, `ar` (true RTL), `ru`. Ukrainian is a website interface language; offered lesson languages remain English, Russian and Arabic unless separately approved.
 - Public services: English, Russian and Arabic lessons (verify current availability); professional communication coaching; translation; interpretation (specific pairs/scope require approval).
 - Never add Korean lessons, content, SEO targeting or UI language options.
 - Homepage introduction video: `https://player.vimeo.com/video/1171310337?h=3416a6f4f5` with privacy hash preserved, on-demand playback and a fallback.
-- A secure, usable admin must manage approved content, three-language translation states, media/video, services, enquiries, preview, publish and rollback.
+- A secure, usable admin must manage approved content, four-language translation states, media/video, services, enquiries, preview, publish and rollback.
 - Premium editorial visual identity; authentic, consented photographs; fast and accessible on mobile.
 
 ## Non-negotiable approval and authorization gates
