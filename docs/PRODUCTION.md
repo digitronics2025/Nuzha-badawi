@@ -90,3 +90,8 @@ The mandatory staging write suite now uses Ukrainian for the synthetic enquiry a
 Public pages on the configured staging `workers.dev` host now receive `X-Robots-Tag: noindex, nofollow`, including cached responses. Production remains indexable. No DNS, Access or paid infrastructure changes are required.
 
 Staging browser rendering checks passed for Home/About × UK/EN/AR/RU × 1440/768/390/320 px (32 pages): images decode, disclosure remains, Arabic is RTL, canonical/hreflang exist, no overflow or JavaScript errors, and no Vimeo requests before Play. The privacy hash is retained on click. The Vimeo player endpoint independently returned HTTP 200 with a 50-second video configuration; audible playback was not claimed. Browser transport used TLS-verified Node fetch responses under their original URLs because Chromium did not trust the environment proxy certificate. This validates rendering with live responses, not an unmodified browser network path.
+
+
+### Contact mobile positioning correction
+
+Live staging interaction checks found the mobile contact card changed to `position: static`, leaving its absolutely positioned decorative globe anchored outside the card. It overlapped form controls and produced horizontal overflow. Keeping the mobile card `position: relative` anchors and clips the existing decoration inside its card, preserving the intended layout. Recheck contact at mobile widths in all four locales; no content, form submission, authentication or infrastructure changes are involved.
