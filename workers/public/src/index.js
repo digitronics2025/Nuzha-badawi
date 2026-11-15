@@ -85,12 +85,8 @@ async function servePublished(request,env,ctx){
  if(cache&&ctx?.waitUntil&&request.method==='GET')ctx.waitUntil(cache.put(cacheKey,html.clone()));
  return publicSecurity(html,env);
 }
-/** `/` sends visitors to their preferred supported locale (Ukrainian default); never cached across languages. */
-export function preferredLocale(header){
- const prefs=String(header||'').split(',').map((part,i)=>{const [tag,...params]=part.trim().toLowerCase().split(';');const q=params.find(x=>x.trim().startsWith('q='));return {lang:tag.split('-')[0],q:q?Number(q.trim().slice(2))||0:1,i};}).filter(x=>x.lang&&x.q>0).sort((a,b)=>b.q-a.q||a.i-b.i);
- return prefs.find(x=>['uk','en','ar','ru'].includes(x.lang))?.lang||'uk';
-}
-function rootRedirect(request){const loc=preferredLocale(request.headers.get('accept-language'));return new Response(null,{status:302,headers:{location:`/${loc}/`,'cache-control':'private, no-store','vary':'accept-language'}});}
+/** The unlocalized entry always opens Ukrainian; other locales use explicit URLs. */
+function rootRedirect(){return new Response(null,{status:302,headers:{location:'/uk/','cache-control':'private, no-store'}});}
 async function maintenance(env){
  if(!env.DB)return;
  // Rate-limit buckets are 15-minute windows; anything older than a day is useless.
@@ -119,7 +115,7 @@ async function handlePublic(request,env,ctx){try{
   if(p.startsWith('/api/'))return problem(404,'NOT_FOUND','API endpoint not found.');
   if(p.startsWith('/media/')){if(request.method!=='GET'&&request.method!=='HEAD')throw new HttpError(405,'METHOD_NOT_ALLOWED','Method not allowed.');return await serveMedia(request,env);}
   if(request.method!=='GET'&&request.method!=='HEAD')throw new HttpError(405,'METHOD_NOT_ALLOWED','Method not allowed.');
-  if(p==='/'||p==='/index.html')return rootRedirect(request);
+  if(p==='/'||p==='/index.html')return rootRedirect();
   return await servePublished(request,env,ctx);
  }catch(e){return errorResponse(e);}}
 export default worker;

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {generateKeyPairSync,sign} from 'node:crypto';
 import {verifyAccess} from '../shared/auth.js';
 import {bundledAssets} from '../shared/assets.js';
-import publicWorker,{preferredLocale} from '../public/src/index.js';
+import publicWorker from '../public/src/index.js';
 
 const {privateKey,publicKey}=generateKeyPairSync('rsa',{modulusLength:2048});
 const jwk={...publicKey.export({format:'jwk'}),kid:'k2',alg:'RS256'};
@@ -47,15 +47,11 @@ test('bundled binary WebP media is served byte-for-byte with correct headers',as
  assert.equal(response.status,304);assert.equal((await response.arrayBuffer()).byteLength,0);
 });
 
-test('root negotiates all four locales with Ukrainian as the default',async()=>{
- assert.equal(preferredLocale('ar-MA,ar;q=0.9,en;q=0.5'),'ar');
- assert.equal(preferredLocale('ko-KR,ru;q=0.8'),'ru');
- assert.equal(preferredLocale('fr-FR'),'uk');assert.equal(preferredLocale(''),'uk');
- assert.equal(preferredLocale('uk-UA,en;q=0.8'),'uk');
- assert.equal(preferredLocale('uk;q=0,en;q=0.8'),'en');
- assert.equal(preferredLocale('en;q=0.1,ru;q=0.9'),'ru');
- const r=await publicWorker.fetch(new Request('https://nozha-badavi.com/',{headers:{'accept-language':'ru'}}),{},{});
- assert.equal(r.status,302);assert.equal(r.headers.get('location'),'/ru/');assert.match(r.headers.get('cache-control'),/no-store/);
+test('unlocalized entry always opens Ukrainian regardless of browser language',async()=>{
+ for(const path of ['/', '/index.html'])for(const language of ['', 'en-US,en;q=0.9', 'ar-MA,ar;q=0.9', 'ru', 'uk-UA', 'fr-FR', 'uk;q=0,en;q=1']){
+  const r=await publicWorker.fetch(new Request('https://nozha-badavi.com'+path,{headers:{'accept-language':language}}),{},{});
+  assert.equal(r.status,302);assert.equal(r.headers.get('location'),'/uk/');assert.match(r.headers.get('cache-control'),/no-store/);
+ }
 });
 
 test('staging pages are noindex while production remains indexable',async()=>{

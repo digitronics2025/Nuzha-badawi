@@ -14,7 +14,7 @@
 | https://nusya-public-staging.digitronics-electro.workers.dev | Staging public (Turnstile **test** keys) | Isolated staging D1/R2 |
 | https://nusya-admin-staging.digitronics-electro.workers.dev | Staging admin | Access app **NUSYA Admin STAGING** (owners + verification service token) |
 
-The corrected Worker redirects `/` (302, `Vary: Accept-Language`, `Cache-Control: private, no-store`) to a supported preference (`uk`, `en`, `ar`, `ru`), defaulting to `/uk/` for absent or unsupported preferences. This correction still requires deployment. workers.dev and preview URLs are **disabled** for production Workers.
+The unlocalized `/` and `/index.html` entry points always redirect to `/uk/` (302, `Cache-Control: private, no-store`), regardless of the browser’s language. Visitors can choose English, Arabic or Russian through the language switcher or explicit `/en/`, `/ar/`, `/ru/` URLs. workers.dev and preview URLs are **disabled** for production Workers.
 
 ## Cloudflare resources (account `5e8dba9f…`, zone `nozha-badavi.com`, Free zone plan, Workers Paid)
 
@@ -120,3 +120,8 @@ The existing deployment workflow now accepts manual mode `verify` (the default):
 [Read-only verification run 43747296939](https://github.com/digitronics2025/Nuzha-badawi/actions/runs/43747296939) passed: GitHub Client ID matches the staging Worker allowlist; the rotated token authenticates to staging as the expected identity; production admin rejects the staging token. The earlier missing-secret blocker is cleared. Deployment jobs were skipped.
 
 New review repairs keep the playing-state video poster hidden and expose effective `needs_review` for legacy translated drafts whose stored review provenance does not match the current English draft. Owners can approve these drafts without editing content; no historical approval is silently backfilled. Regression coverage exercises both paths. The initial staging deployment attempt was cancelled to include these repairs before full verification.
+
+
+## Ukrainian entry-point correction — 2026-11-15
+
+The user clarified that Ukrainian must open at the main URL even for an English-language browser. The previous implementation treated Ukrainian as a fallback behind Accept-Language negotiation, which opened English in an English-configured incognito browser. Remove automatic negotiation at the unlocalized entry points and test English, Arabic and Russian browser preferences explicitly. Existing locale URLs and language switching remain available. No UI layout, CMS content, credentials or schema change.

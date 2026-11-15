@@ -90,3 +90,6 @@ Before publishing, reconcile any D1 CMS overrides with source-derived fallback c
 ## Review hardening — 2026-11-15
 
 Review-hardening decision: keep the existing lightweight stack; use explicit content field metadata shared with admin, remove template ETags from CMS HTML, normalize page aliases, centralize response security, require translation source review, and restrict rollback to published audited revisions. Implement approved owner workflows and immutable enquiry retries. Preserve D-031 illustration assets/disclosure and use factual four-language privacy text. Integrate main’s staging noindex fix. No production promotion until mandatory staging Access credentials permit full write verification.
+
+
+| D-033 | 2026-11-15 | Always open `/uk/` from the main URL, irrespective of browser Accept-Language; other languages require their explicit locale URLs or the switcher | User clarification | The user reported an English incognito landing page and reiterated Ukrainian must be the default. Supersedes browser-language negotiation at `/` and `/index.html`; retains all four localized routes. |

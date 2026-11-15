@@ -22,8 +22,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 // ---- Public site
 for(const loc of ['uk','en','ar','ru'])for(const page of ['','about/','lessons/','coaching/','translation/','contact/','privacy/']){
  const r=await pub(`/${loc}/${page}`);check(`GET /${loc}/${page}`,r.status===200&&r.body.includes(`lang="${loc}"`)&&(loc!=='ar'||r.body.includes('dir="rtl"')),String(r.status));}
-let r=await pub('/',{headers:{'accept-language':'ar'}});check('root → /ar/ by Accept-Language',r.status===302&&r.headers.get('location')==='/ar/');
-for(const language of ['', 'fr-FR', 'uk-UA']){
+let r;
+for(const language of ['', 'en-US,en;q=0.9', 'ar', 'ru', 'fr-FR', 'uk-UA']){
  r=await pub('/',{headers:{'accept-language':language}});
  check(`root → /uk/ for ${language||'no language preference'}`,r.status===302&&r.headers.get('location')==='/uk/'&&r.headers.get('cache-control')?.includes('no-store'));
 }
