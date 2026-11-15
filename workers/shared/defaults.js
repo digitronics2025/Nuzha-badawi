@@ -46,7 +46,7 @@ export default {
         "closing_title": "Let’s start a conversation.",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
         "title": "A personal approach to languages.",
-        "description": "Meet the educator behind NUSYA and the experiences that shape her teaching."
+        "description": "Meet Nozha and explore the teaching, education, translation, interpretation and student-support experience behind her approach."
       },
       "seo": {
         "title": "A personal approach to languages.",
@@ -85,7 +85,7 @@ export default {
         "closing_title": "Let’s start a conversation.",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
         "title": "Prepare to speak with confidence.",
-        "description": "Personal language preparation for important professional conversations."
+        "description": "Personalised language preparation for business meetings, conferences, presentations, speeches and specialised professional conversations."
       },
       "seo": {
         "title": "Prepare to speak with confidence.",
@@ -105,7 +105,7 @@ export default {
         "closing_title": "Let’s start a conversation.",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
         "title": "Words, meaning and understanding.",
-        "description": "Written translation and interpretation requests for individuals and organisations."
+        "description": "Nozha’s professional background includes written translation involving Ukrainian, English, Russian and Arabic, plus interpretation during migration-service interviews. Current language pairs, formats and availability are assessed individually."
       },
       "seo": {
         "title": "Words, meaning and understanding.",
@@ -120,7 +120,7 @@ export default {
         "form_title": "Start your enquiry",
         "closing_desc": "A language to learn or a message to communicate—your next step can begin here.",
         "title": "Tell me how I can help.",
-        "description": "Choose your service and share the essential details. Contact submissions become available when the backend is connected."
+        "description": "Choose a service and share the essential details. Requests can be submitted when the secure enquiry service is enabled."
       },
       "seo": {
         "title": "Tell me how I can help.",
@@ -189,7 +189,7 @@ export default {
         "closing_title": "لنبدأ الحديث.",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
         "title": "نهج شخصي في تعلّم اللغات.",
-        "description": "تعرّف على صاحبة NUSYA والخبرات التي تشكّل أسلوبها في التعليم."
+        "description": "تعرّف على Nozha وخبرتها في التعليم والترجمة ودعم الطلبة الدوليين التي تشكّل أسلوبها في التدريس."
       },
       "seo": {
         "title": "نهج شخصي في تعلّم اللغات.",
@@ -228,7 +228,7 @@ export default {
         "closing_title": "لنبدأ الحديث.",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
         "title": "استعد للتحدّث بثقة.",
-        "description": "إعداد لغوي شخصي لمحادثات مهنية مهمة."
+        "description": "إعداد لغوي شخصي لاجتماعات العمل والمؤتمرات والعروض والخطابات والمحادثات المهنية المتخصصة."
       },
       "seo": {
         "title": "استعد للتحدّث بثقة.",
@@ -248,7 +248,7 @@ export default {
         "closing_title": "لنبدأ الحديث.",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
         "title": "الكلمات والمعنى والفهم.",
-        "description": "طلبات الترجمة التحريرية والشفوية للأفراد والمؤسسات."
+        "description": "تشمل خبرة Nozha الترجمة التحريرية بين الأوكرانية والإنجليزية والروسية والعربية، والترجمة الشفوية خلال مقابلات خدمات الهجرة. يتم تقييم اتجاهات اللغات والصيغ والتوفر لكل طلب بصورة منفصلة."
       },
       "seo": {
         "title": "الكلمات والمعنى والفهم.",
@@ -263,7 +263,7 @@ export default {
         "form_title": "ابدأ طلبك",
         "closing_desc": "لغة تريد تعلّمها أو رسالة ترغب في إيصالها؛ تبدأ الخطوة التالية هنا.",
         "title": "أخبرني كيف أساعدك.",
-        "description": "اختر الخدمة وقدّم التفاصيل الأساسية. ستصبح الطلبات متاحة بعد ربط النظام الخلفي."
+        "description": "اختر الخدمة وقدّم التفاصيل الأساسية. يمكن إرسال الطلب عند تفعيل خدمة استقبال الطلبات الآمنة."
       },
       "seo": {
         "title": "أخبرني كيف أساعدك.",
@@ -332,7 +332,7 @@ export default {
         "closing_title": "Давайте познакомимся.",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
         "title": "Индивидуальный подход к языкам.",
-        "description": "Познакомьтесь с преподавателем NUSYA и опытом, который формирует её подход."
+        "description": "Познакомьтесь с Нузей и её опытом преподавания, образования, перевода и поддержки иностранных студентов."
       },
       "seo": {
         "title": "Индивидуальный подход к языкам.",
@@ -371,7 +371,7 @@ export default {
         "closing_title": "Давайте познакомимся.",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
         "title": "Готовьтесь говорить уверенно.",
-        "description": "Личная языковая подготовка к важному профессиональному общению."
+        "description": "Индивидуальная языковая подготовка к деловым встречам, конференциям, презентациям, выступлениям и профильным профессиональным обсуждениям."
       },
       "seo": {
         "title": "Готовьтесь говорить уверенно.",
@@ -391,7 +391,7 @@ export default {
         "closing_title": "Давайте познакомимся.",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
         "title": "Слова, смысл и понимание.",
-        "description": "Запросы на письменный и устный перевод для людей и организаций."
+        "description": "Профессиональный опыт Нузи включает письменные переводы с участием украинского, английского, русского и арабского языков, а также устный перевод на собеседованиях в миграционной службе. Актуальные языковые пары, форматы и доступность уточняются для каждого запроса."
       },
       "seo": {
         "title": "Слова, смысл и понимание.",
@@ -406,7 +406,7 @@ export default {
         "form_title": "Ваш запрос",
         "closing_desc": "Язык для изучения или сообщение для передачи — первый шаг может начаться здесь.",
         "title": "Расскажите, чем я могу помочь.",
-        "description": "Выберите услугу и основные детали. Запросы заработают после подключения серверной части."
+        "description": "Выберите услугу и укажите основные детали. Отправка запросов доступна, когда защищённый сервис обращений включён."
       },
       "seo": {
         "title": "Расскажите, чем я могу помочь.",
