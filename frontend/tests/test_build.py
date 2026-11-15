@@ -28,6 +28,7 @@ class FrontendBuildTests(unittest.TestCase):
                 self.assertIn('dir="rtl"' if loc=='ar' else 'dir="ltr"',text)
                 self.assertIn('<main id="main"',text)
                 self.assertIn('rel="canonical"',text)
+                self.assertIn('hreflang="uk"',text)
                 self.assertIn('hreflang="en"',text)
                 self.assertIn('hreflang="ar"',text)
                 self.assertIn('hreflang="ru"',text)
@@ -84,8 +85,8 @@ class FrontendBuildTests(unittest.TestCase):
         s=(DIST/'sitemap.xml').read_text()
         root=ET.fromstring(s)
         locs=[x.text for x in root.iter() if x.tag.endswith('loc')]
-        self.assertEqual(len(locs),21)
-        self.assertTrue(all('/en/' in x or '/ar/' in x or '/ru/' in x for x in locs))
+        self.assertEqual(len(locs),28)
+        self.assertTrue(all('/uk/' in x or '/en/' in x or '/ar/' in x or '/ru/' in x for x in locs))
     def test_admin_is_separate_and_private_by_design(self):
         a=ROOT/'dist-admin'
         self.assertTrue((a/'index.html').exists())
