@@ -63,7 +63,7 @@ if(MODE==='staging'&&auth){
  for(const s of Object.values(settings.services)){s.visible=true;s.acceptingRequests=true;}
  settings.approvedTranslationPairs=['en:ru','ru:en'];
  r=await admin('/api/v1/admin/settings',{method:'PUT',body:JSON.stringify({settings})});check('owner updates service settings',r.body.ok===true);
- const enquiry={...base(),locale:'ar',type:'translation',name:'اختبار التحقق',details:{sourceLanguage:'en',targetLanguage:'ru',dueDate:'2026-12-20'},turnstileToken:'XXXX.DUMMY.TOKEN.XXXX'};
+ const enquiry={...base(),locale:'uk',type:'translation',name:'Тест перевірки',details:{sourceLanguage:'en',targetLanguage:'ru',dueDate:'2026-12-20'},turnstileToken:'XXXX.DUMMY.TOKEN.XXXX'};
  const post=e=>pub('/api/v1/enquiries',{method:'POST',headers:{'content-type':'application/json',origin:PUBLIC_URL},body:JSON.stringify(e)});
  r=await post(enquiry);check('enquiry accepted (201) and persisted',r.status===201&&/^NS-[A-Z0-9]{16}$/.test(r.body.reference||''),JSON.stringify(r.body));
  const ref=r.body.reference;
@@ -72,38 +72,38 @@ if(MODE==='staging'&&auth){
  r=await post({...enquiry,idempotencyKey:crypto.randomUUID(),details:{...enquiry.details,targetLanguage:'ar'}});check('unapproved direction en:ar rejected',r.status===400);
  await sleep(5000);
  r=await admin('/api/v1/admin/enquiries?limit=10');const item=r.body.items?.find(i=>i.reference===ref);
- check('enquiry visible in admin',!!item&&item.locale==='ar'&&item.name==='اختبار التحقق');
+ check('enquiry visible in admin',!!item&&item.locale==='uk'&&item.name==='Тест перевірки');
  check('owner email notification sent',item?.notificationStatus==='sent',item?.notificationStatus);
  r=await admin(`/api/v1/admin/enquiries/${ref}`,{method:'PATCH',body:JSON.stringify({status:'closed',note:'automated verification'})});check('enquiry status update',r.body.status==='closed');
  r=await admin(`/api/v1/admin/enquiries/${ref}`);check('status change audited',r.body.events?.some(e=>e.event_type==='status_change'));
 
  // CMS: draft → preview → publish → public → rollback
  const marker=`Verification ${Date.now()}`;
- let page=(await admin('/api/v1/admin/pages/about?locale=ru')).body;
+ let page=(await admin('/api/v1/admin/pages/about?locale=uk')).body;
  const content=structuredClone(page.draft||page.published||page.defaultContent);content.fields.title=marker;
- r=await admin('/api/v1/admin/pages/about?locale=ru',{method:'PUT',body:JSON.stringify({baseRevision:page.draftRevision,payload:content})});check('save RU draft',r.body.ok===true,JSON.stringify(r.body));
+ r=await admin('/api/v1/admin/pages/about?locale=uk',{method:'PUT',body:JSON.stringify({baseRevision:page.draftRevision,payload:content})});check('save UK draft',r.body.ok===true,JSON.stringify(r.body));
  const rev=r.body.revision;
- r=await admin('/api/v1/admin/pages/about?locale=ru',{method:'PUT',body:JSON.stringify({baseRevision:page.draftRevision,payload:content})});check('stale baseRevision → 409',r.status===409);
- r=await pub('/ru/about/');check('draft NOT public before publish',!r.body.includes(marker));
- r=await admin('/preview/ru/about/');check('private preview shows draft',r.body.includes(marker)&&r.headers.get('cache-control')==='no-store');
- r=await admin('/api/v1/admin/pages/about/publish?locale=ru',{method:'POST',body:JSON.stringify({revision:rev})});check('publish RU about',r.body.ok===true,JSON.stringify(r.body));
- let seen=false;for(let i=0;i<14&&!seen;i++){await sleep(10000);seen=(await pub(`/ru/about/?cb=${i}`)).body.includes(marker)||(await pub('/ru/about/')).body.includes(marker);}
+ r=await admin('/api/v1/admin/pages/about?locale=uk',{method:'PUT',body:JSON.stringify({baseRevision:page.draftRevision,payload:content})});check('stale baseRevision → 409',r.status===409);
+ r=await pub('/uk/about/');check('draft NOT public before publish',!r.body.includes(marker));
+ r=await admin('/preview/uk/about/');check('private preview shows draft',r.body.includes(marker)&&r.headers.get('cache-control')==='no-store');
+ r=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:rev})});check('publish UK about',r.body.ok===true,JSON.stringify(r.body));
+ let seen=false;for(let i=0;i<14&&!seen;i++){await sleep(10000);seen=(await pub(`/uk/about/?cb=${i}`)).body.includes(marker)||(await pub('/uk/about/')).body.includes(marker);}
  check('published copy live on public site (≤140s)',seen);
  r=await pub('/en/about/');check('no cross-locale leak (EN unchanged)',!r.body.includes(marker));
  const prior=page.publishedRevision;
- if(prior){r=await admin('/api/v1/admin/pages/about/rollback?locale=ru',{method:'POST',body:JSON.stringify({toRevision:prior})});check('rollback to prior revision',r.body.ok===true);}
- else{const base2=(await admin('/api/v1/admin/pages/about?locale=ru')).body;const orig=structuredClone(base2.defaultContent);
-  r=await admin('/api/v1/admin/pages/about?locale=ru',{method:'PUT',body:JSON.stringify({baseRevision:base2.draftRevision,payload:orig})});
-  const r2=await admin('/api/v1/admin/pages/about/publish?locale=ru',{method:'POST',body:JSON.stringify({revision:r.body.revision})});
-  const hist=(await admin('/api/v1/admin/pages/about/revisions?locale=ru')).body.revisions;
-  const r3=await admin('/api/v1/admin/pages/about/rollback?locale=ru',{method:'POST',body:JSON.stringify({toRevision:rev})});
-  const r4=await admin('/api/v1/admin/pages/about/rollback?locale=ru',{method:'POST',body:JSON.stringify({toRevision:r.body.revision})});
+ if(prior){r=await admin('/api/v1/admin/pages/about/rollback?locale=uk',{method:'POST',body:JSON.stringify({toRevision:prior})});check('rollback to prior revision',r.body.ok===true);}
+ else{const base2=(await admin('/api/v1/admin/pages/about?locale=uk')).body;const orig=structuredClone(base2.defaultContent);
+  r=await admin('/api/v1/admin/pages/about?locale=uk',{method:'PUT',body:JSON.stringify({baseRevision:base2.draftRevision,payload:orig})});
+  const r2=await admin('/api/v1/admin/pages/about/publish?locale=uk',{method:'POST',body:JSON.stringify({revision:r.body.revision})});
+  const hist=(await admin('/api/v1/admin/pages/about/revisions?locale=uk')).body.revisions;
+  const r3=await admin('/api/v1/admin/pages/about/rollback?locale=uk',{method:'POST',body:JSON.stringify({toRevision:rev})});
+  const r4=await admin('/api/v1/admin/pages/about/rollback?locale=uk',{method:'POST',body:JSON.stringify({toRevision:r.body.revision})});
   check('restore default + rollback roundtrip',r2.body.ok&&r3.body.ok&&r4.body.ok&&hist.length>=2);}
  // Translation workflow: EN edit flags AR/RU for review
  page=(await admin('/api/v1/admin/pages/privacy?locale=en')).body;const en=structuredClone(page.draft||page.defaultContent);
  r=await admin('/api/v1/admin/pages/privacy?locale=en',{method:'PUT',body:JSON.stringify({baseRevision:page.draftRevision,payload:en})});
  r=await admin('/api/v1/admin/pages');const priv=r.body.pages.find(p=>p.key==='privacy');
- check('EN source edit flags AR/RU needs_review',priv.locales.ar.status==='needs_review'&&priv.locales.ru.status==='needs_review');
+ check('EN source edit flags UK/AR/RU needs_review',priv.locales.uk.status==='needs_review'&&priv.locales.ar.status==='needs_review'&&priv.locales.ru.status==='needs_review');
 
  // Media: upload (private) → publish → public
  const png=Uint8Array.from(Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==','base64'));

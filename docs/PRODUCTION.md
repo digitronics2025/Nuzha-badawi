@@ -77,3 +77,10 @@ Incremental cost ≈ **US$0/month** at expected traffic. It uses the existing Wo
 - Available GitHub integration returns HTTP 403 for Actions secrets. `CF_ACCESS_CLIENT_ID` and `CF_ACCESS_CLIENT_SECRET` are absent from this execution environment. No credentials were written to source, logs or documentation.
 - Required credential setup: repository Settings → Secrets and variables → Actions. The staging Access service token must match both its Access policy and `SERVICE_TOKEN_OWNERS`; its secret cannot be recovered from Cloudflare after creation. Do not authorize it against production admin.
 - Production promotion remains contingent on the full staging write suite and a successful controlled deployment. Existing rollback commands and D1 Time Travel recovery above remain in effect.
+
+
+### Ukrainian persistence correction
+
+Application locale validation included `uk`, but initial D1 CHECK constraints allowed only EN/AR/RU. Migration `0002_ukrainian_locale.sql` rebuilds the three affected tables atomically with UK/EN/AR/RU constraints, preserving existing rows, IDs, foreign-key relationships, indexes and autoincrement high-water marks. The original migration remains unchanged. Upgrade validation seeds linked CMS/enquiry/outbox data, verifies preservation, exercises all four locales and rejects unsupported locales. Staging applied this migration successfully after recording a D1 Time Travel bookmark. Production has not applied it yet.
+
+The mandatory staging write suite now uses Ukrainian for the synthetic enquiry and CMS draft/preview/publish/rollback cycle, and checks Ukrainian translation-review flags. This prevents a static-page-only language check from masking persistence failures. Production migration must retain the pre-migration Time Travel bookmark. Code rollback does not remove the additive Ukrainian locale support; restore data only if an actual data incident warrants it.

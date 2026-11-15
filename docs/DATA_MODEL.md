@@ -37,3 +37,8 @@ Versioned migrations, reviewable data change, staging rehearsal, backup/export a
 
 ## Proposed Cloudflare bindings and isolation
 The domain `nozha-badavi.com` is visibly registered, but **no D1/R2 resources or bindings have been verified**. If approved, define `DB` D1 binding for required content/enquiry queries, migrations in version control, environment-separated development/staging/production databases; optionally `MEDIA` R2 binding for approved admin media uploads, with safe read rules. Never expose database operations through public privileged endpoints. Admin runs on protected `admin.nozha-badavi.com` and enforces independent application authorization. Workers, bindings and IDs are proposals requiring verification and explicit cloud approval. See `CLOUDFLARE_DEPLOYMENT.md`.
+
+
+## Implemented locale storage update — 2026-11-15
+
+`cms_revisions`, `cms_state` and `enquiries` support website UI locales `uk` (default), `en`, `ar`, `ru` after migration `0002_ukrainian_locale.sql`. This adds a website interface language; offered lesson languages remain English, Russian and Arabic. The migration preserves rows, IDs, foreign keys, indexes and autoincrement sequences. Test upgrades against existing linked records; apply to isolated staging before production and record a D1 Time Travel restore point.
