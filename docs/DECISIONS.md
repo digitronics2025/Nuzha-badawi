@@ -66,3 +66,7 @@ This applies to all 21 public pages (EN, AR, RU), underneath copyright. It does 
 | D-023 | 2026-11-15 | Replace hard-coded “backend not connected” contact guidance with neutral status wording | Content correction for review | Backend code exists but its live deployment state was not verified; successful enquiry must still be confirmed server-side |
 
 Before publishing, reconcile any D1 CMS overrides with source-derived fallback content and confirm all three translations; do not overwrite owner-edited published content without review.
+
+## Ukrainian as default public locale — 2026-11-15
+
+User requested Ukrainian as a fourth public language and the default language for `https://nozha-badavi.com/`. The default root now redirects to `/uk/`, and `hreflang="x-default"` points to Ukrainian. All seven pages have Ukrainian translations, CMS fallback content and admin editing support; English, Arabic RTL and Russian retain their original routes. The language menu is available on mobile; narrow mobile headers move language choices into the menu to avoid overflow. The change does not automatically change a visitor's selected language or overwrite any existing published CMS translations. Ukrainian wording should receive a native-speaker editorial review before production publishing.
