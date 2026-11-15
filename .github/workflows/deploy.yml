@@ -69,6 +69,7 @@ jobs:
     needs: gate
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
       - name: Verify rotated staging credentials without changing data
@@ -77,6 +78,14 @@ jobs:
           CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
         run: |
           node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const config=readFileSync('workers/admin/wrangler.staging.jsonc','utf8');
+          const allowed=config.match(/"SERVICE_TOKEN_OWNERS"\s*:\s*"([^"]+)"/)?.[1].split(',').map(x=>x.trim())||[];
+          if(!allowed.includes(process.env.CF_ACCESS_CLIENT_ID)){
+            console.error('GitHub CF_ACCESS_CLIENT_ID does not match the staging Worker allowlist. Update it to the Client ID of the rotated staging token.');
+            process.exit(1);
+          }
+          console.log('PASS: GitHub Client ID matches the staging Worker allowlist.');
           const headers={
             'CF-Access-Client-Id':process.env.CF_ACCESS_CLIENT_ID,
             'CF-Access-Client-Secret':process.env.CF_ACCESS_CLIENT_SECRET
