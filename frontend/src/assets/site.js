@@ -2,6 +2,56 @@
 const root = document.documentElement;
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// The source remains a normal image link without JS or native dialog support.
+const reviewDialog = document.querySelector('[data-review-dialog]');
+if (reviewDialog && typeof reviewDialog.showModal === 'function') {
+  let image = reviewDialog.querySelector('[data-review-image-target]');
+  const loading = reviewDialog.querySelector('[data-review-loading]');
+  const error = reviewDialog.querySelector('[data-review-error]');
+  const close = reviewDialog.querySelector('[data-review-close]');
+  let opener = null;
+  let activeImage = null;
+  document.querySelectorAll('a[data-review-image]').forEach(link => {
+    link.addEventListener('click', event => {
+      if (link.hidden || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      opener = link;
+      const author = link.closest('[data-review-card]').querySelector('cite').textContent;
+      reviewDialog.querySelector('[data-review-caption]').textContent = author;
+      activeImage = new Image();
+      const current = activeImage;
+      image.replaceWith(current); image = current;
+      image.dataset.reviewImageTarget = ''; image.decoding = 'async'; image.hidden = true;
+      image.alt = `${reviewDialog.dataset.sourceAlt} ${author}`;
+      loading.hidden = false; error.hidden = true;
+      current.onload = () => {
+        if (current !== activeImage) return;
+        image.hidden = false; loading.hidden = true;
+      };
+      current.onerror = () => {
+        if (current !== activeImage) return;
+        loading.hidden = true; error.hidden = false;
+      };
+      reviewDialog.showModal();
+      close.focus();
+      current.src = link.href;
+    });
+  });
+  close.addEventListener('click', () => reviewDialog.close());
+  reviewDialog.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const controls = [...reviewDialog.querySelectorAll('button,a[href],input,select,textarea')].filter(el => !el.disabled && el.getClientRects().length);
+    const first = controls[0], last = controls.at(-1);
+    if ((event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+      event.preventDefault(); (event.shiftKey ? last : first).focus();
+    }
+  });
+  reviewDialog.addEventListener('close', () => {
+    activeImage = null; image.removeAttribute('src'); image.hidden = true;
+    opener?.focus();
+  });
+}
+
 const menuButton = document.querySelector('.menu-toggle');
 const mobileMenu = document.querySelector('.mobile-menu');
 if (menuButton && mobileMenu) {

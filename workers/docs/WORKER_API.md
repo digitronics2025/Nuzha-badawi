@@ -61,6 +61,12 @@ The reference and timestamp shown above are examples, not live records. HTTP 201
 
 The content payload is a schema-bounded structure `{fields:{...},seo:{title,description},media:{heroPortrait,aboutPortrait}}`, not arbitrary HTML. Text is inserted safely with HTMLRewriter; external video links are allowlisted and approved. `baseRevision` must match the latest draft; unexpected edits return 409. Arabic/Russian published copy remains stable if the English source changes and review state becomes `needs_review`.
 
+### Teaching experience and testimonials
+
+The homepage payload also accepts optional `testimonialsEnabled: boolean` (missing means false). Existing revisions therefore keep the new section hidden, including after rollback. Home fields include `proof_age`, `proof_levels`, `proof_formats`, `testimonials_title`, `testimonials_intro`, `testimonials_rating`, `testimonials_snapshot`, and `review_{yura,m,serg}_{quote,author,date}`. About and Lessons expose `teaching_experience`; Lessons also exposes `english_experience` and `russian_experience`. The normal allowlist, field limits, escaping and translation review apply; there is no new table or route.
+
+Home-only optional media keys `reviewYuraScreenshot`, `reviewMScreenshot` and `reviewSergScreenshot` accept existing media IDs (10–80 ASCII letters, digits, hyphen or underscore). No external image URLs are accepted. Publish/rollback require each referenced asset to be published with consent. The public media endpoint requires both publication and consent. Private previews use the authenticated media route. Review images use dedicated links and accessible labels, not the managed-portrait renderer; no source image is loaded before its link is opened. Empty quotations/authors remove their cards; absent image IDs leave text-only cards. Rating snapshots remain attributed plain text, never `AggregateRating` structured data or an automatic platform feed.
+
 ## Source-of-truth settings
 
 All new services default to `acceptingRequests=false` until Nozha approves current availability. The `approvedTranslationPairs` list is **directed**, e.g. `en:ru` does not imply `ru:en`. There is no Korean service or fourth public locale. The video is the supplied Vimeo ID/hash and can be updated to another allowlisted privacy-hashed Vimeo URL.

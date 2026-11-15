@@ -47,3 +47,11 @@ The admin shares the NUSYA ivory/espresso identity but operates as a calm, funct
 The inbox exposes customer messages, service details, reply links and event history through authenticated detail requests. UK is included in translation status. Page changes, navigation and unload protect unsaved edits; overlapping loads discard stale responses and disable heading fields while loading. History lists author/date/publication eligibility with protected revision previews and restore confirmation. Drafts cannot be restored as published revisions.
 
 The editor also exposes SEO title/description, internal enquiry notes, owner contact/social settings and approved video poster IDs; these controls use existing validated APIs and plain-text DOM rendering.
+
+## Teaching background and English lesson reviews
+
+On **Pages & content → Home**, edit the three `proof` statements and the **English lesson reviews** group. Enable **Show approved testimonials on the homepage**, edit the heading, dated Preply snapshot and the three excerpt/author/date sets, then **Save draft → Preview → Approve translation → Publish** (translation approval is required for UK/AR/RU). Existing owner text and portrait references remain intact. A page without an enabled review revision shows no testimonials; **History / rollback** can restore that state. Blank quotations or authors suppress individual cards.
+
+Screenshots are optional. In **Media & video**, upload only approved review-only crops without avatars or unrelated platform/phone controls; record the source and confirm publication rights. Copy each published ID into the matching review screenshot field on Home. Clear an ID to remove the source link while retaining the quotation. Do not upload the supplied full screenshots until the exact image reuse rights/crops are approved. The text-only launch does not depend on screenshot approval.
+
+The rating is a historical screenshot snapshot, not a live counter: update its source/date and translations together when new evidence is approved. Do not add a total student count from overlapping groups. About and Lessons have separate editable teaching-experience fields; historical ages, levels and formats do not change current service availability.

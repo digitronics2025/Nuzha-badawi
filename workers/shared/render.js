@@ -6,7 +6,12 @@ import {pageSchema,safeJson} from './seo.js';
 export function renderPublished(htmlResponse,payload={},settings={},opts={}){
  if(typeof HTMLRewriter==='undefined')throw Error('HTMLRewriter runtime is unavailable');
  const fields=payload.fields||{},seo=payload.seo||{},media=payload.media||{};
+ const effectiveFields={...defaults[opts.locale]?.[opts.pageKey]?.fields,...fields};
+ const hasReview=key=>Boolean(effectiveFields[`review_${key}_quote`]?.trim()&&effectiveFields[`review_${key}_author`]?.trim());
  let rewriter=new HTMLRewriter();
+ rewriter=rewriter.on('[data-nusya-testimonials]',{element(el){if(payload.testimonialsEnabled!==true||!['yura','m','serg'].some(hasReview))el.remove();else el.removeAttribute('hidden');}});
+ rewriter=rewriter.on('[data-review-card]',{element(el){if(!hasReview(el.getAttribute('data-review-card')))el.remove();}});
+ rewriter=rewriter.on('a[data-review-image]',{element(el){const id=media[el.getAttribute('data-review-image')];if(typeof id==='string'&&/^[a-z0-9_-]{10,80}$/i.test(id)){el.setAttribute('href',`${opts.mediaBase||'/media/'}${id}`);el.removeAttribute('hidden');}else el.remove();}});
  rewriter=rewriter.on('[data-nusya-field]',{element(el){const key=el.getAttribute('data-nusya-field');if(key&&Object.hasOwn(fields,key))el.setInnerContent(String(fields[key]));}});
  rewriter=rewriter.on('[data-nusya-service]',{element(el){const id=el.getAttribute('data-nusya-service');if(id&&settings.services?.[id]?.visible===false)el.remove();}});
  rewriter=rewriter.on('[data-video]',{element(el){if(settings.video?.enabled===false){el.remove();return;}const raw=settings.video?.url;if(raw)el.setAttribute('data-vimeo',raw);}});

@@ -64,7 +64,7 @@ function publicSecurity(response,env={}){const r=secureHeaders(response);const h
 }
 async function serveMedia(request,env){
  const id=new URL(request.url).pathname.split('/')[2]||'';if(!/^[a-z0-9_-]{10,80}$/i.test(id)||!env.MEDIA||!env.DB)return problem(404,'NOT_FOUND','Asset not found.');
- const row=await env.DB.prepare('SELECT object_key,content_type FROM media_assets WHERE id=? AND published=1').bind(id).first();if(!row)return problem(404,'NOT_FOUND','Asset not found.');
+ const row=await env.DB.prepare('SELECT object_key,content_type FROM media_assets WHERE id=? AND published=1 AND consent_confirmed=1').bind(id).first();if(!row)return problem(404,'NOT_FOUND','Asset not found.');
  const obj=await env.MEDIA.get(row.object_key);if(!obj)return problem(404,'NOT_FOUND','Asset not found.');
  return new Response(obj.body,{headers:{'content-type':row.content_type,'cache-control':'public, max-age=300, s-maxage=300','x-content-type-options':'nosniff'}});
 }
