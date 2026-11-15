@@ -34,3 +34,6 @@ Indexes only based on actual query patterns. Candidates: (entry_id,locale), (ent
 
 ## Migration discipline
 Versioned migrations, reviewable data change, staging rehearsal, backup/export and restore test before production. No table/schema creation or Cloudflare D1 interaction is authorized by this document itself.
+
+## Proposed Cloudflare bindings and isolation
+The domain `nozha-badavi.com` is visibly registered, but **no D1/R2 resources or bindings have been verified**. If approved, define `DB` D1 binding for required content/enquiry queries, migrations in version control, environment-separated development/staging/production databases; optionally `MEDIA` R2 binding for approved admin media uploads, with safe read rules. Never expose database operations through public privileged endpoints. Admin runs on protected `admin.nozha-badavi.com` and enforces independent application authorization. Workers, bindings and IDs are proposals requiring verification and explicit cloud approval. See `CLOUDFLARE_DEPLOYMENT.md`.
