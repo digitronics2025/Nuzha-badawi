@@ -60,7 +60,6 @@ if (!reduced() && 'IntersectionObserver' in window) {
   });
 }
 
-// Vimeo privacy: do not request player code until an explicit click.
 for (const poster of document.querySelectorAll('[data-video]')) {
   const play = poster.querySelector('.video-play');
   if (!play) continue;
@@ -80,12 +79,11 @@ for (const poster of document.querySelectorAll('[data-video]')) {
     iframe.allow = 'fullscreen; picture-in-picture; encrypted-media; web-share';
     iframe.allowFullscreen = true; iframe.loading = 'lazy'; iframe.referrerPolicy = 'strict-origin-when-cross-origin';
     poster.classList.add('is-playing');
+    const fallback=poster.querySelector('.video-fallback');if(fallback){fallback.style.display='block';fallback.style.zIndex='4';fallback.style.background='#38251e';}
     poster.append(iframe);
   }, { once: true });
 }
 
-// Turnstile is enabled by the public Worker once domain credentials are configured.
-// Without backend configuration, keep the form visible but never claim delivery.
 async function setupContactSecurity(form) {
   const target=document.getElementById('nusya-turnstile');
   if(!target)return;
@@ -119,7 +117,6 @@ async function setupContactSecurity(form) {
     form.dataset.backendReady='true';
   }catch { form.dataset.backendReady='false'; }
 }
-// Service-aware enquiry form. Backend owns validation, spam controls and durable acceptance.
 const form = document.querySelector('#enquiry-form');
 if (form) {
   setupContactSecurity(form);
@@ -140,19 +137,22 @@ if (form) {
   for (const choice of typeChoices) choice.addEventListener('change', updatePanels);
   const params = new URLSearchParams(location.search);
   const kind = params.get('service');
+  const requestedLanguage=params.get('language');if(requestedLanguage){const select=form.querySelector('[name=language]');if(select&&[...select.options].some(o=>o.value===requestedLanguage))select.value=requestedLanguage;}
   if (kind) { const wanted = typeChoices.find(choice => choice.value === kind); if (wanted) wanted.checked = true; }
   updatePanels();
   const activeField = name => form.querySelector(`.form-detail:not([hidden]) [name="${name}"]`)?.value || '';
   function show(text,success=false) { feedback.textContent=text; feedback.classList.toggle('success',success); feedback.hidden=false; feedback.scrollIntoView({block:'nearest',behavior:reduced()?'instant':'smooth'}); }
+  const retryFields=new Map();function lockRetry(lock){for(const el of form.querySelectorAll('input:not([name=cf-turnstile-response]),select,textarea')){if(lock){if(!retryFields.has(el))retryFields.set(el,el.disabled);el.disabled=true;}else if(retryFields.has(el)){el.disabled=retryFields.get(el);}}if(!lock)retryFields.clear();}
+  const newRequest=document.createElement('button');newRequest.type='button';newRequest.className='btn btn-outline';newRequest.hidden=true;newRequest.textContent=({uk:'Почати новий запит',en:'Start a new request',ar:'بدء طلب جديد',ru:'Начать новый запрос'})[form.dataset.locale];newRequest.addEventListener('click',()=>{lockRetry(false);form._pendingRequest=null;delete form.dataset.idempotencyKey;newRequest.hidden=true;feedback.hidden=true;});submit.after(newRequest);
   form.addEventListener('submit',async event => {
-    event.preventDefault(); feedback.hidden=true;
+    event.preventDefault(); feedback.hidden=true;for(const e of form.querySelectorAll('.field-error'))e.remove();for(const e of form.querySelectorAll('[aria-invalid]')){e.removeAttribute('aria-invalid');e.removeAttribute('aria-describedby');}
     if (!form.checkValidity()) { form.reportValidity(); return; }
     if(form.dataset.backendReady!=='true') { show(form.dataset.error || 'The contact system is not configured yet.'); return; }
     const token=form.querySelector('[name="cf-turnstile-response"]')?.value;
     if(!token) { show(({uk:'Пройдіть перевірку безпеки перед надсиланням.',en:'Complete the security challenge before submitting.', ar:'أكمل التحقق الأمني قبل الإرسال.', ru:'Пройдите проверку безопасности перед отправкой.'})[form.dataset.locale] || form.dataset.error); return; }
     const type=selectedType();
     if ((type==='translation'||type==='interpretation') && activeField('sourceLanguage') && activeField('sourceLanguage')===activeField('targetLanguage')) { show(form.dataset.same || 'Source and target must differ.'); return; }
-    const request = {
+    let request = {
       idempotencyKey: form.dataset.idempotencyKey || (form.dataset.idempotencyKey = (crypto.randomUUID?.() || String(Date.now())+'-'+Math.random().toString(36).slice(2))),
       locale: form.dataset.locale || 'uk', type,
       name: form.elements.namedItem('name')?.value?.trim() || '',
@@ -161,16 +161,17 @@ if (form) {
       details: Object.fromEntries(['language','goal','sourceLanguage','targetLanguage','dueDate','eventDate','format'].map(key=>[key,activeField(key)]).filter(([,value])=>value)),
       privacyAcknowledged: form.elements.namedItem('privacyAcknowledged')?.checked || false, turnstileToken:token
     };
+    request=form._pendingRequest?{...form._pendingRequest,turnstileToken:token}:request;form._pendingRequest={...request};
     submit.disabled=true;
     try {
       const response = await fetch('/api/v1/enquiries', {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(request),credentials:'same-origin',signal:AbortSignal.timeout(10000)});
       const json = response.headers.get('content-type')?.includes('application/json') ? await response.json() : null;
       if (response.status===201 && json?.ok===true && json.reference) {
         show(`${form.dataset.success || 'Received:'} ${json.reference}`,true);
-        form.reset(); delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false; window.turnstile?.reset?.();
-      } else { show(json?.message || form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.(); }
+        lockRetry(false);form.reset();form._pendingRequest=null;newRequest.hidden=true; delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false; window.turnstile?.reset?.();
+      } else { if(response.status<500){lockRetry(false);form._pendingRequest=null;delete form.dataset.idempotencyKey;}else lockRetry(true);newRequest.hidden=false;for(const key of Object.keys(json?.fieldErrors||{})){const field=form.querySelector(`[name="${CSS.escape(key)}"]:not(:disabled)`);if(!field)continue;const error=document.createElement('span');error.className='field-error';error.id='error-'+key;error.textContent=({uk:'Перевірте це поле.',en:'Please check this field.',ar:'يرجى التحقق من هذا الحقل.',ru:'Проверьте это поле.'})[form.dataset.locale];field.setAttribute('aria-invalid','true');field.setAttribute('aria-describedby',error.id);field.after(error);}show(json?.message || form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.(); }
     } catch {
-      show(form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.();
+      lockRetry(true);newRequest.hidden=false;show(form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.();
     } finally { submit.disabled=false; }
   });
 }

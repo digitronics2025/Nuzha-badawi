@@ -16,31 +16,38 @@ export async function insertDraft(db,key,loc,content,actor,expectedRevision){
  if((expectedRevision??null)!==beforeRev)throw new HttpError(409,'EDIT_CONFLICT','Page was changed elsewhere. Refresh before saving.');
  const newRevision=await db.prepare('INSERT INTO cms_revisions(page_key,locale,payload_json,source_revision,created_by) VALUES(?,?,?,?,?) RETURNING id').bind(key,loc,JSON.stringify(content),beforeRev,actor).first();
  const r=await db.prepare(`INSERT INTO cms_state(page_key,locale,draft_revision,review_status,updated_at)
- VALUES(?, ?, ?, 'ready', ?)
- ON CONFLICT(page_key,locale) DO UPDATE SET draft_revision=excluded.draft_revision, review_status='ready',updated_at=excluded.updated_at
- WHERE cms_state.draft_revision IS ? RETURNING draft_revision`).bind(key,loc,newRevision.id,now(),beforeRev).first();
+ VALUES(?, ?, ?, ?, ?)
+ ON CONFLICT(page_key,locale) DO UPDATE SET draft_revision=excluded.draft_revision, review_status=excluded.review_status,updated_at=excluded.updated_at
+ WHERE cms_state.draft_revision IS ? RETURNING draft_revision`).bind(key,loc,newRevision.id,loc==='en'?'ready':'needs_review',now(),beforeRev).first();
  if(!r)throw new HttpError(409,'EDIT_CONFLICT','Page changed while you were editing.');
  // Changed English copy must not overwrite already-published translations.
  if(loc==='en')await db.prepare("UPDATE cms_state SET review_status='needs_review',updated_at=? WHERE page_key=? AND locale IN ('uk','ar','ru')").bind(now(),key).run();
  await audit(db,actor,'save_draft',`${key}:${loc}`,newRevision.id);
  return newRevision.id;
 }
+export async function validatePublicationMedia(db,payload){for(const id of Object.values(payload?.media||{})){const row=await db.prepare('SELECT id FROM media_assets WHERE id=? AND published=1 AND consent_confirmed=1').bind(id).first();if(!row)throw new HttpError(409,'MEDIA_APPROVAL_REQUIRED','Referenced image is not approved for publication.');}}
 export async function publishDraft(db,key,loc,expectedRevision,actor){
  const st=await state(db,key,loc);if(!st?.draft_revision||st.draft_revision!==expectedRevision)throw new HttpError(409,'EDIT_CONFLICT','Draft revision changed.');
- if(st.review_status==='needs_review')throw new HttpError(409,'REVIEW_REQUIRED','Review this translation before publishing.');
- const r=await db.prepare("UPDATE cms_state SET published_revision=?,review_status='published',updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? RETURNING published_revision").bind(expectedRevision,now(),key,loc,expectedRevision).first();
+ await validatePublicationMedia(db,(await revision(db,expectedRevision))?.payload);
+ const source=loc==='en'?null:await state(db,key,'en');
+ if(st.review_status==='needs_review'||(loc!=='en'&&(st.source_revision_seen??null)!==(source?.draft_revision??null)))throw new HttpError(409,'REVIEW_REQUIRED','Review this translation before publishing.');
+ const r=await db.prepare("UPDATE cms_state SET published_revision=?,review_status='published',updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? AND review_status!='needs_review' AND (?='en' OR source_revision_seen IS (SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en')) RETURNING published_revision").bind(expectedRevision,now(),key,loc,expectedRevision,loc,key).first();
  if(!r)throw new HttpError(409,'EDIT_CONFLICT','Page changed during publish.');
  await audit(db,actor,'publish',`${key}:${loc}`,expectedRevision);
  return {revision:expectedRevision,publishedAt:now()};
 }
 export async function rollBack(db,key,loc,toRevision,actor){
  const target=await revision(db,toRevision);if(!target||target.page_key!==key||target.locale!==loc)throw new HttpError(400,'VALIDATION_FAILED','Revision does not belong to this page.');
- await db.prepare("UPDATE cms_state SET published_revision=?,review_status='published',updated_at=? WHERE page_key=? AND locale=?").bind(toRevision,now(),key,loc).run();
+ const approved=await db.prepare("SELECT id FROM admin_audit WHERE target=? AND revision=? AND action='publish' LIMIT 1").bind(`${key}:${loc}`,toRevision).first();
+ if(!approved)throw new HttpError(409,'PUBLICATION_REQUIRED','Only previously published revisions can be restored.');
+ await validatePublicationMedia(db,target.payload);
+ const changed=await db.prepare("UPDATE cms_state SET published_revision=?,updated_at=? WHERE page_key=? AND locale=? RETURNING published_revision").bind(toRevision,now(),key,loc).first();
+ if(!changed)throw new HttpError(409,'EDIT_CONFLICT','Page state is missing.');
  await audit(db,actor,'rollback',`${key}:${loc}`,toRevision);
  return {revision:toRevision,publishedAt:now()};
 }
 export async function markReviewed(db,key,loc,expectedDraft,actor){
- const r=await db.prepare("UPDATE cms_state SET review_status='ready',updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? RETURNING draft_revision").bind(now(),key,loc,expectedDraft).first();
+ const r=await db.prepare("UPDATE cms_state SET review_status='ready',source_revision_seen=(SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en'),updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? RETURNING draft_revision").bind(key,now(),key,loc,expectedDraft).first();
  if(!r)throw new HttpError(409,'EDIT_CONFLICT','The translation draft changed.');
  await audit(db,actor,'review',`${key}:${loc}`,expectedDraft);return r.draft_revision;
 }

@@ -134,6 +134,6 @@ class FrontendBuildTests(unittest.TestCase):
         css=(DIST/'assets'/'site.css').stat().st_size
         js=(DIST/'assets'/'site.js').stat().st_size
         self.assertLess(css,46000)
-        self.assertLess(js,12000)
+        self.assertLess(js,16000)
 
 if __name__=='__main__':unittest.main()

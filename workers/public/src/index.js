@@ -72,13 +72,14 @@ async function servePublished(request,env,ctx){
  const parsed=pageFromPath(new URL(request.url).pathname);
  if(!parsed||!env.ASSETS)return env.ASSETS?env.ASSETS.fetch(request):problem(503,'SERVICE_UNAVAILABLE','Static assets are not configured.');
  const cache=globalThis.caches?.default;
- const cacheKey=new Request('https://nusya-cache.local'+new URL(request.url).pathname);
+ const cacheKey=new Request(`https://${env.PUBLIC_HOST||new URL(request.url).hostname}/cms-v2`+new URL(request.url).pathname);
  if(cache){const saved=await cache.match(cacheKey);if(saved)return publicSecurity(saved);}
- const asset=await env.ASSETS.fetch(request);if(!asset.ok||!asset.headers.get('content-type')?.includes('text/html'))return publicSecurity(asset);
+ const assetHeaders=new Headers(request.headers);assetHeaders.delete('if-none-match');assetHeaders.delete('if-modified-since');
+ const asset=await env.ASSETS.fetch(new Request(request,{headers:assetHeaders}));if(!asset.ok||!asset.headers.get('content-type')?.includes('text/html'))return publicSecurity(asset);
  if(!env.DB)return publicSecurity(asset);
  const conf=await settings(env.DB),revision=await published(env.DB,parsed.key,parsed.locale);
  let html=renderPublished(asset,revision?.payload||{},conf,{locale:parsed.locale,turnstileSiteKey:parsed.key==='contact'?env.TURNSTILE_SITE_KEY:null});
- const h=new Headers(html.headers);h.set('cache-control','public, max-age=0, s-maxage=90');h.set('content-type','text/html; charset=utf-8');
+ const h=new Headers(html.headers);h.delete('etag');h.delete('last-modified');h.set('cache-control','public, max-age=0, s-maxage=90');h.set('content-type','text/html; charset=utf-8');
  html=new Response(html.body,{status:200,headers:h});
  if(cache&&ctx?.waitUntil&&request.method==='GET')ctx.waitUntil(cache.put(cacheKey,html.clone()));
  return publicSecurity(html);
@@ -96,9 +97,16 @@ async function maintenance(env){
  if(env.ENABLE_OUTBOX_CRON==='true')await flushOutbox(env.DB,env);
 }
 const worker={
- async fetch(request,env,ctx){try{
+ async fetch(request,env,ctx){const response=await handlePublic(request,env,ctx);const safe=publicSecurity(response);return request.method==='HEAD'?new Response(null,{status:safe.status,headers:safe.headers}):safe;},
+ async scheduled(event,env,ctx){ctx.waitUntil(maintenance(env));}
+};
+async function handlePublic(request,env,ctx){try{
   if(!env.ASSETS)env={...env,ASSETS:BUNDLED};
   const url=new URL(request.url),p=url.pathname;
+  if(request.method==='GET'||request.method==='HEAD'){let decoded;try{decoded=decodeURIComponent(p);}catch{throw new HttpError(400,'INVALID_PATH','Invalid URL encoding.');}
+   const normalized=decoded.replace(/\/index\.html$/, '/');const page=pageFromPath(normalized);
+   if(page){const canonical=`/${page.locale}/${page.key==='home'?'':page.key+'/'}`;if(p!==canonical)return new Response(null,{status:308,headers:{location:canonical+url.search}});}
+  }
   if(p==='/api/v1/config'&&request.method==='GET'){
     const conf=env.DB?await settings(env.DB):null;
     return json({ok:true,ready:!!(env.DB&&env.TURNSTILE_SECRET&&env.TURNSTILE_SITE_KEY&&env.RATE_LIMIT_SALT),turnstileSiteKey:env.TURNSTILE_SITE_KEY||null,services:conf?.services||{},approvedTranslationPairs:conf?.approvedTranslationPairs||[]});
@@ -112,7 +120,5 @@ const worker={
   if(request.method!=='GET'&&request.method!=='HEAD')throw new HttpError(405,'METHOD_NOT_ALLOWED','Method not allowed.');
   if(p==='/'||p==='/index.html')return rootRedirect(request);
   return await servePublished(request,env,ctx);
- }catch(e){return errorResponse(e);}},
- async scheduled(event,env,ctx){ctx.waitUntil(maintenance(env));}
-};
+ }catch(e){return errorResponse(e);}}
 export default worker;

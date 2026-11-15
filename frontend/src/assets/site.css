@@ -44,3 +44,5 @@
 .video-poster:has(.video-cover-image) .video-art{display:block;background:linear-gradient(135deg,#b99675,#e0c9af)}
 .video-poster:has(.video-cover-image) .video-play{inset-inline-start:56%;background:rgba(59,36,27,.92)}
 @media(max-width:767px){.portrait-concept-disclosure{font-size:9px}.video-poster:has(.video-cover-image) .video-play{width:54px;height:54px;inset-inline-start:55%}}
+
+[hidden]{display:none!important}

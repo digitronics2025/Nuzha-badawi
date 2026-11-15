@@ -1,5 +1,6 @@
 import {HttpError,isLocale,isPageKey,isSafeKey} from './http.js';
 import defaults from './defaults.js';
+import {fieldSchema} from './content-schema.js';
 
 const text=(v,min,max,label)=>{
  if(typeof v!=='string')throw new HttpError(400,'VALIDATION_FAILED',`${label} must be text.`);
@@ -72,9 +73,9 @@ export function validatePagePayload(pageKey,loc,payload){
  const f=payload.fields;if(!f||typeof f!=='object'||Array.isArray(f)||Object.keys(f).length>65)throw new HttpError(400,'VALIDATION_FAILED','Invalid page fields.');
  const fields={};for(const [k,v] of Object.entries(f)){
    if(!/^[a-z][a-zA-Z0-9_.]{0,63}$/.test(k)||!Object.hasOwn(defaults?.[loc]?.[pageKey]?.fields||{},k))throw new HttpError(400,'VALIDATION_FAILED','Unsupported content field.');
-   fields[k]=text(v,0, k==='description'||/Body|Description|Copy|Desc/.test(k)?2500:260,k);
+   fields[k]=text(v,0, fieldSchema(loc,pageKey)[k].maxLength,k);
  }
- const seo={};if(payload.seo){seo.title=optional(payload.seo.title,100,'SEO title');seo.description=optional(payload.seo.description,260,'SEO description');}
+ const seo={};if(payload.seo){seo.title=optional(payload.seo.title,100,'SEO title');seo.description=optional(payload.seo.description,500,'SEO description');}
  const media={};if(payload.media){for(const [k,v] of Object.entries(payload.media)){if(!['heroPortrait','aboutPortrait'].includes(k)||!isSafeKey(v))throw new HttpError(400,'VALIDATION_FAILED','Invalid media reference.');media[k]=v;}}
  return {fields,seo,media};
 }
