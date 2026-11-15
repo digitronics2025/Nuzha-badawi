@@ -59,7 +59,7 @@ test('staging pages are noindex while production remains indexable',async()=>{
   for(const [path,status] of [['/uk/',200],['/uk/index.html',308],['/404.html',404],['/missing/',404]]){
    const response=await publicWorker.fetch(new Request(`https://${host}${path}`),{PUBLIC_HOST:host},{});
    assert.equal(response.status,status);
-   assert.equal(response.headers.get('x-robots-tag'),host.endsWith('.workers.dev')?'noindex, nofollow':status===404?'noindex':null);
+   assert.equal(response.headers.get('x-robots-tag'),host.endsWith('.workers.dev')||status>=400?'noindex, nofollow':null);
   }
  }
 });

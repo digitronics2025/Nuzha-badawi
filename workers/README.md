@@ -38,6 +38,8 @@ Public Worker serves localized published HTML, static assets (asset-first outsid
 
 Public pages are prerendered HTML with `data-nusya-field` markers. A published revision in D1 overrides **plain text only**, its SEO metadata and approved image references in an `HTMLRewriter`. Public HTML cache TTL is 90s; private admin responses are always no-store. Drafts never appear publicly. Source EN changes flag Arabic/Russian review status, retaining their last published content. Owner may publish or restore an older approved revision.
 
+Public HTML uses the host/page-scoped `cms-v3` cache namespace; TTL and private caching boundaries are unchanged. Published SEO updates search, Open Graph, Twitter and safely serialized JSON-LD together. The asset bundle preserves PNG/WebP/ICO bytes as base64, serves ICO as `image/x-icon` and the text manifest as `application/manifest+json`. Both missing routes and direct `/404.html` return 404/noindex; JSON API responses are no-store/noindex. No new data migration or account infrastructure is needed.
+
 ## Anti-abuse and durability
 
 Enquiries require Turnstile siteverify, matching first-party origin, bounded JSON, validated service, approved pairs, HMAC IP bucketing and idempotency. D1 batch persists enquiry + outbox before sending HTTP 201. Email failures do not destroy enquiries. Contact API never claims a sent email unless actually confirmed.

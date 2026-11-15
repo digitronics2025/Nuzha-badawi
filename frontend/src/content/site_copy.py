@@ -1,7 +1,7 @@
 """Localized editorial content, pending final publication sign-off by Nozha."""
 LOCALES=('uk','en','ar','ru')
 NAV_KEYS=('home','about','lessons','coaching','translation','contact')
-SOCIAL={'preply':'https://preply.com/en/tutor/522376','instagram':'https://instagram.com/nusyabadavi','linkedin':'https://www.linkedin.com/in/%D0%BD%D1%83%D1%81%D1%8F-%D0%B1%D0%B0%D0%B4%D0%B0%D0%B2%D0%B8-253b8316a/'}
+SOCIAL={'preply':'https://preply.com/en/tutor/522376','instagram':'https://instagram.com/nusyabadavi','linkedin':''}  # Screenshot-only LinkedIn URL remains unverified; owner CMS may supply a confirmed profile.
 COPY={
 'uk':{
 'name':'Українська',

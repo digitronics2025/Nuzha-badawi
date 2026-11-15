@@ -17,6 +17,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'/'content'))
 from site_copy import COPY, LOCALES, NAV_KEYS, SOCIAL
 from experience_copy import EXPERIENCE
+from seo import BRAND, CANONICAL, IMAGE_ALT, OG_LOCALES, metadata, structured_data
 DEVELOPER_URL='https://dr-badawi-abdalsalam.com/'
 PUBLIC=ROOT/'dist-public'
 ADMIN=ROOT/'dist-admin'
@@ -24,7 +25,6 @@ PAGES=['home','about','lessons','coaching','translation','contact','privacy']
 NAV_PAGES=['home','about','lessons','coaching','translation','contact']
 VIMEO='https://player.vimeo.com/video/1171310337?h=3416a6f4f5'
 VIMEO_PUBLIC='https://vimeo.com/1171310337/3416a6f4f5'
-CANONICAL='https://nozha-badavi.com'
 
 def asset(name):
     digest=hashlib.sha256((ROOT/'src/assets'/name).read_bytes()).hexdigest()[:12]
@@ -56,13 +56,26 @@ def header(loc,page):
 def footer(loc):
     c=COPY[loc]
     nav=''.join(f'<a href="{U(loc,k)}">{E(c["nav"][i])}</a>' for i,k in enumerate(NAV_KEYS))
-    return f'''<footer class="footer"><div class="wrap footer-grid"><div class="footer-intro">{wordmark(loc)}<p class="footer-quote">{T(loc,'tagline')}</p></div><div class="footer-links"><h3>{T(loc,'social_title')}</h3><a data-nusya-link="instagram" href="{E(SOCIAL['instagram'])}" target="_blank" rel="noopener noreferrer">Instagram {arrow()}</a><a data-nusya-link="preply" href="{E(SOCIAL['preply'])}" target="_blank" rel="noopener noreferrer">Preply {arrow()}</a><a data-nusya-link="linkedin" href="{E(SOCIAL['linkedin'])}" target="_blank" rel="noopener noreferrer">LinkedIn {arrow()}</a></div><nav class="footer-links" aria-label="{T(loc,'footer_label')}">{nav}</nav></div><div class="wrap footer-bottom"><div class="footer-meta"><span>{T(loc,'copyright')}</span><span class="developer-credit">{T(loc,'developer_label')} <a class="developer-link" href="{E(DEVELOPER_URL)}" target="_blank" rel="noopener noreferrer"><bdi>{T(loc,'developer_name')}</bdi><span class="developer-arrow" aria-hidden="true">{arrow()}</span></a></span></div><a href="{U(loc,'privacy')}">{T(loc,'privacy_title')}</a><span class="footer-dot">NUSYA · 2026</span></div></footer>'''
-def shell(loc,page,body,seo_title,seo_desc):
+    return f'''<footer class="footer"><div class="wrap footer-grid"><div class="footer-intro">{wordmark(loc)}<p class="footer-quote">{T(loc,'tagline')}</p></div><div class="footer-links"><h3>{T(loc,'social_title')}</h3><a data-nusya-link="instagram" href="{E(SOCIAL['instagram'])}" target="_blank" rel="noopener noreferrer">Instagram {arrow()}</a><a data-nusya-link="preply" href="{E(SOCIAL['preply'])}" target="_blank" rel="noopener noreferrer">Preply {arrow()}</a><a data-nusya-link="linkedin" hidden href="{E(SOCIAL['linkedin'])}" target="_blank" rel="noopener noreferrer">LinkedIn {arrow()}</a></div><nav class="footer-links" aria-label="{T(loc,'footer_label')}">{nav}</nav></div><div class="wrap footer-bottom"><div class="footer-meta"><span>{T(loc,'copyright')}</span><span class="developer-credit">{T(loc,'developer_label')} <a class="developer-link" href="{E(DEVELOPER_URL)}" target="_blank" rel="noopener noreferrer"><bdi>{T(loc,'developer_name')}</bdi><span class="developer-arrow" aria-hidden="true">{arrow()}</span></a></span></div><a href="{U(loc,'privacy')}">{T(loc,'privacy_title')}</a><span class="footer-dot">NUSYA · 2026</span></div></footer>'''
+def icon_links(manifest=False):
+    links='<link rel="icon" type="image/svg+xml" sizes="any" href="/assets/favicon.svg"><link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="/favicon.ico">'
+    links+=''.join(f'<link rel="icon" type="image/png" sizes="{size}x{size}" href="/assets/favicon-{size}x{size}.png">' for size in (16,32))
+    return links+'<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">'+('<link rel="manifest" href="/site.webmanifest">' if manifest else '')
+
+def json_script(value):
+    return json.dumps(value,ensure_ascii=False,separators=(',',':')).replace('&','\\u0026').replace('<','\\u003c').replace('>','\\u003e').replace('\u2028','\\u2028').replace('\u2029','\\u2029')
+
+def shell(loc,page,body,seo_title,seo_desc,indexable=True):
     c=COPY[loc];route=U(loc,page) if page!='404' else U(loc)+'404.html'
     alt=''.join(f'<link rel="alternate" hreflang="{l}" href="{CANONICAL}{U(l,page)}" />' for l in LOCALES)
     canonical=CANONICAL+route
     body_class=' page-'+page
-    return f'''<!doctype html><html lang="{loc}" dir="{c['dir']}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#F8F4EE"><meta name="description" content="{E(seo_desc)}"><meta property="og:type" content="website"><meta property="og:site_name" content="NUSYA Linguistic Studio"><meta property="og:title" content="{E(seo_title)}"><meta property="og:description" content="{E(seo_desc)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="{CANONICAL}/assets/social-card-{loc}.png"><meta name="twitter:card" content="summary_large_image"><meta name="color-scheme" content="light"><link rel="canonical" href="{canonical}">{alt}<link rel="alternate" hreflang="x-default" href="{CANONICAL}{U('uk',page)}"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="stylesheet" href="{asset('tokens.css')}"><link rel="stylesheet" href="{asset('site.css')}"><title>{E(seo_title)} · NUSYA Linguistic Studio</title><script type="module" src="{asset('site.js')}"></script></head><body class="{body_class.strip()}">{header(loc,page)}<main id="main" tabindex="-1">{body}</main>{footer(loc)}<div id="live-announcer" class="sr-only" role="status" aria-live="polite"></div></body></html>'''
+    image_file=ROOT/'src'/'assets'/f'social-card-{loc}.png'
+    image_url=f'{CANONICAL}/assets/social-card-{loc}.png?v={hashlib.sha256(image_file.read_bytes()).hexdigest()[:12]}'
+    sharing=f'<meta property="og:locale" content="{OG_LOCALES[loc]}">'+''.join(f'<meta property="og:locale:alternate" content="{OG_LOCALES[l]}">' for l in LOCALES if l!=loc)
+    sharing+=f'<meta property="og:image" content="{image_url}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:type" content="image/png"><meta property="og:image:alt" content="{E(IMAGE_ALT[loc])}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{E(seo_title)}"><meta name="twitter:description" content="{E(seo_desc)}"><meta name="twitter:image" content="{image_url}"><meta name="twitter:image:alt" content="{E(IMAGE_ALT[loc])}">'
+    indexing=f'<link rel="canonical" href="{canonical}">{alt}<link rel="alternate" hreflang="x-default" href="{CANONICAL}{U("uk",page)}"><script id="nusya-schema" type="application/ld+json">{json_script(structured_data(loc,page,seo_title,seo_desc))}</script>' if indexable else '<meta name="robots" content="noindex,nofollow">'
+    return f'''<!doctype html><html lang="{loc}" dir="{c['dir']}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#F8F4EE"><meta name="description" content="{E(seo_desc)}"><meta property="og:type" content="website"><meta property="og:site_name" content="NUSYA Linguistic Studio"><meta property="og:title" content="{E(seo_title)}"><meta property="og:description" content="{E(seo_desc)}">{('<meta property="og:url" content="'+canonical+'">') if indexable else ''}{sharing}<meta name="color-scheme" content="light">{indexing}{icon_links(True)}<link rel="stylesheet" href="{asset('tokens.css')}"><link rel="stylesheet" href="{asset('site.css')}"><title>{E(seo_title)} · NUSYA Linguistic Studio</title><script type="module" src="{asset('site.js')}"></script></head><body class="{body_class.strip()}">{header(loc,page)}<main id="main" tabindex="-1">{body}</main>{footer(loc)}<div id="live-announcer" class="sr-only" role="status" aria-live="polite"></div></body></html>'''
 def portrait(loc,mode='hero'):
     # Generated editorial concept, explicitly disclosed in every supported locale.
     disclosure={'uk':'Ілюстрація, створена ШІ — не справжнє фото Ножі Бадаві.','en':'AI-generated illustration — not an authentic photo of Nozha Badavi.','ar':'رسم توضيحي مولّد بالذكاء الاصطناعي — ليس صورة حقيقية لنزهة بدوي.','ru':'Иллюстрация, созданная ИИ — не настоящая фотография Нузи Бадави.'}[loc]
@@ -84,8 +97,9 @@ def lesson_cards(loc,detail=False):
         desc_key=key+'_long' if detail else key+'_desc'
         target=SOCIAL['preply'] if detail and key=='english' else U(loc,'contact')+'?service=lesson&language='+key
         text=c['preply_cta'] if detail and key=='english' else c['learn_more'] if not detail else c['lessons_cta']
+        link_label=text+' — '+c[key]
         deco=['A·Z','А·Я','أ·ي'][i]
-        out.append(f'''<article class="lesson-card lang-{key}" data-nusya-service="{key}" data-reveal><div class="lesson-decor"><span class="lesson-index">0{i+1}</span><span aria-hidden="true" class="lesson-glyph">{deco}</span><div class="line-art" aria-hidden="true"></div></div><div class="lesson-card-body"><span class="mini-label">{T(loc,"language_label_short")} 0{i+1}</span><h3 class="card-heading" data-nusya-field="{key}">{E(c[key])}</h3><p data-nusya-field="{desc_key}">{E(c[desc_key])}</p>{availability(loc,key)}<a class="text-link" data-nusya-enquiry="{key}" hidden href="{E(target)}" {('target="_blank" rel="noopener noreferrer"' if detail and key=='english' else '')}>{E(text)}{arrow()}</a></div></article>''')
+        out.append(f'''<article class="lesson-card lang-{key}" data-nusya-service="{key}" data-reveal><div class="lesson-decor"><span class="lesson-index">0{i+1}</span><span aria-hidden="true" class="lesson-glyph">{deco}</span><div class="line-art" aria-hidden="true"></div></div><div class="lesson-card-body"><span class="mini-label">{T(loc,"language_label_short")} 0{i+1}</span><h3 class="card-heading" data-nusya-field="{key}">{E(c[key])}</h3><p data-nusya-field="{desc_key}">{E(c[desc_key])}</p>{availability(loc,key)}<a class="text-link" data-nusya-enquiry="{key}" aria-label="{E(link_label)}" hidden href="{E(target)}" {('target="_blank" rel="noopener noreferrer"' if detail and key=='english' else '')}>{E(text)}{arrow()}</a></div></article>''')
     return '<div class="lesson-grid">'+''.join(out)+'</div>'
 def service_cards(loc):
     c=COPY[loc]
@@ -163,7 +177,7 @@ def enquiry_form(loc):
     return f'''<form id="enquiry-form" class="enquiry-form" method="post" action="/api/v1/enquiries" novalidate data-locale="{loc}" data-messages="{E(json.dumps(EXPERIENCE[loc],ensure_ascii=False))}" data-error="{T(loc,'form_error')}" data-success="{T(loc,'form_success')}" data-same="{T(loc,'form_same')}"><fieldset class="service-choice"><legend>{T(loc,'form_service')}</legend>{choices}</fieldset><div class="form-fields">{details}{common}</div>{notes}<div id="nusya-turnstile" aria-live="polite"></div><div class="form-feedback" id="enquiry-feedback" role="status" aria-live="polite" hidden></div><p id="enquiry-readiness" role="status">{T(loc,"service_loading")}</p><button class="btn btn-primary" type="submit" disabled>{T(loc,'form_send')} {arrow()}</button><noscript><p>{T(loc,'form_error')}</p></noscript></form>'''
 def page_contact(loc):
     c=COPY[loc]
-    links=''.join(f'<a class="contact-social" data-nusya-link="{E(name)}" href="{E(href)}" target="_blank" rel="noopener noreferrer"><span>{name}</span>{arrow()}</a>' for name,href in SOCIAL.items())
+    links=''.join(f'<a class="contact-social" data-nusya-link="{E(name)}" href="{E(href)}" target="_blank" rel="noopener noreferrer" {"hidden" if not href else ""}><span>{name}</span>{arrow()}</a>' for name,href in SOCIAL.items())
     return page_intro(loc,c['social_title'],c['contact_page_title'],c['contact_page_desc'])+f'''<section class="section-pad wrap contact-grid"><div class="form-panel"><h2 class="display">{T(loc,'form_title')}</h2>{enquiry_form(loc)}</div><aside class="contact-side">{label(c['contact_social'])}<h2 class="display">NUSYA</h2><p>{T(loc,'closing_desc')}</p><div class="contact-socials">{links}<a data-nusya-contact="email" hidden></a><a data-nusya-contact="phone" hidden></a></div><div class="contact-art" aria-hidden="true">◎</div></aside></section>'''
 def page_privacy(loc):
     c=COPY[loc]
@@ -174,6 +188,9 @@ def build_public():
     PUBLIC.mkdir(parents=True)
     source=ROOT/'src'/'assets'
     shutil.copytree(source,PUBLIC/'assets',ignore=shutil.ignore_patterns('admin.*'))
+    for name in ('favicon.ico','apple-touch-icon.png'):
+        shutil.copy2(source/name,PUBLIC/name)
+    (PUBLIC/'site.webmanifest').write_text(json.dumps({'name':BRAND,'short_name':'NUSYA','lang':'uk','start_url':'/uk/','display':'browser','theme_color':'#F8F4EE','background_color':'#F8F4EE','icons':[{'src':f'/assets/icon-{size}.png','sizes':f'{size}x{size}','type':'image/png','purpose':'any'} for size in (192,512)]}),encoding='utf-8')
     # Static asset security headers (served by Workers Static Assets without invoking the Worker).
     (PUBLIC/'_headers').write_text('/assets/*\n  X-Content-Type-Options: nosniff\n  Cache-Control: public, max-age=3600\n  Strict-Transport-Security: max-age=31536000; includeSubDomains\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Strict-Transport-Security: max-age=31536000; includeSubDomains\n',encoding='utf-8')
     pages={'home':home,'about':page_about,'lessons':page_lessons,'coaching':page_coaching,'translation':page_translation,'contact':page_contact,'privacy':page_privacy}
@@ -181,13 +198,11 @@ def build_public():
         for name,render in pages.items():
             folder=PUBLIC/loc/(name if name!='home' else '')
             folder.mkdir(parents=True,exist_ok=True)
-            title=c['hero'] if name=='home' else c.get(name+'_page_title') or c.get(name+'_title') or c['hero']
-            description=c['hero_desc'] if name=='home' else c.get(name+'_page_desc') or c.get(name+'_desc') or c['hero_desc']
-            (folder/'index.html').write_text(shell(loc,name,render(loc),title,description),encoding='utf-8')
+            seo=metadata(loc,name)
+            (folder/'index.html').write_text(shell(loc,name,render(loc),seo['title'],seo['description']),encoding='utf-8')
     (PUBLIC/'index.html').write_text('<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/uk/"><link rel="canonical" href="https://nozha-badavi.com/uk/"></head><body><a href="/uk/">NUSYA — Українська</a></body></html>',encoding='utf-8')
     for loc in LOCALES:
-        error=shell(loc,'404',page_intro(loc,'NUSYA',COPY[loc]['not_found'],COPY[loc]['not_found_desc'])+f'<div class="wrap error-actions">{pill(COPY[loc]["back_home"],U(loc))}{pill(COPY[loc]["lessons_cta"],U(loc,"lessons"),"outline")}</div>',COPY[loc]['not_found'],COPY[loc]['not_found_desc'])
-        error=error.replace('<meta name="color-scheme"', '<meta name="robots" content="noindex"><meta name="color-scheme"')
+        error=shell(loc,'404',page_intro(loc,'NUSYA',COPY[loc]['not_found'],COPY[loc]['not_found_desc'])+f'<div class="wrap error-actions">{pill(COPY[loc]["back_home"],U(loc))}{pill(COPY[loc]["lessons_cta"],U(loc,"lessons"),"outline")}</div>',COPY[loc]['not_found'],COPY[loc]['not_found_desc'],indexable=False)
         (PUBLIC/loc/'404.html').write_text(error,encoding='utf-8')
         if loc=='uk':(PUBLIC/'404.html').write_text(error,encoding='utf-8')
     (PUBLIC/'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: https://nozha-badavi.com/sitemap.xml\n',encoding='utf-8')
@@ -199,9 +214,12 @@ def build_admin():
     ADMIN.mkdir(parents=True)
     shutil.copytree(ROOT/'src'/'assets',ADMIN/'assets')
     admin=(ROOT/'src/admin.html').read_text(encoding='utf-8')
+    admin=admin.replace('<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">',icon_links())
     for name in ['tokens.css','admin.css','admin.js']:
         admin=admin.replace('/assets/'+name,asset(name))
     (ADMIN/'index.html').write_text(admin,encoding='utf-8')
+    for name in ('favicon.ico','apple-touch-icon.png'):
+        shutil.copy2(ROOT/'src'/'assets'/name,ADMIN/name)
     preview=ADMIN/'preview-public'
     shutil.copytree(PUBLIC,preview,ignore=shutil.ignore_patterns('assets','_headers'))
     (ADMIN/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')

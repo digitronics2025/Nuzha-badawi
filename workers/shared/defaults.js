@@ -62,7 +62,7 @@ export default {
         "proof_2": "Міжкультурне спілкування"
       },
       "seo": {
-        "title": "Вивчайте мови. Знайдіть свій голос. Відкрийте світ.",
+        "title": "Нозха Бадаві — мовні заняття та спілкування",
         "description": "Індивідуальні заняття з англійської, російської та арабської мов, підготовка до професійного спілкування, письмовий та усний переклад із Нозхою Бадаві."
       },
       "media": {}
@@ -103,7 +103,7 @@ export default {
         "description": "Дізнайтеся про викладання, освіту, переклад і підтримку студентів, що сформували підхід Нозхи."
       },
       "seo": {
-        "title": "Індивідуальний підхід до мов.",
+        "title": "Про Нозху Бадаві",
         "description": "Дізнайтеся про викладання, освіту, переклад і підтримку студентів, що сформували підхід Нозхи."
       },
       "media": {}
@@ -131,7 +131,7 @@ export default {
         "description": "Індивідуальне вивчення англійської, російської та арабської відповідно до ваших цілей."
       },
       "seo": {
-        "title": "Мовні заняття для вашого світу.",
+        "title": "Заняття з англійської, російської та арабської",
         "description": "Індивідуальне вивчення англійської, російської та арабської відповідно до ваших цілей."
       },
       "media": {}
@@ -156,7 +156,7 @@ export default {
         "description": "Індивідуальна мовна підготовка до ділових зустрічей, конференцій, презентацій, виступів і фахових розмов."
       },
       "seo": {
-        "title": "Готуйтеся говорити впевнено.",
+        "title": "Підготовка до професійного спілкування",
         "description": "Індивідуальна мовна підготовка до ділових зустрічей, конференцій, презентацій, виступів і фахових розмов."
       },
       "media": {}
@@ -182,7 +182,7 @@ export default {
         "description": "Професійний досвід Нозхи охоплює письмовий переклад за участю української, англійської, російської та арабської, а також усний переклад під час співбесід у міграційній службі. Актуальні мовні пари, формати й доступність уточнюються індивідуально."
       },
       "seo": {
-        "title": "Слова, зміст і розуміння.",
+        "title": "Письмовий та усний переклад — Нозха Бадаві",
         "description": "Професійний досвід Нозхи охоплює письмовий переклад за участю української, англійської, російської та арабської, а також усний переклад під час співбесід у міграційній службі. Актуальні мовні пари, формати й доступність уточнюються індивідуально."
       },
       "media": {}
@@ -197,7 +197,7 @@ export default {
         "description": "Оберіть послугу та вкажіть основні деталі. Запит можна надіслати, коли захищений сервіс звернень активний."
       },
       "seo": {
-        "title": "Розкажіть, як я можу допомогти.",
+        "title": "Зв’язатися з Нозхою Бадаві",
         "description": "Оберіть послугу та вкажіть основні деталі. Запит можна надіслати, коли захищений сервіс звернень активний."
       },
       "media": {}
@@ -279,7 +279,7 @@ export default {
         "proof_2": "Cross-cultural communication"
       },
       "seo": {
-        "title": "Learn a language. Find your voice. Connect with the world.",
+        "title": "Nozha Badavi — language lessons and coaching",
         "description": "Personalised English, Russian and Arabic lessons, professional communication coaching, translation and interpretation with Nozha Badavi."
       },
       "media": {}
@@ -320,7 +320,7 @@ export default {
         "description": "Meet Nozha and explore the teaching, education, translation, interpretation and student-support experience behind her approach."
       },
       "seo": {
-        "title": "A personal approach to languages.",
+        "title": "About Nozha Badavi",
         "description": "Meet Nozha and explore the teaching, education, translation, interpretation and student-support experience behind her approach."
       },
       "media": {}
@@ -348,7 +348,7 @@ export default {
         "description": "Individual learning in English, Russian and Arabic, shaped around your goals."
       },
       "seo": {
-        "title": "Language lessons around your world.",
+        "title": "English, Russian and Arabic lessons",
         "description": "Individual learning in English, Russian and Arabic, shaped around your goals."
       },
       "media": {}
@@ -373,7 +373,7 @@ export default {
         "description": "Personalised language preparation for business meetings, conferences, presentations, speeches and specialised professional conversations."
       },
       "seo": {
-        "title": "Prepare to speak with confidence.",
+        "title": "Professional communication coaching",
         "description": "Personalised language preparation for business meetings, conferences, presentations, speeches and specialised professional conversations."
       },
       "media": {}
@@ -399,7 +399,7 @@ export default {
         "description": "Nozha’s professional background includes written translation involving Ukrainian, English, Russian and Arabic, plus interpretation during migration-service interviews. Current language pairs, formats and availability are assessed individually."
       },
       "seo": {
-        "title": "Words, meaning and understanding.",
+        "title": "Translation and interpretation — Nozha Badavi",
         "description": "Nozha’s professional background includes written translation involving Ukrainian, English, Russian and Arabic, plus interpretation during migration-service interviews. Current language pairs, formats and availability are assessed individually."
       },
       "media": {}
@@ -414,7 +414,7 @@ export default {
         "description": "Choose a service and share the essential details. Requests can be submitted when the secure enquiry service is enabled."
       },
       "seo": {
-        "title": "Tell me how I can help.",
+        "title": "Contact Nozha Badavi",
         "description": "Choose a service and share the essential details. Requests can be submitted when the secure enquiry service is enabled."
       },
       "media": {}
@@ -496,7 +496,7 @@ export default {
         "proof_2": "تواصل بين الثقافات"
       },
       "seo": {
-        "title": "تعلّم لغة. عبّر بثقة. وانفتح على العالم.",
+        "title": "نزهة بدوي — دروس لغات وتواصل مهني",
         "description": "دروس مخصّصة في الإنجليزية والروسية والعربية، والتواصل المهني والترجمة التحريرية والشفوية مع Nozha Badavi."
       },
       "media": {}
@@ -537,7 +537,7 @@ export default {
         "description": "تعرّف على Nozha وخبرتها في التعليم والترجمة ودعم الطلبة الدوليين التي تشكّل أسلوبها في التدريس."
       },
       "seo": {
-        "title": "نهج شخصي في تعلّم اللغات.",
+        "title": "تعرّف على نزهة بدوي",
         "description": "تعرّف على Nozha وخبرتها في التعليم والترجمة ودعم الطلبة الدوليين التي تشكّل أسلوبها في التدريس."
       },
       "media": {}
@@ -565,7 +565,7 @@ export default {
         "description": "تعلّم فردي للإنجليزية والروسية والعربية بما يناسب أهدافك."
       },
       "seo": {
-        "title": "دروس لغات تناسب عالمك.",
+        "title": "دروس الإنجليزية والروسية والعربية",
         "description": "تعلّم فردي للإنجليزية والروسية والعربية بما يناسب أهدافك."
       },
       "media": {}
@@ -590,7 +590,7 @@ export default {
         "description": "إعداد لغوي شخصي لاجتماعات العمل والمؤتمرات والعروض والخطابات والمحادثات المهنية المتخصصة."
       },
       "seo": {
-        "title": "استعد للتحدّث بثقة.",
+        "title": "التدريب على التواصل المهني",
         "description": "إعداد لغوي شخصي لاجتماعات العمل والمؤتمرات والعروض والخطابات والمحادثات المهنية المتخصصة."
       },
       "media": {}
@@ -616,7 +616,7 @@ export default {
         "description": "تشمل خبرة Nozha الترجمة التحريرية بين الأوكرانية والإنجليزية والروسية والعربية، والترجمة الشفوية خلال مقابلات خدمات الهجرة. يتم تقييم اتجاهات اللغات والصيغ والتوفر لكل طلب بصورة منفصلة."
       },
       "seo": {
-        "title": "الكلمات والمعنى والفهم.",
+        "title": "الترجمة التحريرية والشفوية — نزهة بدوي",
         "description": "تشمل خبرة Nozha الترجمة التحريرية بين الأوكرانية والإنجليزية والروسية والعربية، والترجمة الشفوية خلال مقابلات خدمات الهجرة. يتم تقييم اتجاهات اللغات والصيغ والتوفر لكل طلب بصورة منفصلة."
       },
       "media": {}
@@ -631,7 +631,7 @@ export default {
         "description": "اختر الخدمة وقدّم التفاصيل الأساسية. يمكن إرسال الطلب عند تفعيل خدمة استقبال الطلبات الآمنة."
       },
       "seo": {
-        "title": "أخبرني كيف أساعدك.",
+        "title": "تواصل مع نزهة بدوي",
         "description": "اختر الخدمة وقدّم التفاصيل الأساسية. يمكن إرسال الطلب عند تفعيل خدمة استقبال الطلبات الآمنة."
       },
       "media": {}
@@ -713,7 +713,7 @@ export default {
         "proof_2": "Общение между культурами"
       },
       "seo": {
-        "title": "Изучайте языки. Обретайте уверенность. Открывайте мир.",
+        "title": "Нузя Бадави — языковые уроки и общение",
         "description": "Индивидуальные уроки английского, русского и арабского, подготовка к профессиональному общению, письменный и устный перевод с Nozha Badavi."
       },
       "media": {}
@@ -754,7 +754,7 @@ export default {
         "description": "Познакомьтесь с Нузей и её опытом преподавания, образования, перевода и поддержки иностранных студентов."
       },
       "seo": {
-        "title": "Индивидуальный подход к языкам.",
+        "title": "О Нузе Бадави",
         "description": "Познакомьтесь с Нузей и её опытом преподавания, образования, перевода и поддержки иностранных студентов."
       },
       "media": {}
@@ -782,7 +782,7 @@ export default {
         "description": "Индивидуальные занятия английским, русским и арабским для ваших целей."
       },
       "seo": {
-        "title": "Уроки языков для вашего мира.",
+        "title": "Уроки английского, русского и арабского",
         "description": "Индивидуальные занятия английским, русским и арабским для ваших целей."
       },
       "media": {}
@@ -807,7 +807,7 @@ export default {
         "description": "Индивидуальная языковая подготовка к деловым встречам, конференциям, презентациям, выступлениям и профильным профессиональным обсуждениям."
       },
       "seo": {
-        "title": "Готовьтесь говорить уверенно.",
+        "title": "Подготовка к профессиональному общению",
         "description": "Индивидуальная языковая подготовка к деловым встречам, конференциям, презентациям, выступлениям и профильным профессиональным обсуждениям."
       },
       "media": {}
@@ -833,7 +833,7 @@ export default {
         "description": "Профессиональный опыт Нузи включает письменные переводы с участием украинского, английского, русского и арабского языков, а также устный перевод на собеседованиях в миграционной службе. Актуальные языковые пары, форматы и доступность уточняются для каждого запроса."
       },
       "seo": {
-        "title": "Слова, смысл и понимание.",
+        "title": "Письменный и устный перевод — Нузя Бадави",
         "description": "Профессиональный опыт Нузи включает письменные переводы с участием украинского, английского, русского и арабского языков, а также устный перевод на собеседованиях в миграционной службе. Актуальные языковые пары, форматы и доступность уточняются для каждого запроса."
       },
       "media": {}
@@ -848,7 +848,7 @@ export default {
         "description": "Выберите услугу и укажите основные детали. Отправка запросов доступна, когда защищённый сервис обращений включён."
       },
       "seo": {
-        "title": "Расскажите, чем я могу помочь.",
+        "title": "Связаться с Нузей Бадави",
         "description": "Выберите услугу и укажите основные детали. Отправка запросов доступна, когда защищённый сервис обращений включён."
       },
       "media": {}

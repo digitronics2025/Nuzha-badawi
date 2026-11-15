@@ -27,7 +27,7 @@ export function bundledAssets(files,{notFound=null}={}){
  return {async fetch(request){
   const url=new URL(request.url);let path;try{path=decodeURIComponent(url.pathname);}catch{path='';}
   if(path.includes('..')||path.includes('\0'))path='';
-  if(path&&files[path])return respond(request,path);
+  if(path&&files[path])return respond(request,path,path===notFound?404:200);
   if(path.endsWith('/')&&files[path+'index.html'])return respond(request,path+'index.html');
   if(path&&!path.endsWith('/')&&files[path+'/index.html'])return Response.redirect(new URL(path+'/'+url.search,url),307);
   if(notFound&&files[notFound])return respond(request,notFound,404);
