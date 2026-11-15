@@ -32,6 +32,21 @@ test('bundled asset shim resolves indexes, redirects, 404 page, HEAD and ETag',a
  r=await a.fetch(new Request('https://h/../etc'));assert.equal(r.status,404);assert.equal(await r.text(),'missing');
 });
 
+test('bundled binary WebP media is served byte-for-byte with correct headers',async()=>{
+ const bytes=Uint8Array.from([82,73,70,70,4,0,0,0,87,69,66,80,0,255,128,42]);
+ const bundled=bundledAssets({'/assets/picture.webp':{type:'image/webp',base64:Buffer.from(bytes).toString('base64')}});
+ let response=await bundled.fetch(new Request('https://h/assets/picture.webp'));
+ assert.equal(response.status,200);
+ assert.equal(response.headers.get('content-type'),'image/webp');
+ assert.equal(response.headers.get('x-content-type-options'),'nosniff');
+ assert.deepEqual(new Uint8Array(await response.arrayBuffer()),bytes);
+ const etag=response.headers.get('etag');
+ response=await bundled.fetch(new Request('https://h/assets/picture.webp',{method:'HEAD'}));
+ assert.equal(response.status,200);assert.equal((await response.arrayBuffer()).byteLength,0);
+ response=await bundled.fetch(new Request('https://h/assets/picture.webp',{headers:{'if-none-match':etag}}));
+ assert.equal(response.status,304);assert.equal((await response.arrayBuffer()).byteLength,0);
+});
+
 test('root negotiates en/ar/ru and never yields an unsupported locale',async()=>{
  assert.equal(preferredLocale('ar-MA,ar;q=0.9,en;q=0.5'),'ar');
  assert.equal(preferredLocale('ko-KR,ru;q=0.8'),'ru');
