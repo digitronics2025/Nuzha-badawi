@@ -39,7 +39,9 @@ r=await pub('/en/');check('public CSP + HSTS',!!r.headers.get('content-security-
 check('search indexing matches environment',new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?r.headers.get('x-robots-tag')?.includes('noindex'):!r.headers.get('x-robots-tag')?.includes('noindex'));
 for(const path of ['/404.html','/uk/index.html']){
  const response=await pub(path);
- check(`direct HTML indexing ${path}`,response.status===200&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?response.headers.get('x-robots-tag')?.includes('noindex'):!response.headers.get('x-robots-tag')?.includes('noindex')));
+ const canonical=path==='/uk/index.html';
+ check(`direct HTML indexing ${path}`,response.status===(canonical?308:200)&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?response.headers.get('x-robots-tag')?.includes('noindex'):!response.headers.get('x-robots-tag')?.includes('noindex')),String(response.status));
+ if(canonical){check('direct index redirects to canonical Ukrainian page',response.headers.get('location')==='/uk/');const target=await pub('/uk/');check('canonical redirect destination is localized and has correct indexing',target.status===200&&target.body.includes('lang="uk"')&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?target.headers.get('x-robots-tag')?.includes('noindex'):!target.headers.get('x-robots-tag')?.includes('noindex')));}
 }
 check('Vimeo ID + privacy hash present',r.body.includes('player.vimeo.com/video/1171310337?h=3416a6f4f5'));
 r=await pub('/api/v1/config');check('public config ready',r.body.ok===true&&r.body.ready===true,JSON.stringify(r.body.services||{}).slice(0,80));
