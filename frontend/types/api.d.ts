@@ -107,3 +107,17 @@ export interface ContentFieldSchema {
   group: string;
   editable: boolean;
 }
+export interface AdminMedia {
+  id: string;
+  contentType: "image/jpeg" | "image/png" | "image/webp";
+  byteSize: number;
+  altText: string;
+  source: string;
+  published: boolean;
+  createdAt: string;
+}
+export interface AdminMediaList {
+  ok: true;
+  items: AdminMedia[];
+  nextCursor: string | null;
+}

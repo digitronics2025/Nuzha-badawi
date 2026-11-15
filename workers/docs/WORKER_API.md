@@ -7,6 +7,7 @@
 - Translation review accepts an optional `sourceRevision` (integer or null). The new editor supplies the English draft revision it displayed; an atomic comparison rejects approval if that source changed. Existing callers without this additive field retain their contract.
 - UK/EN/AR/RU infographic fields use the existing bounded plain-text payload; absent historical fields retain static defaults. Existing owner revisions are never rewritten.
 - Localized missing-page documents return 404 and noindex. Server-rendered service status removes closed enquiry actions, while the API continues to validate availability and directed pairs independently.
+- `GET /api/v1/admin/media?status=private|published|all&limit=20&cursor=...` returns up to 50 protected metadata records in insertion order: `id`, `contentType`, `byteSize`, `altText`, `source`, `published`, `createdAt`, with `nextCursor`. Default status is `private`; opaque pagination cursors come from the previous response. Saved provenance and pending uploads survive browser sessions; approval remains owner-only. An additive publication index bounds filtered reads without rewriting media records.
 
 **Status:** Code implemented locally, integration tested. Cloudflare bindings, production domain, live authentication and email remain unconfigured.
 
@@ -64,6 +65,7 @@ The reference and timestamp shown above are examples, not live records. HTTP 201
 | `/api/v1/admin/enquiries/:reference` | GET/PATCH | Editor/owner | Read detail, audit status changes |
 | `/api/v1/admin/notifications/retry` | POST | Owner | Bounded retry of failed/pending notification outbox |
 | `/api/v1/admin/media` | POST | Editor/owner | Private validated photo upload to R2 (optional binding) |
+| `/api/v1/admin/media` | GET | Editor/owner | Private/published library, saved provenance and bounded cursor pagination |
 | `/api/v1/admin/media/:id/publish` | POST | Owner | Consent-confirmed publication of image |
 | `/api/v1/admin/media/:id` | GET | Editor/owner | Protected draft media preview |
 

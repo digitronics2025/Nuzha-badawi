@@ -43,6 +43,9 @@ const state = {
   sequence: 0,
   filter: "",
   mediaId: null,
+  mediaItems: [],
+  mediaCursor: null,
+  mediaRequest: 0,
   dirtySections: new Set(),
   enquiryChanges: new Set(),
 };
@@ -825,7 +828,7 @@ function installMediaUploader() {
     input.name = name;
     input.required = true;
     if (type === "file") input.accept = "image/jpeg,image/png,image/webp";
-    else input.maxLength = name === "source" ? 500 : 300;
+    else input.maxLength = name === "source" ? 260 : 240;
     input.addEventListener("input", () => dirty(true, "media-upload"));
     label.append(input);
     form.append(label);
@@ -844,6 +847,38 @@ function installMediaUploader() {
   const result = node("section");
   result.id = "media-upload-result";
   parent.append(result);
+  const library = node("section");
+  library.id = "media-library";
+  library.append(node("h3", "Saved media library"));
+  const filterLabel = node("label", "Show media", "edit-label"),
+    filter = node("select", undefined, "admin-input");
+  filter.id = "media-filter";
+  filterLabel.htmlFor = filter.id;
+  for (const [value, text] of [
+    ["private", "Awaiting owner approval"],
+    ["published", "Approved for public use"],
+    ["all", "All media"],
+  ]) {
+    const option = node("option", text);
+    option.value = value;
+    filter.append(option);
+  }
+  filter.addEventListener("change", () => action(() => loadMedia()));
+  const list = node("ul", undefined, "media-library-list");
+  list.id = "media-library-list";
+  const more = button("Load more media", () =>
+    action(() => loadMedia(null, true)),
+  );
+  more.id = "media-load-more";
+  more.hidden = true;
+  library.append(
+    filterLabel,
+    filter,
+    button("Refresh media library", () => action(() => loadMedia())),
+    list,
+    more,
+  );
+  parent.append(library);
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
@@ -856,28 +891,108 @@ function installMediaUploader() {
         body: new FormData(form),
       });
       state.mediaId = uploaded.id;
+      showMedia({
+        id: uploaded.id,
+        altText: form.elements.namedItem("altText").value,
+        source: form.elements.namedItem("source").value,
+        contentType: file.type,
+        byteSize: file.size,
+        published: false,
+      });
       form.reset();
       dirty(false, "media-upload");
-      showUploadedMedia();
       note(
         "Image uploaded privately. Owner approval is required before public use.",
         "success",
       );
+      $("#media-filter").value = "private";
+      await loadMedia(uploaded.id);
     });
   });
 }
-function showUploadedMedia() {
-  if (!state.mediaId) return;
+async function loadMedia(selectId = state.mediaId, append = false) {
+  const sequence = state.sequence,
+    request = ++state.mediaRequest;
+  const params = new URLSearchParams({
+    status: $("#media-filter").value,
+    limit: "20",
+  });
+  if (append && state.mediaCursor) params.set("cursor", state.mediaCursor);
+  const result = await api("/media?" + params);
+  if (!current("video", sequence) || request !== state.mediaRequest) return;
+  state.mediaItems = append
+    ? [...state.mediaItems, ...result.items]
+    : result.items;
+  state.mediaCursor = result.nextCursor;
+  const list = $("#media-library-list");
+  list.replaceChildren();
+  if (!state.mediaItems.length)
+    list.append(
+      node(
+        "li",
+        "No media in this view. Private uploads remain here until an owner approves them.",
+      ),
+    );
+  for (const item of state.mediaItems) {
+    const row = node("li"),
+      inspect = button("Inspect image " + item.id.slice(0, 8), () =>
+        showMedia(item),
+      );
+    row.append(
+      node("p", item.altText),
+      node(
+        "p",
+        (item.published ? "Approved" : "Private") + " · " + item.createdAt,
+        "box-note",
+      ),
+      inspect,
+    );
+    list.append(row);
+  }
+  $("#media-load-more").hidden = !state.mediaCursor;
+  showMedia(
+    state.mediaItems.find((item) => item.id === selectId) ||
+      state.mediaItems[0],
+  );
+  updateControls();
+}
+function showMedia(asset) {
   const root = $("#media-upload-result");
   root.replaceChildren();
-  root.append(node("p", "Private media ID: " + state.mediaId));
+  state.mediaId = asset?.id || null;
+  if (!asset) return;
+  root.append(
+    node("h3", "Selected image"),
+    node(
+      "p",
+      (asset.published ? "Approved media ID: " : "Private media ID: ") +
+        asset.id,
+    ),
+    node("p", "Source / licence: " + asset.source),
+    node(
+      "p",
+      asset.contentType + " · " + Math.ceil(asset.byteSize / 1024) + " KB",
+      "box-note",
+    ),
+  );
   const image = node("img", undefined, "managed-preview");
-  image.src = "/api/v1/admin/media/" + encodeURIComponent(state.mediaId);
-  image.alt = "Private uploaded image preview";
+  image.src = "/api/v1/admin/media/" + encodeURIComponent(asset.id);
+  image.alt = asset.altText;
   root.append(image);
+  if (asset.published) {
+    root.append(
+      node(
+        "p",
+        "Approved for public use. Add its media ID to a page or the video poster.",
+      ),
+    );
+    updateControls();
+    return;
+  }
   const label = node("label", undefined, "edit-label"),
     consent = node("input");
   consent.type = "checkbox";
+  consent.dataset.ownerOnly = "true";
   label.append(
     consent,
     document.createTextNode(
@@ -891,10 +1006,12 @@ function showUploadedMedia() {
       if (!consent.checked)
         return note("Confirm permission for public use first.", "error");
       action(async () => {
-        await api("/media/" + encodeURIComponent(state.mediaId) + "/publish", {
+        await api("/media/" + encodeURIComponent(asset.id) + "/publish", {
           method: "POST",
           body: JSON.stringify({ consentConfirmed: true }),
         });
+        await loadMedia();
+        showMedia({ ...asset, published: true });
         note(
           "Image approved for public use. Add its media ID to a page or the video poster.",
           "success",
@@ -968,8 +1085,8 @@ async function loadVideo() {
     toggle.checked = settings.video.enabled;
     poster.value = settings.video.posterMediaId || "";
     for (const input of [url, toggle, poster]) input.oninput = () => dirty();
-    showUploadedMedia();
     updateControls();
+    await loadMedia();
   } catch (error) {
     if (current("video", sequence)) note(error.message, "error");
   }

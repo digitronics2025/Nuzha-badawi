@@ -221,8 +221,7 @@ summary:focus-visible {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(248, 244, 238, 0.95);
-  backdrop-filter: saturate(1.2) blur(14px);
+  background: rgba(248, 244, 238, 0.98);
   border-bottom: 1px solid rgba(122, 87, 54, 0.13);
   height: 83px;
   transition: box-shadow 0.22s;
@@ -1349,18 +1348,20 @@ summary:focus-visible {
   pointer-events: none;
 }
 /* Progressive motion. Essential content remains visible before JavaScript. */
-.motion-on [data-reveal] {
-  transition:
-    opacity 0.42s var(--ease),
-    transform 0.42s var(--ease);
-}
-.motion-on [data-reveal].reveal-ready {
-  opacity: 0;
-  transform: translateY(18px);
-}
-.motion-on [data-reveal].reveal-visible {
-  opacity: 1;
-  transform: none;
+@media (prefers-reduced-motion: no-preference) {
+  .motion-on [data-reveal].reveal-visible {
+    animation: section-enter var(--motion-section) var(--ease) both;
+  }
+  @keyframes section-enter {
+    from {
+      opacity: 0.85;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 .motion-on .hero-copy {
   animation: heroappear 0.64s var(--ease) both;
@@ -1969,7 +1970,6 @@ summary:focus-visible {
   padding: 6px 10px;
   font: 600 10px/1.45 var(--sans);
   letter-spacing: 0.02em;
-  backdrop-filter: blur(4px);
 }
 .portrait-art[data-image-id] .portrait-concept,
 .portrait-art[data-image-id] .portrait-concept-disclosure {
@@ -2598,4 +2598,12 @@ summary:focus-visible {
   text-shadow: none;
   font-size: 14px;
   z-index: auto;
+}
+
+/* SVG stroke drawing is non-composited: touch devices get the complete static route. */
+@media (hover: none) {
+  .motion-on .connection-route path {
+    animation: none !important;
+    stroke-dasharray: none;
+  }
 }

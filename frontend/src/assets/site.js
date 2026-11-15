@@ -57,14 +57,17 @@ if (header) {
 }
 
 // Motion is decorative. Existing content is always readable without JS or an observer.
-if (!reduced() && "IntersectionObserver" in window) {
+if (
+  !reduced() &&
+  matchMedia("(hover: hover) and (pointer: fine)").matches &&
+  "IntersectionObserver" in window
+) {
   root.classList.add("motion-on");
   const entries = [...document.querySelectorAll("[data-reveal]")];
   const observer = new IntersectionObserver(
     (changes, obs) => {
       for (const entry of changes) {
         if (entry.isIntersecting) {
-          entry.target.classList.remove("reveal-ready");
           entry.target.classList.add("reveal-visible");
           obs.unobserve(entry.target);
         }
@@ -72,11 +75,8 @@ if (!reduced() && "IntersectionObserver" in window) {
     },
     { threshold: 0.05, rootMargin: "0px 0px -14px 0px" },
   );
-  for (const el of entries) {
-    if (el.getBoundingClientRect().top > innerHeight - 25)
-      el.classList.add("reveal-ready");
-    observer.observe(el);
-  }
+  // Let the observer trigger a one-shot entrance. Never pre-hide content or force layout.
+  for (const el of entries) observer.observe(el);
   matchMedia("(prefers-reduced-motion: reduce)").addEventListener?.(
     "change",
     (event) => {

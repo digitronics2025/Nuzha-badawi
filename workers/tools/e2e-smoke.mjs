@@ -142,8 +142,10 @@ if(MODE==='staging'&&auth){
  const form=new FormData();form.append('file',new Blob([png],{type:'image/png'}),'probe.png');form.append('altText','Verification pixel');form.append('source','Generated test image, owner licence');
  r=await admin('/api/v1/admin/media',{method:'POST',body:form});check('media upload (private)',r.status===201,JSON.stringify(r.body));
  const mid=r.body.id;
+ r=await admin('/api/v1/admin/media?status=private&limit=20');check('private media discoverable with saved provenance',r.body.items?.some(item=>item.id===mid&&item.source==='Generated test image, owner licence'&&item.published===false));
  r=await pub(`/media/${mid}`);check('unpublished media hidden publicly',r.status===404);
  r=await admin(`/api/v1/admin/media/${mid}/publish`,{method:'POST',body:JSON.stringify({consentConfirmed:true})});check('media publish with consent',r.body.published===true);
+ r=await admin('/api/v1/admin/media?status=published&limit=20');check('approved media discoverable in owner library',r.body.items?.some(item=>item.id===mid&&item.published===true));
  r=await pub(`/media/${mid}`);check('published media served publicly',r.status===200&&r.headers.get('content-type')==='image/png');
  const bad=new FormData();bad.append('file',new Blob([new TextEncoder().encode('<svg onload=alert(1)>')],{type:'image/png'}),'x.png');bad.append('altText','Malicious file');bad.append('source','test source');
  r=await admin('/api/v1/admin/media',{method:'POST',body:bad});check('spoofed image rejected',r.status===400);

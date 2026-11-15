@@ -104,6 +104,15 @@ with sync_playwright() as p:
  # Saving the upload must not clear unsaved video settings.
  page.once('dialog',lambda d:d.dismiss());page.locator('[data-view=overview]').click();assert page.locator('#view-video').is_visible()
  page.locator('#save-video').click();page.wait_for_function('document.querySelector("#workspace-feedback").textContent.includes("Settings published")')
+ # Pending media and provenance survive a new editor session, with owner-only approval.
+ fixture.role='editor';page.reload();page.wait_for_function('document.querySelector(".demo-banner").textContent.includes("EDITOR")');admin('video')
+ page.get_by_text('Private media ID:',exact=False).wait_for()
+ assert page.get_by_role('button',name='Approve image for public use').is_disabled()
+ assert page.get_by_text('Source / licence: Existing disclosed studio artwork; local test only',exact=True).is_visible()
+ fixture.role='owner';page.reload();page.wait_for_function('document.querySelector(".demo-banner").textContent.includes("OWNER")');admin('video')
+ page.get_by_text('Private media ID:',exact=False).wait_for();page.get_by_label('I confirm permission for public use of this image.').check();page.get_by_role('button',name='Approve image for public use').click()
+ page.get_by_text('Approved media ID:',exact=False).wait_for()
+ page.locator('#media-filter').select_option('published');page.get_by_role('button',name='Inspect image review_p').wait_for()
  admin('enquiries');page.get_by_role('button',name='Read enquiry').click();page.get_by_text('Internal note',exact=True).wait_for()
  note=page.locator('[data-enquiry-note]');note.fill('Keep this note while opening and closing the detail.')
  page.get_by_role('button',name='Read enquiry').click();page.get_by_role('button',name='Read enquiry').click();assert note.input_value().startswith('Keep this note')
@@ -124,6 +133,7 @@ with sync_playwright() as p:
  # JavaScript-free content and dynamic reduced-motion changes.
  nojs=browser.new_context(java_script_enabled=False,viewport={'width':320,'height':900});nojs.route('**/*',fixture.serve);static=nojs.new_page();static.goto('http://public.test/ar/')
  assert static.locator('h1').is_visible();assert static.locator('.guide-card').first.is_visible();assert static.locator('.experience-timeline').is_visible();nojs.close()
+ touch=browser.new_context(viewport={'width':390,'height':900},has_touch=True,is_mobile=True,reduced_motion='no-preference');touch.route('**/*',fixture.serve);touch_page=touch.new_page();touch_page.goto('http://public.test/en/');assert 'motion-on' not in (touch_page.locator('html').get_attribute('class') or '');touch.close()
  motion=context.new_page();motion.emulate_media(reduced_motion='no-preference');motion.goto('http://public.test/en/');assert 'motion-on' in motion.locator('html').get_attribute('class');motion.emulate_media(reduced_motion='reduce');motion.wait_for_function('!document.documentElement.classList.contains("motion-on")')
  assert motion.locator('.connection-route path').evaluate('(el)=>getComputedStyle(el).animationName')=='none';motion.close()
  assert not errors,errors

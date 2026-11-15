@@ -6,6 +6,8 @@ The current chat explicitly authorized autonomous design selection and implement
 
 Reference designs, state/motion coverage, provenance, reproducible gallery generation and verification are recorded in [the editorial experience report](docs/reports/editorial-experience/README.md). The homepage now connects a four-service guide, three lesson-language cards, source-backed timeline and ordered enquiry process. Shared implementation tokens are in `frontend/src/assets/tokens.css`; fonts are self-hosted with unmodified OFL files and provenance. Gold remains decorative; small text uses measured ink colors. Existing optimized illustrations, localized disclosure, on-demand Vimeo hash and footer developer credit remain.
 
+Measured startup cost applies the performance fallback below: decorative hero/portrait, route and section entrances run only on fine-pointer devices with hover and no reduced-motion preference. Touch layouts keep the same static composition and immediate useful menu/form feedback. Reveals never hide content or force synchronous layout; the header and disclosure use opaque surfaces instead of backdrop blur.
+
 The historical mockup gate below remains the default for future work; it is not a claim that current reference boards received individual sign-off.
 
 **Status:** proposed direction, **not yet approved as final mockups**. This file defines the design brief and acceptance rules; the future coding agent must render high-fidelity mockups and obtain explicit user approval **before UI implementation**.

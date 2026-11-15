@@ -16,6 +16,7 @@ class ReviewFixture:
         self.revision=3
         self.saved={}
         self.review='needs_review'
+        self.media=[]
         self.services={key:{'visible':True,'acceptingRequests':key not in ['translation','interpretation']} for key in ['english','russian','arabic','coaching','translation','interpretation']}
         self.settings={'services':self.services,'approvedTranslationPairs':[], 'video':{'enabled':True,'url':'https://player.vimeo.com/video/1171310337?h=3416a6f4f5','posterMediaId':None},'contact':{'email':'studio@example.invalid','phone':''},'links':{'preply':'https://preply.com/en/tutor/522376','instagram':'https://www.instagram.com/nusyabadavi','linkedin':''}}
 
@@ -55,7 +56,17 @@ class ReviewFixture:
             elif key=='enquiries':data['items']=[] if self.empty_inbox else [{'reference':'NS-1234567890ABCDEF','name':'Sample visitor','email':'visitor@example.invalid','type':'lesson','status':'new','createdAt':'2026-11-15','notificationStatus':'pending'}]
             elif key.startswith('enquiries/'):
                 data.update(enquiry={'message':'I would like to practise for professional meetings. This is synthetic review data.','details':{'language':'english','goal':'Professional meetings'}},events=[{'created_at':'2026-11-15','event_type':'received','actor':'system','payload_json':'{}'}])
-            elif key=='media':data['id']='review_private_image'
+            elif key=='media':
+                if req.method=='POST':
+                    item={'id':'review_private_image','altText':'Synthetic fixture illustration','source':'Existing disclosed studio artwork; local test only','published':False,'createdAt':'2026-11-15T19:00:00Z','byteSize':15182,'contentType':'image/webp'}
+                    self.media=[item];data['id']=item['id']
+                else:
+                    status=query.get('status',['private'])[0]
+                    data.update(items=[item for item in self.media if status=='all' or item['published']==(status=='published')],nextCursor=None)
+            elif key.startswith('media/') and key.endswith('/publish'):
+                for item in self.media:
+                    if item['id']==key.split('/')[1]:item['published']=True
+                data['published']=True
             elif key.startswith('media/') and req.method=='GET':
                 route.fulfill(body=(self.root/'src/assets/nozha-portrait-optimized.webp').read_bytes(),content_type='image/webp');return
             route.fulfill(json=data);return

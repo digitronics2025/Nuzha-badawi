@@ -582,6 +582,13 @@ input[type="file"] {
   border-radius: 10px;
   margin-top: 16px;
 }
+.media-library-list {
+  padding-inline-start: 1.2rem;
+}
+.media-library-list li {
+  padding-block: 0.75rem;
+  border-block-end: 1px solid var(--line);
+}
 .toast {
   position: fixed;
   bottom: 24px;
