@@ -28,3 +28,10 @@ Describe the objective and exact affected pages/modules.
 - [ ] Migration/backups and rollback considered.
 - [ ] Screenshots or visual QA evidence attached.
 - Known limitations / follow-up:
+
+## Domain and Cloudflare rollout
+- [ ] If relevant, confirm `nozha-badavi.com` is a **registered domain**, not assume a live website.
+- [ ] Consult `docs/CLOUDFLARE_DEPLOYMENT.md` for public/admin Worker isolation, Custom Domains and safe previews.
+- [ ] Production DNS, Workers, D1/R2, Access and email actions have **separate explicit authorization** before changes.
+- [ ] Apex, www redirect, admin protection, three locales, TLS, cache coherency, Vimeo, form/email failure and rollback validated where applicable.
+- [ ] Costs and quotas evaluated; no unnecessary Workers, KV, Queues, Cron, AI or paid APIs.
