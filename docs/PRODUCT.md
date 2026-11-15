@@ -50,3 +50,6 @@ No LMS, user accounts for students, custom video calls, automatic Preply synchro
 
 ## Success metrics (define baseline after launch)
 User can understand offer and act in first viewport; reliable qualified requests; admin can safely publish a reviewed change without coding; no lost leads; good Core Web Vitals; WCAG 2.2 AA target; indexed translated pages; sustainable low platform cost. Track quote requests and outbound Preply clicks separately.
+
+## Domain and cloud-delivery requirement
+Final intended brand URL: `https://nozha-badavi.com` with language paths `/en/`, `/ar/`, `/ru/`; optional `www` redirect to apex. A protected admin is planned at `https://admin.nozha-badavi.com`. Registered-domain screenshot is evidence of availability **for project planning**, not proof of a live service. Website/hosting/notification capabilities should be implemented via the smallest appropriate Cloudflare Worker architecture, subject to design, security, cost and production gates. See `CLOUDFLARE_DEPLOYMENT.md`.
