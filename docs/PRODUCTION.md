@@ -108,3 +108,8 @@ Source changes are on `fix/review-reliability-hardening`, not yet deployed. Loca
 Release blocker: Cloudflare API credentials are present, but staging `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET` are unavailable. GitHub's Actions secrets endpoint returns HTTP 403 for the integration. No Access policies, credentials, production resources or DNS were changed; mandatory staging write verification must not be bypassed. An authorized repository owner must make the existing staging Access credentials available to the controlled pipeline before promotion.
 
 The build preserves the two existing illustration assets and localized AI disclosure under D-031. Four-language privacy copy describes the implemented processors and manual six-month retention review. Existing published CMS content takes precedence over source defaults: review/publish the updated privacy notice through owner admin during the verified rollout rather than overwriting owner revisions with a migration. No enquiry deletion was performed.
+
+
+### Read-only credential verification
+
+The existing deployment workflow now accepts manual mode `verify` (the default): credential presence preflight, GET staging admin identity, and GET production admin isolation only. Tests, migrations, staging deployment, production deployment and enquiry submissions are skipped in this mode. A successful check verifies the current rotated secret without exposing it. Choose `deploy` explicitly for manual deployment; production is restricted to main. Secret values remain in GitHub Actions.
