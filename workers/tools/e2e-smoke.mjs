@@ -12,6 +12,8 @@ if(!PUBLIC_URL||!ADMIN_URL)throw Error('PUBLIC_URL and ADMIN_URL are required');
 const results=[];let failed=0;
 const check=(name,ok,detail='')=>{results.push(`${ok?'PASS':'FAIL'}  ${name}${detail?'  — '+detail:''}`);if(!ok)failed++;};
 const auth=ID&&SECRET?{'CF-Access-Client-Id':ID,'CF-Access-Client-Secret':SECRET}:null;
+// Staging promotes to production, so its admin/CMS/enquiry/media checks are mandatory, never silently skipped.
+if(MODE==='staging'&&!auth){console.error('FAIL  staging mode requires CF_ACCESS_CLIENT_ID and CF_ACCESS_CLIENT_SECRET');process.exit(1);}
 async function admin(path,opts={}){const r=await fetch(ADMIN_URL+path,{redirect:'manual',...opts,headers:{...auth,origin:ADMIN_URL,...(opts.body&&!(opts.body instanceof FormData)?{'content-type':'application/json'}:{}),...(opts.headers||{})}});
  const type=r.headers.get('content-type')||'';return {status:r.status,headers:r.headers,body:type.includes('json')?await r.json():await r.text()};}
 async function pub(path,opts={}){const r=await fetch(PUBLIC_URL+path,{redirect:'manual',...opts});const type=r.headers.get('content-type')||'';return {status:r.status,headers:r.headers,body:type.includes('json')?await r.json():await r.text()};}

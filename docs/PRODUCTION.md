@@ -59,7 +59,8 @@ Worker secrets (names only): `nusya-public`: `TURNSTILE_SECRET`, `RATE_LIMIT_SAL
 - Manual: `cd workers && npm ci && npm run build:frontend && npm run check && npm run deploy:admin && npm run deploy:public`.
 - Code rollback: `npx wrangler rollback --config public/wrangler.jsonc` (or `admin/…`). D1 data is unaffected.
 - Content rollback: Admin → Pages → History / rollback.
-- Data backup: `npx wrangler d1 export nusya-platform --remote --output=backup.sql --config public/wrangler.jsonc`. D1 Time Travel also allows point-in-time restore for 30 days.
+- Data recovery: every CI production deploy records a D1 Time Travel bookmark in the job summary before migrating; restore with `npx wrangler d1 time-travel restore nusya-platform --bookmark=<bookmark>` (full data, 30-day window). Ad-hoc offline backup (contains customer PII — store only in the owner's private storage, never in GitHub): `npx wrangler d1 export nusya-platform --remote --output=backup.sql --config workers/public/wrangler.jsonc`.
+- CI staging e2e is mandatory: `MODE=staging` fails if the Access service-token secrets are missing.
 
 ## Estimated cost
 Incremental cost ≈ **US$0/month** at expected traffic. It uses the existing Workers Paid plan ($5/month, already active and shared with other projects): requests, D1 rows and storage fit the included allowances. R2 stays under 10 GB free. Access is free for ≤50 users, Turnstile is free, and Email Sending at a few owner notifications a day stays within the included allowance. The domain registration was paid separately (renewal 2028-11-15).
