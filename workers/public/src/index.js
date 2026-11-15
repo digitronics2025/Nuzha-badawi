@@ -56,7 +56,8 @@ async function createEnquiry(request,env,ctx){
  if(ctx?.waitUntil)ctx.waitUntil(flushOutbox(env.DB,env,reference));
  return formResponse(reference);
 }
-function publicSecurity(response){const r=secureHeaders(response);const h=new Headers(r.headers);
+function publicSecurity(response,env={}){const r=secureHeaders(response);const h=new Headers(r.headers);
+ if(env.PUBLIC_HOST?.endsWith('.workers.dev'))h.set('x-robots-tag','noindex, nofollow');
  h.set('strict-transport-security','max-age=31536000; includeSubDomains');
  h.set('content-security-policy',"default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; frame-src https://player.vimeo.com https://challenges.cloudflare.com; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; frame-ancestors 'none'; upgrade-insecure-requests");
  return new Response(r.body,{status:r.status,headers:h});
@@ -73,16 +74,16 @@ async function servePublished(request,env,ctx){
  if(!parsed||!env.ASSETS)return env.ASSETS?env.ASSETS.fetch(request):problem(503,'SERVICE_UNAVAILABLE','Static assets are not configured.');
  const cache=globalThis.caches?.default;
  const cacheKey=new Request(`https://${env.PUBLIC_HOST||new URL(request.url).hostname}/cms-v2`+new URL(request.url).pathname);
- if(cache){const saved=await cache.match(cacheKey);if(saved)return publicSecurity(saved);}
+ if(cache){const saved=await cache.match(cacheKey);if(saved)return publicSecurity(saved,env);}
  const assetHeaders=new Headers(request.headers);assetHeaders.delete('if-none-match');assetHeaders.delete('if-modified-since');
- const asset=await env.ASSETS.fetch(new Request(request,{headers:assetHeaders}));if(!asset.ok||!asset.headers.get('content-type')?.includes('text/html'))return publicSecurity(asset);
- if(!env.DB)return publicSecurity(asset);
+ const asset=await env.ASSETS.fetch(new Request(request,{headers:assetHeaders}));if(!asset.ok||!asset.headers.get('content-type')?.includes('text/html'))return publicSecurity(asset,env);
+ if(!env.DB)return publicSecurity(asset,env);
  const conf=await settings(env.DB),revision=await published(env.DB,parsed.key,parsed.locale);
  let html=renderPublished(asset,revision?.payload||{},conf,{locale:parsed.locale,turnstileSiteKey:parsed.key==='contact'?env.TURNSTILE_SITE_KEY:null});
  const h=new Headers(html.headers);h.delete('etag');h.delete('last-modified');h.set('cache-control','public, max-age=0, s-maxage=90');h.set('content-type','text/html; charset=utf-8');
  html=new Response(html.body,{status:200,headers:h});
  if(cache&&ctx?.waitUntil&&request.method==='GET')ctx.waitUntil(cache.put(cacheKey,html.clone()));
- return publicSecurity(html);
+ return publicSecurity(html,env);
 }
 /** `/` sends visitors to their preferred supported locale (Ukrainian default); never cached across languages. */
 export function preferredLocale(header){
@@ -97,7 +98,7 @@ async function maintenance(env){
  if(env.ENABLE_OUTBOX_CRON==='true')await flushOutbox(env.DB,env);
 }
 const worker={
- async fetch(request,env,ctx){const response=await handlePublic(request,env,ctx);const safe=publicSecurity(response);return request.method==='HEAD'?new Response(null,{status:safe.status,headers:safe.headers}):safe;},
+ async fetch(request,env,ctx){const response=await handlePublic(request,env,ctx);const safe=publicSecurity(response,env);return request.method==='HEAD'?new Response(null,{status:safe.status,headers:safe.headers}):safe;},
  async scheduled(event,env,ctx){ctx.waitUntil(maintenance(env));}
 };
 async function handlePublic(request,env,ctx){try{
