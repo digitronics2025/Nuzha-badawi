@@ -12,3 +12,6 @@ Read [AGENTS.md](../AGENTS.md) before editing. This file is only a short bridge 
 - Protect private CV details, approved media rights, customer enquiries, secrets, production data and Preply rules.
 - Verify real architecture before selecting stack; minimize Cloudflare/D1/R2/API cost, and never assume anything is deployed.
 - Keep canonical docs and `docs/DECISIONS.md` current; test and report actual evidence.
+
+## Domain and Cloudflare guidance
+The user provided a Cloudflare Registrar screenshot showing `nozha-badavi.com` registered, **not live**. Proposed canonical site `https://nozha-badavi.com`; private admin `https://admin.nozha-badavi.com`. Before generating Wrangler/workflows, read `docs/CLOUDFLARE_DEPLOYMENT.md` and `docs/PLAN-nusya-multilingual-studio.md`; proposed public/admin Workers, D1, optional R2 and Access are **not already provisioned**. Enforce separate high-fidelity design approval before UI code, and separate authorization for Cloudflare resource/DNS/production actions. Never leak credentials or preview production data; optimize Workers/D1/R2/notification cost.
