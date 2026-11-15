@@ -50,3 +50,9 @@
 - **Implemented**: present in inspected code with reproducible evidence.
 - **Verified**: tested in the intended environment with results.
 - **Approved to publish**: the owner approved this specific public claim/asset.
+
+## Domain and Cloudflare expansion (2026-11-15)
+- [Cloudflare domain and Worker deployment blueprint](CLOUDFLARE_DEPLOYMENT.md): domain routing, proposed public/admin Workers, D1/R2/Access/Turnstile/email capabilities, costs, previews, verification and rollback.
+- [Complete updated execution plan](PLAN-nusya-multilingual-studio.md): self-contained implementation strategy including registration evidence, architecture, approval gates, full lifecycle and test criteria.
+- Registered domain evidence: `nozha-badavi.com`, shown ready in the user's Cloudflare Registrar screenshot. **Registered does not mean live.**
+- Future cloud resources are hypothetical until separately inspected/approved. No agent may silently provision paid features or deploy from a documentation update.
