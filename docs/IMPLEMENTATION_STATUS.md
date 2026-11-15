@@ -31,3 +31,14 @@ Review `workers/README.md`, `workers/docs/WORKER_API.md`, `workers/docs/RELEASE_
 
 ## CV-based information revision under review (2026-11-15)
 A later content-review branch prepares complete EN/AR/RU professional-history summaries from the newer one-page CV, with source-document evidence in `docs/SOURCES.md`. The static copy and generated Worker fallback manifest are kept synchronized; this does not by itself update live published D1 CMS overrides or constitute permission to publish private CV data. Confirm dates, qualification wording, service availability and translations with Nozha before production publishing. No Cloudflare configuration or deployment was performed as part of the content change.
+
+
+## AI-generated editorial media — pending binary assets and live verification (2026-11-15)
+
+A dedicated media branch replaces the homepage/About portrait placeholder with an AI-generated editorial concept and the Vimeo poster with a matching introduction cover. Both media files were generated in the project conversation and optimized to WebP. The image **is not a verified photograph of Nozha** and must not be represented as authentic; the visible multilingual disclosure and CMS-managed portrait override remain in place. No real-person endorsement or approval is implied.
+
+Before merging, upload the exact binary assets supplied with the project conversation into:
+- `frontend/src/assets/nozha-portrait-optimized.webp` (560×700, ~15 KB)
+- `frontend/src/assets/nusya-introduction-cover-optimized.webp` (896×504, ~23 KB)
+
+The GitHub text-only connector cannot write binary image files from this container. The frontend test intentionally fails until both assets are committed. **Do not merge or deploy with broken image URLs.** After committing both assets, run the full frontend and full-platform GitHub checks, verify the actual portrait and poster on desktop/mobile in EN/AR/RU, and confirm Vimeo playback remains click-to-load. Check admin-published R2 media overrides before production rollout. The concept image should ultimately be replaced with a genuine Nozha photograph with her permission. No Cloudflare production deployment has been performed as part of this change.
