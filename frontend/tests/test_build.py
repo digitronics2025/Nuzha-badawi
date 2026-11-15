@@ -63,6 +63,26 @@ class FrontendBuildTests(unittest.TestCase):
             self.assertIn(COPY[loc]['form_info'],contact)
             self.assertNotIn(COPY[loc]['form_error'],about)
 
+    def test_editorial_media_assets_exist_and_are_localized(self):
+        assets=DIST/'assets'
+        for name in ('nozha-portrait-optimized.webp','nusya-introduction-cover-optimized.webp'):
+            path=assets/name
+            self.assertTrue(path.is_file(),name)
+            self.assertLess(path.stat().st_size,120_000,name)
+            data=path.read_bytes()
+            self.assertGreater(len(data),1000,name)
+            self.assertEqual(data[:4],b'RIFF',name)
+            self.assertEqual(data[8:12],b'WEBP',name)
+        for loc in LOCALES:
+            for page in ('home','about'):
+                html=(DIST/loc/('' if page=='home' else 'about')/'index.html').read_text(encoding='utf8')
+                self.assertIn('/assets/nozha-portrait-optimized.webp',html,(loc,page))
+                self.assertIn('/assets/nusya-introduction-cover-optimized.webp',html,(loc,page))
+                self.assertIn('portrait-concept-disclosure',html,(loc,page))
+                self.assertIn('data-nusya-media=',html,(loc,page))
+                self.assertIn('data-video',html,(loc,page))
+                self.assertNotIn('<iframe',html,(loc,page))
+
     def test_social_links_are_external_safe(self):
         s=(DIST/'en'/'index.html').read_text()
         self.assertIn('rel="noopener noreferrer"',s)

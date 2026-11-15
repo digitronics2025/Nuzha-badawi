@@ -3,7 +3,7 @@
 **Branch:** `feat/nusya-full-platform` (built from `feat/nusya-frontend-only`). **Release status: DEPLOYED TO PRODUCTION 2026-11-15** on the user's explicit full-autopilot authorization. Inventory, evidence and runbook: [PRODUCTION.md](PRODUCTION.md). Sections below describe the pre-deployment state and remaining owner actions.
 
 ## Implemented and locally tested
-- 21 public pages (7 page types × `en`/`ar` RTL/`ru`) and a separate protected-host admin frontend, preserving the approved cinematic visual design.
+- 28 public pages (7 page types × `uk`/`en`/`ar` RTL/`ru`) and a separate protected-host admin frontend, preserving the approved cinematic visual design.
 - Cloudflare public Worker for localized published HTML via versioned D1 content overrides, approved media retrieval, 90-second public HTML cache, and Turnstile-gated, durable enquiry submission with idempotency, approved directed language pairs and rate limits.
 - Cloudflare admin Worker with independent WebCrypto signature verification of Access JWT and owner/editor allowlist, page drafts, review, publish, rollback, settings, media consent/visibility, customer enquiry statuses and notification outbox.
 - D1 SQL migration, role and validation boundaries, isolated media handling, GitHub Actions verification pipeline, example Wrangler configuration, API documentation and release checklist.
@@ -27,7 +27,7 @@ cd workers && npm run check
 
 Review `workers/README.md`, `workers/docs/WORKER_API.md`, `workers/docs/RELEASE_READINESS.md` and `frontend/docs/BACKEND_HANDOFF.md` for integration, security gates and final release steps.
 
-**No Korean** and no fourth public locale. All admin/private requests are fail-closed until Cloudflare Access and role bindings are correctly configured; new service enquiries are disabled until Nozha approves them.
+**No Korean.** Ukrainian (`uk`) is the default locale; English (`en`), Arabic (`ar`, RTL), and Russian (`ru`) remain supported. All admin/private requests are fail-closed until Cloudflare Access and role bindings are correctly configured; new service enquiries are disabled until Nozha approves them.
 
 ## CV-based information revision under review (2026-11-15)
 A later content-review branch prepares complete EN/AR/RU professional-history summaries from the newer one-page CV, with source-document evidence in `docs/SOURCES.md`. The static copy and generated Worker fallback manifest are kept synchronized; this does not by itself update live published D1 CMS overrides or constitute permission to publish private CV data. Confirm dates, qualification wording, service availability and translations with Nozha before production publishing. No Cloudflare configuration or deployment was performed as part of the content change.
@@ -38,3 +38,9 @@ A later content-review branch prepares complete EN/AR/RU professional-history su
 - Code changes during deployment: bundled static assets, Accept-Language root redirect, HEAD cache-poisoning fix, rate-bucket cleanup cron, Access service-token support (explicit allowlist), `aud` string claim support, Turnstile test-key gating for staging, availability-aware form, Turnstile reset after failed submit, Web Analytics CSP allowance, email sender display name.
 - Tests: 18 Worker + 9 frontend unit tests; production smoke 31/31; staging e2e write flow passed (see PRODUCTION.md).
 - Remaining owner actions: real-token enquiry + admin login confirmation, translation directions, consented portraits, GitHub deploy secrets.
+
+## Editorial portrait and introduction cover — assets committed (2026-11-15)
+
+Both optimized WebP assets are committed in `frontend/src/assets/`: `nozha-portrait-optimized.webp` (560×700) and `nusya-introduction-cover-optimized.webp` (896×504). The homepage and About page use the portrait concept and the Vimeo introduction cover in all four locales (Ukrainian, English, Arabic and Russian). The video remains click-to-load, and approved CMS-managed portrait media continues to override the concept when present.
+
+**Disclosure:** The portrait is AI-generated editorial artwork, not an authentic photograph of Nozha. Visible locale-specific disclosures are part of the page implementation. Nozha's consent and an approved genuine photograph are required before replacing this editorial concept with an authentic portrait. Continue checking live R2/D1 CMS overrides and mobile rendering after production deployment; a passing GitHub build does not alone establish live visual verification.
