@@ -126,3 +126,15 @@ test('publishing a page with an unapproved image is blocked',async(t)=>{
  let r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=en',{baseRevision:null,payload},'PUT'),e,{});assert.equal(r.status,200);const rev=(await r.json()).revision;
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/publish?locale=en',{revision:rev},'POST'),e,{});assert.equal(r.status,409);
 });
+
+test('legacy ready translations expose source review and can publish without editing content',async(t)=>{
+ withNetworkMock();const db=new MockD1();t.after(()=>db.close());const e=env(db);
+ const payload={fields:{hero:'Source heading'}};
+ let r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=en',{baseRevision:null,payload},'PUT'),e,{});assert.equal(r.status,200);
+ r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=ar',{baseRevision:null,payload:{fields:{hero:'عنوان'}}},'PUT'),e,{});const rev=(await r.json()).revision;
+ await db.prepare("UPDATE cms_state SET review_status='ready',source_revision_seen=NULL WHERE page_key='home' AND locale='ar'").run();
+ r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=ar'),e,{});const page=await r.json();assert.equal(page.reviewStatus,'needs_review');assert.equal(page.draftRevision,rev);
+ r=await adminWorker.fetch(authReq('/api/v1/admin/pages'),e,{});assert.equal((await r.json()).pages.find(p=>p.key==='home').locales.ar.status,'needs_review');
+ r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/review?locale=ar',{revision:rev},'POST'),e,{});assert.equal(r.status,200);
+ r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/publish?locale=ar',{revision:rev},'POST'),e,{});assert.equal(r.status,200);
+});

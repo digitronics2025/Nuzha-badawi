@@ -103,7 +103,7 @@ Codex review of the mobile contact fix also identified the inherited desktop `to
 
 ## Review-hardening release candidate — 2026-11-15
 
-Source changes are on `fix/review-reliability-hardening`, not yet deployed. Local evidence: 25 Worker tests, 13 frontend tests, SQL migration preservation checks, both Worker dry-run bundles, native workerd HTMLRewriter/D1 checks, and 84 responsive browser page checks plus retry/inbox/editor flows. Browser APIs are mocked; this does not establish live email delivery or owner login. The current main staging-noindex fix was merged and retained.
+Source changes are on `fix/review-reliability-hardening`, not yet deployed. Local evidence: 26 Worker tests, 13 frontend tests, SQL migration preservation checks, both Worker dry-run bundles, native workerd HTMLRewriter/D1 checks, and 84 responsive browser page checks plus retry/inbox/editor flows. Browser APIs are mocked; this does not establish live email delivery or owner login. The current main staging-noindex fix was merged and retained.
 
 Release blocker: Cloudflare API credentials are present, but staging `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET` are unavailable. GitHub's Actions secrets endpoint returns HTTP 403 for the integration. No Access policies, credentials, production resources or DNS were changed; mandatory staging write verification must not be bypassed. An authorized repository owner must make the existing staging Access credentials available to the controlled pipeline before promotion.
 
@@ -113,3 +113,10 @@ The build preserves the two existing illustration assets and localized AI disclo
 ### Read-only credential verification
 
 The existing deployment workflow now accepts manual mode `verify` (the default): credential presence preflight, GET staging admin identity, and GET production admin isolation only. Tests, migrations, staging deployment, production deployment and enquiry submissions are skipped in this mode. A successful check verifies the current rotated secret without exposing it. Choose `deploy` explicitly for manual deployment; production is restricted to main. Secret values remain in GitHub Actions.
+
+
+### Rotated credentials verified — 2026-11-15
+
+[Read-only verification run 43747296939](https://github.com/digitronics2025/Nuzha-badawi/actions/runs/43747296939) passed: GitHub Client ID matches the staging Worker allowlist; the rotated token authenticates to staging as the expected identity; production admin rejects the staging token. The earlier missing-secret blocker is cleared. Deployment jobs were skipped.
+
+New review repairs keep the playing-state video poster hidden and expose effective `needs_review` for legacy translated drafts whose stored review provenance does not match the current English draft. Owners can approve these drafts without editing content; no historical approval is silently backfilled. Regression coverage exercises both paths. The initial staging deployment attempt was cancelled to include these repairs before full verification.

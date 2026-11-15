@@ -1,6 +1,6 @@
 import {json,problem,errorResponse,HttpError,readJson,corsSameOrigin,noStore,isPageKey,isLocale,secureHeaders} from '../../shared/http.js';
 import {verifyAccess,requireRole} from '../../shared/auth.js';
-import {settings,saveSettings,state,revision,published,allPageStates,insertDraft,publishDraft,rollBack,markReviewed,loadEnquiry,counts,audit,PAGE_KEYS,LOCALES} from '../../shared/store.js';
+import {settings,saveSettings,state,revision,published,allPageStates,insertDraft,publishDraft,rollBack,markReviewed,loadEnquiry,counts,audit,PAGE_KEYS,LOCALES,needsSourceReview} from '../../shared/store.js';
 import {validateSettings,validatePagePayload} from '../../shared/validation.js';
 import {renderPublished} from '../../shared/render.js';
 import {flushOutbox} from '../../shared/notify.js';
@@ -16,10 +16,10 @@ const statuses=new Set(['new','reviewing','awaiting_customer','quoted','booked',
 const editId=/^[a-z0-9_-]{8,80}$/i;
 function needLocale(url){const loc=url.searchParams.get('locale')||'uk';if(!isLocale(loc))throw new HttpError(400,'VALIDATION_FAILED','Unknown locale.');return loc;}
 function pageSummary(states){const map=new Map(states.map(s=>[s.page_key+':'+s.locale,s]));return PAGE_KEYS.map(key=>({key,route:`/${key==='home'?'':key+'/'}`,locales:Object.fromEntries(LOCALES.map(loc=>{
- const row=map.get(key+':'+loc);return [loc,{locale:loc,revision:row?.draft_revision||0,publishedRevision:row?.published_revision||0,status:row?.review_status||'needs_review',title:defaults?.[loc]?.[key]?.fields?.title||''}];
+ const row=map.get(key+':'+loc);return [loc,{locale:loc,revision:row?.draft_revision||0,publishedRevision:row?.published_revision||0,status:needsSourceReview(row,map.get(key+':en'),loc)?'needs_review':row?.review_status||'needs_review',title:defaults?.[loc]?.[key]?.fields?.title||''}];
  }))}));}
-async function getPage(db,key,loc){const st=await state(db,key,loc),draft=await revision(db,st?.draft_revision),pub=await revision(db,st?.published_revision);
- return {ok:true,key,locale:loc,fieldSchema:fieldSchema(loc,key),draftRevision:st?.draft_revision??null,publishedRevision:st?.published_revision??null,reviewStatus:st?.review_status||'needs_review',defaultContent:defaults?.[loc]?.[key]||{fields:{},seo:{}},draft:draft?.payload||null,published:pub?.payload||null,updatedAt:st?.updated_at||null};}
+async function getPage(db,key,loc){const st=await state(db,key,loc),draft=await revision(db,st?.draft_revision),pub=await revision(db,st?.published_revision),source=loc==='en'?null:await state(db,key,'en');
+ return {ok:true,key,locale:loc,fieldSchema:fieldSchema(loc,key),draftRevision:st?.draft_revision??null,publishedRevision:st?.published_revision??null,reviewStatus:needsSourceReview(st,source,loc)?'needs_review':st?.review_status||'needs_review',defaultContent:defaults?.[loc]?.[key]||{fields:{},seo:{}},draft:draft?.payload||null,published:pub?.payload||null,updatedAt:st?.updated_at||null};}
 function parseIntStrict(v){if(v===null||v===undefined)return null;if(typeof v!=='number'||!Number.isSafeInteger(v)||v<1)throw new HttpError(400,'VALIDATION_FAILED','Invalid revision.');return v;}
 async function previewHtml(request,env,loc,key){
  if(!env.ASSETS)throw new HttpError(503,'SERVICE_UNAVAILABLE','Preview assets not configured.');

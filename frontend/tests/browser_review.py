@@ -49,6 +49,10 @@ with sync_playwright() as p:
             if width==390:
                 page.goto(f'http://public.test/{locale}/')
                 page.screenshot(path=str(OUT/f'{locale}-mobile.png'),full_page=True)
+                page.locator('.video-play').first.click()
+                assert not page.locator('.video-art').first.is_visible(),'Poster obscures playing iframe'
+                assert page.locator('[data-video] iframe').first.is_visible()
+                assert page.locator('.video-fallback').first.is_visible()
     unavailable.add('arabic')
     page.goto('http://public.test/en/contact/?service=lesson&language=arabic')
     page.wait_for_function('document.querySelector("form").dataset.backendReady==="true"')

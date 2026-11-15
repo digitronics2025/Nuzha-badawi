@@ -3,7 +3,7 @@
 Current source verification and release blockers are recorded in [PRODUCTION.md](../../docs/PRODUCTION.md#review-hardening-release-candidate--2026-11-15).
 
 - 28 public pages in UK (default), EN, AR RTL and RU.
-- 25 Worker tests and 13 frontend tests; migration preservation checks.
+- 26 Worker tests and 13 frontend tests; migration preservation checks.
 - Native workerd HTMLRewriter and disposable D1 integration checks.
 - Browser coverage: 84 responsive routes plus inbox, retry, language preselection, Ukrainian review and unsaved-edit protection.
 - Public and admin dry-run bundles build successfully.

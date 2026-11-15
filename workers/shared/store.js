@@ -4,12 +4,13 @@ const byIdRow=(id,locale)=>({page_key:id,locale});
 const now=()=>new Date().toISOString();
 export const PAGE_KEYS=['home','about','lessons','coaching','translation','contact','privacy'];
 export const LOCALES=['uk','en','ar','ru'];
+export function needsSourceReview(row,source,locale){return locale!=='en'&&!!row?.draft_revision&&(row.source_revision_seen??null)!==(source?.draft_revision??null);}
 export async function settings(db){const row=await db.prepare("SELECT value_json FROM site_settings WHERE setting_key='site'").first();return row?validateSettings(JSON.parse(row.value_json)):defaultSettings();}
 export async function saveSettings(db,settings,actor){await db.prepare("INSERT INTO site_settings(setting_key,value_json,updated_at,updated_by) VALUES('site',?, ?,?) ON CONFLICT(setting_key) DO UPDATE SET value_json=excluded.value_json, updated_at=excluded.updated_at, updated_by=excluded.updated_by").bind(JSON.stringify(settings),now(),actor).run();}
 export async function state(db,key,loc){return db.prepare('SELECT page_key,locale,draft_revision,published_revision,review_status,source_revision_seen,updated_at FROM cms_state WHERE page_key=? AND locale=?').bind(key,loc).first();}
 export async function revision(db,id){if(!id)return null;const r=await db.prepare('SELECT id,page_key,locale,payload_json,source_revision,created_at,created_by FROM cms_revisions WHERE id=?').bind(id).first();return r?{...r,payload:JSON.parse(r.payload_json)}:null;}
 export async function published(db,key,loc){const st=await state(db,key,loc);return st?.published_revision?revision(db,st.published_revision):null;}
-export async function allPageStates(db){const res=await db.prepare('SELECT page_key,locale,draft_revision,published_revision,review_status,updated_at FROM cms_state ORDER BY page_key,locale').all();return res.results||[];}
+export async function allPageStates(db){const res=await db.prepare('SELECT page_key,locale,draft_revision,published_revision,review_status,source_revision_seen,updated_at FROM cms_state ORDER BY page_key,locale').all();return res.results||[];}
 export async function insertDraft(db,key,loc,content,actor,expectedRevision){
  if(!isPageKey(key)||!isLocale(loc))throw new HttpError(404,'NOT_FOUND','Unknown page.');
  const before=await state(db,key,loc),beforeRev=before?.draft_revision??null;
