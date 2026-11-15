@@ -43,3 +43,8 @@ See `docs/ADMIN.md` for permissions, implementation and publishing transitions.
 
 ## Live-host and preview behavior
 When deployed, visitor routes should use `https://nozha-badavi.com/{en|ar|ru}/...`; `www.nozha-badavi.com` should redirect consistently to apex without losing permitted paths/queries. Admin UX should be isolated on `https://admin.nozha-badavi.com` and require Access plus server-side roles. Preview/draft links must be authenticated/noindex/no-store, not exposed through the public site. A changed published URL needs correct redirects and localized canonical references. These are requirements, not claims of live implementation; see `CLOUDFLARE_DEPLOYMENT.md`.
+
+## Chosen visual choreography and transitions
+The homepage is now arranged as H01 portrait-led hero, H02 evidence strip, H03 prominent user-controlled Vimeo intro, H04 English/Russian/Arabic lessons, H05 professional coaching, H06 translation and interpretation, H07 human biography, H08 consented reviews/FAQs, H09 closing conversion section. Mobile starts with headline and primary CTA before portrait/video; screen reader focus and logical URL semantics are preserved.
+
+Motion uses one-off, unobtrusive reveals and minimal hover feedback; the gold plane/path never loops, video never starts without user action, navigation transitions progressively enhance native links and conditional forms preserve focus. See `design.md` M01–M16 and `docs/PLAN-nusya-multilingual-studio.md` V01–V12 for the implementation acceptance contract. Nothing in this document approves a UI build before the mandatory mockup STOP.
