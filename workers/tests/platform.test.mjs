@@ -135,6 +135,8 @@ test('legacy ready translations expose source review and can publish without edi
  await db.prepare("UPDATE cms_state SET review_status='ready',source_revision_seen=NULL WHERE page_key='home' AND locale='ar'").run();
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home?locale=ar'),e,{});const page=await r.json();assert.equal(page.reviewStatus,'needs_review');assert.equal(page.draftRevision,rev);
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages'),e,{});assert.equal((await r.json()).pages.find(p=>p.key==='home').locales.ar.status,'needs_review');
+ r=await adminWorker.fetch(authReq('/api/v1/admin/summary'),e,{});assert.equal((await r.json()).translationsToReview,1);
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/review?locale=ar',{revision:rev},'POST'),e,{});assert.equal(r.status,200);
  r=await adminWorker.fetch(authReq('/api/v1/admin/pages/home/publish?locale=ar',{revision:rev},'POST'),e,{});assert.equal(r.status,200);
+ r=await adminWorker.fetch(authReq('/api/v1/admin/summary'),e,{});assert.equal((await r.json()).translationsToReview,0);
 });
