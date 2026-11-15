@@ -3,7 +3,7 @@ import {defaultSettings,validateSettings} from './validation.js';
 const byIdRow=(id,locale)=>({page_key:id,locale});
 const now=()=>new Date().toISOString();
 export const PAGE_KEYS=['home','about','lessons','coaching','translation','contact','privacy'];
-export const LOCALES=['en','ar','ru'];
+export const LOCALES=['uk','en','ar','ru'];
 export async function settings(db){const row=await db.prepare("SELECT value_json FROM site_settings WHERE setting_key='site'").first();return row?validateSettings(JSON.parse(row.value_json)):defaultSettings();}
 export async function saveSettings(db,settings,actor){await db.prepare("INSERT INTO site_settings(setting_key,value_json,updated_at,updated_by) VALUES('site',?, ?,?) ON CONFLICT(setting_key) DO UPDATE SET value_json=excluded.value_json, updated_at=excluded.updated_at, updated_by=excluded.updated_by").bind(JSON.stringify(settings),now(),actor).run();}
 export async function state(db,key,loc){return db.prepare('SELECT page_key,locale,draft_revision,published_revision,review_status,source_revision_seen,updated_at FROM cms_state WHERE page_key=? AND locale=?').bind(key,loc).first();}
@@ -21,7 +21,7 @@ export async function insertDraft(db,key,loc,content,actor,expectedRevision){
  WHERE cms_state.draft_revision IS ? RETURNING draft_revision`).bind(key,loc,newRevision.id,now(),beforeRev).first();
  if(!r)throw new HttpError(409,'EDIT_CONFLICT','Page changed while you were editing.');
  // Changed English copy must not overwrite already-published translations.
- if(loc==='en')await db.prepare("UPDATE cms_state SET review_status='needs_review',updated_at=? WHERE page_key=? AND locale IN ('ar','ru')").bind(now(),key).run();
+ if(loc==='en')await db.prepare("UPDATE cms_state SET review_status='needs_review',updated_at=? WHERE page_key=? AND locale IN ('uk','ar','ru')").bind(now(),key).run();
  await audit(db,actor,'save_draft',`${key}:${loc}`,newRevision.id);
  return newRevision.id;
 }

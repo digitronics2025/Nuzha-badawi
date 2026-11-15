@@ -10,9 +10,9 @@ export async function flushOutbox(db,env,reference=null,limit=3){
    const claim=await db.prepare("UPDATE notification_outbox SET state='failed',attempts=attempts+1,next_attempt_at=? WHERE reference=? AND state!='sent' AND attempts=? RETURNING attempts").bind(new Date(Date.now()+Math.min(3600000,2**row.attempts*30000)).toISOString(),row.reference,row.attempts).first();
    if(!claim)continue;
    try{
-     await env.EMAIL.send({to:env.NOTIFICATION_EMAIL,from:env.EMAIL_FROM,subject:`NUSYA enquiry ${row.reference} (${row.type})`,text:`New ${row.type} enquiry, locale ${row.locale}.\nReference: ${row.reference}\nName: ${row.name}\nEmail: ${row.email}\nMessage:\n${row.message}\n\nOpen your private admin to review and respond.`,replyTo:row.email});
+     await env.EMAIL.send({to:env.NOTIFICATION_EMAIL,from:{email:env.EMAIL_FROM,name:'NUSYA Website'},subject:`${env.EMAIL_SUBJECT_PREFIX||""}NUSYA enquiry ${row.reference} (${row.type})`,text:`New ${row.type} enquiry, locale ${row.locale}.\nReference: ${row.reference}\nName: ${row.name}\nEmail: ${row.email}\nMessage:\n${row.message}\n\nOpen your private admin to review and respond.`,replyTo:row.email});
      await db.prepare("UPDATE notification_outbox SET state='sent',last_error_code=NULL,updated_at=? WHERE reference=?").bind(new Date().toISOString(),row.reference).run();sent++;
-   }catch(e){await db.prepare("UPDATE notification_outbox SET state='failed',last_error_code=?,updated_at=? WHERE reference=?").bind((e?.code||'SEND_FAILED').slice(0,64),new Date().toISOString(),row.reference).run();}
+   }catch(e){await db.prepare("UPDATE notification_outbox SET state='failed',last_error_code=?,updated_at=? WHERE reference=?").bind(String(e?.code||'SEND_FAILED').slice(0,64),new Date().toISOString(),row.reference).run();}
  }
  return {sent};
 }

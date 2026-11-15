@@ -66,3 +66,12 @@ This applies to all 21 public pages (EN, AR, RU), underneath copyright. It does 
 | D-023 | 2026-11-15 | Replace hard-coded “backend not connected” contact guidance with neutral status wording | Content correction for review | Backend code exists but its live deployment state was not verified; successful enquiry must still be confirmed server-side |
 
 Before publishing, reconcile any D1 CMS overrides with source-derived fallback content and confirm all three translations; do not overwrite owner-edited published content without review.
+
+## Deployment decisions (2026-11-15, executed under explicit user authorization)
+| ID | Date | Decision | Status | Reason |
+| --- | --- | --- | --- | --- |
+| D-024 | 2026-11-15 | Production deployed: two Workers on custom domains, D1, R2, Access, Turnstile, Email Sending | Live | User authorised full autopilot production launch |
+| D-025 | 2026-11-15 | Bundle static frontend into Worker modules instead of Static Assets | Live | Single deploy artifact; Static Assets upload JWT unusable behind build proxy; cost negligible |
+| D-026 | 2026-11-15 | Enquiries open for lessons + coaching; translation/interpretation closed until owner approves directed pairs | Live | SOURCES.md requires per-direction confirmation |
+| D-027 | 2026-11-15 | Access service tokens only honoured when listed in `SERVICE_TOKEN_OWNERS`; listed on staging only | Live | Automated e2e without weakening production admin |
+| D-028 | 2026-11-15 | One CI/CD pipeline (`deploy.yml`); redundant frontend-only workflow removed | Live | AGENTS.md: one deployment mechanism, staging before production |

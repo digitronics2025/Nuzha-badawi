@@ -33,7 +33,7 @@ jobs:
       - name: D1 migration validity
         run: python3 workers/tools/check_migrations.py
       - name: Worker API / identity / revision tests
-        run: cd workers && node --test tests/*.test.mjs
+        run: cd workers && npm test
       - name: Browser JavaScript syntax
         run: |
           node --check frontend/src/assets/site.js

@@ -28,6 +28,12 @@
 .developer-arrow{display:inline-block;font-size:1.05em;transition:transform .22s var(--ease)}
 .developer-link:hover .developer-arrow{transform:translate(2px,-2px)}
 @media(max-width:767px){.footer-meta{width:100%}}
+/* Owner-disabled enquiry services (availability set in admin). */
+.service-option.is-unavailable{opacity:.45;cursor:not-allowed}
+.service-option.is-unavailable input{cursor:not-allowed}
+
+/* Ukrainian-first mobile navigation: four languages fit inside the menu. */
+@media(max-width:600px){.header-right>.language-select{display:none}.mobile-langs{flex-wrap:wrap;gap:7px}.mobile-langs .lang-link{font-size:13px;padding:10px}}
 
 /* Editorial concept media; replace with an approved authentic portrait through the CMS. */
 .portrait-art{background-color:#dbc2aa}

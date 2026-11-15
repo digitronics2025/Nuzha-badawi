@@ -1,0 +1,32 @@
+{
+  // STAGING — isolated D1/R2, workers.dev only, Turnstile TEST keys. Never bind production resources here.
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "nusya-public-staging",
+  "main": "./src/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "nusya-platform-staging",
+    "database_id": "e6e00b4e-fd9e-4b95-b1be-94e642dcc36b",
+    "migrations_dir": "../migrations"
+  }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "nusya-media-staging" }],
+  "send_email": [{
+    "name": "EMAIL",
+    "destination_address": "contact@tenten.ma",
+    "allowed_sender_addresses": ["notifications@nozha-badavi.com"]
+  }],
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "invocation_logs": false } },
+  "vars": {
+    "PUBLIC_HOST": "nusya-public-staging.digitronics-electro.workers.dev",
+    "TURNSTILE_EXPECTED_HOSTNAME": "example.com",
+    "TURNSTILE_ALLOW_TEST_KEYS": "true",
+    "EMAIL_SUBJECT_PREFIX": "[STAGING] ",
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
+    "NOTIFICATION_EMAIL": "contact@tenten.ma",
+    "EMAIL_FROM": "notifications@nozha-badavi.com",
+    "ENABLE_OUTBOX_CRON": "true"
+  }
+}

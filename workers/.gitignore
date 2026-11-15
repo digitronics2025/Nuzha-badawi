@@ -1,8 +1,8 @@
 node_modules/
-public/wrangler.jsonc
-admin/wrangler.jsonc
 .dev.vars
 .env*
 !*.example
 .wrangler/
 coverage/
+public/src/static-assets.generated.js
+admin/src/static-assets.generated.js

@@ -51,11 +51,12 @@ def shell(loc,page,body,seo_title,seo_desc):
     alt=''.join(f'<link rel="alternate" hreflang="{l}" href="{CANONICAL}{U(l,page)}" />' for l in LOCALES)
     canonical=CANONICAL+route
     body_class=' page-'+page
-    return f'''<!doctype html><html lang="{loc}" dir="{c['dir']}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#F8F4EE"><meta name="description" content="{E(seo_desc)}"><meta property="og:type" content="website"><meta property="og:site_name" content="NUSYA Linguistic Studio"><meta property="og:title" content="{E(seo_title)}"><meta property="og:description" content="{E(seo_desc)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="{CANONICAL}/assets/social-card.svg"><meta name="twitter:card" content="summary_large_image"><meta name="color-scheme" content="light"><link rel="canonical" href="{canonical}">{alt}<link rel="alternate" hreflang="x-default" href="{CANONICAL}{U('en',page)}"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="stylesheet" href="/assets/site.css"><title>{E(seo_title)} · NUSYA Linguistic Studio</title><script type="module" src="/assets/site.js"></script></head><body class="{body_class.strip()}">{header(loc,page)}<main id="main" tabindex="-1">{body}</main>{footer(loc)}<div id="live-announcer" class="sr-only" role="status" aria-live="polite"></div></body></html>'''
+    return f'''<!doctype html><html lang="{loc}" dir="{c['dir']}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#F8F4EE"><meta name="description" content="{E(seo_desc)}"><meta property="og:type" content="website"><meta property="og:site_name" content="NUSYA Linguistic Studio"><meta property="og:title" content="{E(seo_title)}"><meta property="og:description" content="{E(seo_desc)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="{CANONICAL}/assets/social-card.svg"><meta name="twitter:card" content="summary_large_image"><meta name="color-scheme" content="light"><link rel="canonical" href="{canonical}">{alt}<link rel="alternate" hreflang="x-default" href="{CANONICAL}{U('uk',page)}"><link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="stylesheet" href="/assets/site.css"><title>{E(seo_title)} · NUSYA Linguistic Studio</title><script type="module" src="/assets/site.js"></script></head><body class="{body_class.strip()}">{header(loc,page)}<main id="main" tabindex="-1">{body}</main>{footer(loc)}<div id="live-announcer" class="sr-only" role="status" aria-live="polite"></div></body></html>'''
 def portrait(loc,mode='hero'):
-    # Generated editorial concept. This is not a verified photograph of Nozha.
+    # Generated editorial concept, explicitly disclosed in every supported locale.
+    disclosure={'uk':'Ілюстрація, створена ШІ — не справжнє фото Ножі Бадаві.','en':'AI-generated illustration — not an authentic photo of Nozha Badavi.','ar':'رسم توضيحي مولّد بالذكاء الاصطناعي — ليس صورة حقيقية لنزهة بدوي.','ru':'Иллюстрация, созданная ИИ — не настоящая фотография Нузи Бадави.'}[loc]
     # An approved CMS portrait may replace this fallback at any time.
-    return f'''<div class="portrait-art portrait-{mode}" data-nusya-media="{"heroPortrait" if mode=="hero" else "aboutPortrait"}" role="img" aria-label="{T(loc,'profile_pic')}"><img class="portrait-concept" src="/assets/nozha-portrait-optimized.webp" width="560" height="700" alt="" decoding="async" loading="{"eager" if mode=="hero" else "lazy"}" /><span class="portrait-concept-disclosure">{T(loc,'photo_note')}</span></div>'''
+    return f'''<div class="portrait-art portrait-{mode}" data-nusya-media="{"heroPortrait" if mode=="hero" else "aboutPortrait"}" role="img" aria-label="{T(loc,'profile_pic')}"><img class="portrait-concept" src="/assets/nozha-portrait-optimized.webp" width="560" height="700" alt="" decoding="async" loading="{"eager" if mode=="hero" else "lazy"}" /><span class="portrait-concept-disclosure" >{E(disclosure)}</span></div>'''
 
 def page_intro(loc,eyebrow,head,lead):
     return f'<section class="page-intro"><div class="wrap">{label(eyebrow)}<h1 class="display page-heading" data-nusya-field="title">{E(head)}</h1><p class="page-lead" data-nusya-field="description">{E(lead)}</p></div></section>'
@@ -142,7 +143,9 @@ def build_public():
     if PUBLIC.exists():shutil.rmtree(PUBLIC)
     PUBLIC.mkdir(parents=True)
     source=ROOT/'src'/'assets'
-    shutil.copytree(source,PUBLIC/'assets')
+    shutil.copytree(source,PUBLIC/'assets',ignore=shutil.ignore_patterns('admin.*'))
+    # Static asset security headers (served by Workers Static Assets without invoking the Worker).
+    (PUBLIC/'_headers').write_text('/assets/*\n  X-Content-Type-Options: nosniff\n  Cache-Control: public, max-age=3600\n  Strict-Transport-Security: max-age=31536000; includeSubDomains\n/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Strict-Transport-Security: max-age=31536000; includeSubDomains\n',encoding='utf-8')
     pages={'home':home,'about':page_about,'lessons':page_lessons,'coaching':page_coaching,'translation':page_translation,'contact':page_contact,'privacy':page_privacy}
     for loc,c in COPY.items():
         for name,render in pages.items():
@@ -151,8 +154,8 @@ def build_public():
             title=c['hero'] if name=='home' else c.get(name+'_page_title') or c.get(name+'_title') or c['hero']
             description=c['hero_desc'] if name=='home' else c.get(name+'_page_desc') or c.get(name+'_desc') or c['hero_desc']
             (folder/'index.html').write_text(shell(loc,name,render(loc),title,description),encoding='utf-8')
-    (PUBLIC/'index.html').write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/en/"><link rel="canonical" href="https://nozha-badavi.com/en/"></head><body><a href="/en/">NUSYA — English</a></body></html>',encoding='utf-8')
-    (PUBLIC/'404.html').write_text(shell('en','home',page_intro('en','NUSYA',COPY['en']['not_found'],'')+pill(COPY['en']['back_home'],U('en')),'Page not found','The requested page could not be found.'),encoding='utf-8')
+    (PUBLIC/'index.html').write_text('<!doctype html><html lang="uk"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/uk/"><link rel="canonical" href="https://nozha-badavi.com/uk/"></head><body><a href="/uk/">NUSYA — Українська</a></body></html>',encoding='utf-8')
+    (PUBLIC/'404.html').write_text(shell('uk','home',page_intro('uk','NUSYA',COPY['uk']['not_found'],'')+pill(COPY['uk']['back_home'],U('uk')),'Сторінку не знайдено','Запитану сторінку не знайдено.'),encoding='utf-8')
     (PUBLIC/'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: https://nozha-badavi.com/sitemap.xml\n',encoding='utf-8')
     routes=[f'{CANONICAL}{U(loc,page)}' for loc in LOCALES for page in PAGES]
     (PUBLIC/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{E(u)}</loc></url>' for u in routes)+'</urlset>',encoding='utf-8')
@@ -163,9 +166,9 @@ def build_admin():
     shutil.copytree(ROOT/'src'/'assets',ADMIN/'assets')
     shutil.copy2(ROOT/'src'/'admin.html',ADMIN/'index.html')
     preview=ADMIN/'preview-public'
-    shutil.copytree(PUBLIC,preview,ignore=shutil.ignore_patterns('assets'))
+    shutil.copytree(PUBLIC,preview,ignore=shutil.ignore_patterns('assets','_headers'))
     (ADMIN/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
-    print(f'Built admin UI preview (NO AUTH/BACKEND) to {ADMIN}')
+    print(f'Built protected admin UI (served only by the Access-protected admin Worker) to {ADMIN}')
 if __name__=='__main__':
     assert all(set(COPY[loc])==set(COPY['en']) for loc in LOCALES)
     build_public()

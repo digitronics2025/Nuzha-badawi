@@ -1,5 +1,7 @@
 # NUSYA Documentation Index
 
+> **Production:** [PRODUCTION.md](PRODUCTION.md) — live inventory, verification evidence, owner checklist, deploy/rollback.
+
 **Purpose:** keep product intent, approved design, factual content, technical decisions, AI guidance and operations synchronized. **As of initial documentation bootstrap, the repository is empty of application code**; technical files are specifications, not claims of implemented components.
 
 ## Start here

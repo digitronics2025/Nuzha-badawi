@@ -4,7 +4,7 @@
 
 This repository is the controlled source for the future NUSYA personal website, three-language content system, and secure owner-operated admin.
 
-> **Current status:** initial repository documentation only. UI designs are not yet approved and no application, Cloudflare resources, database, or production deployment is claimed to exist. Do not treat architectural proposals as existing implementations.
+> **Current status:** **LIVE since 2026-11-15** — see [docs/PRODUCTION.md](docs/PRODUCTION.md) for deployed resources, verification evidence and the runbook. Public site https://nozha-badavi.com (EN/AR/RU), protected admin https://admin.nozha-badavi.com.
 
 ## Required website features
 
@@ -43,7 +43,7 @@ The updated professional CV and user-provided visuals support the content strate
 
 Not documented yet because the repository did not contain a verified application at bootstrap. When an implementation is approved, add the actual package manager, scripts, environment variables **names only**, local test instructions, build/deploy instructions and operational runbook updates. Never invent commands or credentials.
 
-## Production domain and Cloudflare plan (not deployed)
+## Production domain and Cloudflare (deployed — authoritative inventory in docs/PRODUCTION.md; text below is the original plan)
 - **Registered domain (user's Cloudflare dashboard screenshot):** `nozha-badavi.com`. Registration is confirmed visually; active DNS zone, SSL and Workers deployment are **not** confirmed.
 - Planned canonical site: `https://nozha-badavi.com`; planned protected admin: `https://admin.nozha-badavi.com`; `www` redirects to apex when authorised.
 - Proposed Cloudflare implementation: a public Worker + separately Access-protected admin Worker, D1 for content/enquiries, R2 **only if** admin media uploads require it, Turnstile and a cost-reviewed email transport. Actual resources do not exist as far as this documentation can verify.

@@ -103,6 +103,14 @@ async function setupContactSecurity(form) {
       const updateTarget=()=>{for(const option of targetLanguage.options)if(option.value)option.disabled=!permittedPairs.has(source.value+':'+option.value);if(targetLanguage.selectedOptions[0]?.disabled)targetLanguage.value='';};
       source.addEventListener('change',updateTarget);updateTarget();
     }
+    // Reflect owner-controlled availability: services not accepting enquiries cannot be chosen.
+    const services=config.services||{},accepting=id=>services[id]?.visible!==false&&services[id]?.acceptingRequests===true;
+    const lessonLangs=['english','russian','arabic'];
+    const typeOpen={lesson:lessonLangs.some(accepting),coaching:accepting('coaching'),translation:accepting('translation')&&permittedPairs.size>0,interpretation:accepting('interpretation')&&permittedPairs.size>0};
+    for(const choice of form.querySelectorAll('input[name="type"]')){const open=typeOpen[choice.value]!==false;choice.disabled=!open;choice.closest('label')?.classList.toggle('is-unavailable',!open);if(!open&&choice.checked)choice.checked=false;}
+    if(!form.querySelector('input[name="type"]:checked')){const first=form.querySelector('input[name="type"]:not(:disabled)');if(first){first.checked=true;first.dispatchEvent(new Event('change'));}}
+    const lessonSelect=form.querySelector('.form-detail[data-for="lesson"] [name="language"]');
+    if(lessonSelect)for(const option of lessonSelect.options)if(option.value)option.disabled=!accepting(option.value);
     target.className='cf-turnstile';
     target.dataset.sitekey=config.turnstileSiteKey;
     target.dataset.action='nusya_enquiry';
@@ -141,12 +149,12 @@ if (form) {
     if (!form.checkValidity()) { form.reportValidity(); return; }
     if(form.dataset.backendReady!=='true') { show(form.dataset.error || 'The contact system is not configured yet.'); return; }
     const token=form.querySelector('[name="cf-turnstile-response"]')?.value;
-    if(!token) { show(({en:'Complete the security challenge before submitting.', ar:'أكمل التحقق الأمني قبل الإرسال.', ru:'Пройдите проверку безопасности перед отправкой.'})[form.dataset.locale] || form.dataset.error); return; }
+    if(!token) { show(({uk:'Пройдіть перевірку безпеки перед надсиланням.',en:'Complete the security challenge before submitting.', ar:'أكمل التحقق الأمني قبل الإرسال.', ru:'Пройдите проверку безопасности перед отправкой.'})[form.dataset.locale] || form.dataset.error); return; }
     const type=selectedType();
     if ((type==='translation'||type==='interpretation') && activeField('sourceLanguage') && activeField('sourceLanguage')===activeField('targetLanguage')) { show(form.dataset.same || 'Source and target must differ.'); return; }
     const request = {
       idempotencyKey: form.dataset.idempotencyKey || (form.dataset.idempotencyKey = (crypto.randomUUID?.() || String(Date.now())+'-'+Math.random().toString(36).slice(2))),
-      locale: form.dataset.locale || 'en', type,
+      locale: form.dataset.locale || 'uk', type,
       name: form.elements.namedItem('name')?.value?.trim() || '',
       email: form.elements.namedItem('email')?.value?.trim() || '',
       message: form.elements.namedItem('message')?.value?.trim() || '',
@@ -160,9 +168,9 @@ if (form) {
       if (response.status===201 && json?.ok===true && json.reference) {
         show(`${form.dataset.success || 'Received:'} ${json.reference}`,true);
         form.reset(); delete form.dataset.idempotencyKey; updatePanels(); feedback.hidden=false; window.turnstile?.reset?.();
-      } else show(json?.message || form.dataset.error || 'The contact system is not available yet.');
+      } else { show(json?.message || form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.(); }
     } catch {
-      show(form.dataset.error || 'The contact system is not available yet.');
+      show(form.dataset.error || 'The contact system is not available yet.'); window.turnstile?.reset?.();
     } finally { submit.disabled=false; }
   });
 }

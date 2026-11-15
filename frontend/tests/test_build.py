@@ -66,17 +66,22 @@ class FrontendBuildTests(unittest.TestCase):
     def test_editorial_media_assets_exist_and_are_localized(self):
         assets=DIST/'assets'
         for name in ('nozha-portrait-optimized.webp','nusya-introduction-cover-optimized.webp'):
-            self.assertTrue((assets/name).is_file(),name)
-            self.assertLess((assets/name).stat().st_size,120_000,name)
+            path=assets/name
+            self.assertTrue(path.is_file(),name)
+            self.assertLess(path.stat().st_size,120_000,name)
+            data=path.read_bytes()
+            self.assertGreater(len(data),1000,name)
+            self.assertEqual(data[:4],b'RIFF',name)
+            self.assertEqual(data[8:12],b'WEBP',name)
         for loc in LOCALES:
             for page in ('home','about'):
-                target=DIST/loc/(page if page!='home' else '')/'index.html'
-                html=target.read_text(encoding='utf8')
-                self.assertIn('/assets/nozha-portrait-optimized.webp',html)
-                self.assertIn('/assets/nusya-introduction-cover-optimized.webp',html)
-                self.assertIn(COPY[loc]['photo_note'],html)
-                self.assertIn('data-video',html)
-                self.assertIn('data-nusya-media',html)
+                html=(DIST/loc/('' if page=='home' else 'about')/'index.html').read_text(encoding='utf8')
+                self.assertIn('/assets/nozha-portrait-optimized.webp',html,(loc,page))
+                self.assertIn('/assets/nusya-introduction-cover-optimized.webp',html,(loc,page))
+                self.assertIn('portrait-concept-disclosure',html,(loc,page))
+                self.assertIn('data-nusya-media=',html,(loc,page))
+                self.assertIn('data-video',html,(loc,page))
+                self.assertNotIn('<iframe',html,(loc,page))
 
     def test_social_links_are_external_safe(self):
         s=(DIST/'en'/'index.html').read_text()
@@ -95,12 +100,23 @@ class FrontendBuildTests(unittest.TestCase):
                 self.assertIn('<bdi>',text)
                 self.assertLess(text.index('class="footer-meta"'),text.index('class="developer-credit"'))
 
+    def test_ukrainian_is_the_default_language(self):
+        root=(DIST/'index.html').read_text(encoding='utf8')
+        self.assertIn('lang="uk"',root)
+        self.assertIn('url=/uk/',root)
+        self.assertIn('https://nozha-badavi.com/uk/',root)
+        for loc in LOCALES:
+            html=(DIST/loc/'index.html').read_text(encoding='utf8')
+            self.assertIn('hreflang="x-default" href="https://nozha-badavi.com/uk/"',html)
+            self.assertIn('href="/uk/"',html)
+        self.assertIn('Українська',(DIST/'uk'/'index.html').read_text(encoding='utf8'))
+
     def test_sitemap_has_only_complete_locales(self):
         s=(DIST/'sitemap.xml').read_text()
         root=ET.fromstring(s)
         locs=[x.text for x in root.iter() if x.tag.endswith('loc')]
-        self.assertEqual(len(locs),21)
-        self.assertTrue(all('/en/' in x or '/ar/' in x or '/ru/' in x for x in locs))
+        self.assertEqual(len(locs),28)
+        self.assertTrue(all('/uk/' in x or '/en/' in x or '/ar/' in x or '/ru/' in x for x in locs))
     def test_admin_is_separate_and_private_by_design(self):
         a=ROOT/'dist-admin'
         self.assertTrue((a/'index.html').exists())
