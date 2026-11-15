@@ -39,7 +39,7 @@ export function corsSameOrigin(request,expectedHostname) {
 }
 export function requireMethod(request,method) {if(request.method!==method)throw new HttpError(405,'METHOD_NOT_ALLOWED', 'Method not allowed.');}
 export function noStore(response) {const h=new Headers(response.headers);h.set('cache-control','no-store');h.set('x-robots-tag','noindex,nofollow');h.set('x-content-type-options','nosniff');return new Response(response.body,{status:response.status,statusText:response.statusText,headers:h});}
-export function isLocale(v){return ['en','ar','ru'].includes(v);}
+export function isLocale(v){return ['uk','en','ar','ru'].includes(v);}
 export function isPageKey(v){return ['home','about','lessons','coaching','translation','contact','privacy'].includes(v);}
 export function isSafeKey(v){return /^[a-z0-9_.-]{1,80}$/.test(String(v||''));}
 export function escapeHTML(s){return String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
