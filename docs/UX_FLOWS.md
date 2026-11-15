@@ -52,4 +52,4 @@ Motion uses one-off, unobtrusive reveals and minimal hover feedback; the gold pl
 
 ## Review hardening — 2026-11-15
 
-Approved review fixes: enquiry details are readable in admin; publication history includes revision previews; all four translation states are visible. An ambiguous submission freezes the original payload/identity for retry and offers an explicit new-request action. Field errors are associated with affected inputs. Vimeo fallback remains reachable after loading. Lesson links preselect their requested language. Neutral studio artwork is the fallback until genuine media are supplied.
+Approved review fixes: enquiry details are readable in admin; publication history includes revision previews; all four translation states are visible. An ambiguous submission freezes the original payload/identity for retry and offers an explicit new-request action. Field errors are associated with affected inputs. Vimeo fallback remains reachable after loading. Lesson links preselect their requested language. Existing optimized illustration assets retain their AI disclosure and CMS overrides under D-031.

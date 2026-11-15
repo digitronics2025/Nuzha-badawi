@@ -37,6 +37,10 @@ r=await pub('/ko/');check('no Korean locale',r.status===404);
 r=await pub('/api/v1/admin/me');check('admin API absent on public host',r.status===404);
 r=await pub('/en/');check('public CSP + HSTS',!!r.headers.get('content-security-policy')&&!!r.headers.get('strict-transport-security'));
 check('search indexing matches environment',new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?r.headers.get('x-robots-tag')?.includes('noindex'):!r.headers.get('x-robots-tag')?.includes('noindex'));
+for(const path of ['/404.html','/uk/index.html']){
+ const response=await pub(path);
+ check(`direct HTML indexing ${path}`,response.status===200&&(new URL(PUBLIC_URL).hostname.endsWith('.workers.dev')?response.headers.get('x-robots-tag')?.includes('noindex'):!response.headers.get('x-robots-tag')?.includes('noindex')));
+}
 check('Vimeo ID + privacy hash present',r.body.includes('player.vimeo.com/video/1171310337?h=3416a6f4f5'));
 r=await pub('/api/v1/config');check('public config ready',r.body.ok===true&&r.body.ready===true,JSON.stringify(r.body.services||{}).slice(0,80));
 const base=()=>({idempotencyKey:crypto.randomUUID(),locale:'en',type:'lesson',name:'QA Probe',email:'qa@example.com',message:'Automated verification probe.',details:{language:'english'},privacyAcknowledged:true});

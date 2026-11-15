@@ -9,7 +9,7 @@ Current source verification and release blockers are recorded in [PRODUCTION.md]
 - Public and admin dry-run bundles build successfully.
 - Mandatory staging write checks remain blocked by unavailable Access service credentials.
 - Production promotion, real Turnstile/email delivery and authenticated production owner login have not been verified for this candidate.
-- Neutral artwork avoids false person imagery; genuine media may be added through consented owner publishing.
+- Existing illustration assets retain AI disclosure under D-031; genuine media may be added through consented owner publishing.
 - Privacy updates in source require a deliberate CMS publication where existing revisions override them.
 
 Do not mark this candidate deployed based on local checks or a successful PR workflow.
