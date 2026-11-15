@@ -14,7 +14,11 @@ try{
  await db.prepare("INSERT INTO cms_revisions(page_key,locale,payload_json,created_by) VALUES('home','en',?,'test')").bind(JSON.stringify({fields:{hero:'Native runtime CMS heading'}})).run();
  await db.prepare("INSERT INTO cms_state(page_key,locale,draft_revision,published_revision) VALUES('home','en',1,1)").run();
  let r=await runtime.dispatchFetch('https://nozha-badavi.com/en/',{headers:{'if-none-match':'old-template'}});
- assert.equal(r.status,200);assert.equal(r.headers.get('etag'),null);assert.match(await r.text(),/Native runtime CMS heading/);
+ assert.equal(r.status,200);assert.equal(r.headers.get('etag'),null);const home=await r.text();assert.match(home,/Native runtime CMS heading/);assert.doesNotMatch(home,/data-nusya-link="linkedin"/);
+ await db.prepare("INSERT INTO site_settings(setting_key,value_json,updated_by) VALUES('site',?,'test')").bind(JSON.stringify({links:{linkedin:'https://www.linkedin.com/in/review'}})).run();
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/about/');assert.match(await r.text(),/https:\/\/www.linkedin.com\/in\/review/);
+ await db.prepare("UPDATE site_settings SET value_json=? WHERE setting_key='site'").bind(JSON.stringify({links:{linkedin:''}})).run();
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/contact/');assert.doesNotMatch(await r.text(),/data-nusya-link="linkedin"/);
  r=await runtime.dispatchFetch('https://nozha-badavi.com/en/index.html?x=1',{redirect:'manual'});assert.equal(r.status,308);assert.equal(r.headers.get('location'),'/en/?x=1');
  r=await runtime.dispatchFetch('https://nozha-badavi.com/en/',{method:'HEAD'});assert.equal(await r.text(),'');
  for(const locale of ['uk','en','ar','ru']){r=await runtime.dispatchFetch(`https://nozha-badavi.com/${locale}/`);assert.equal(r.status,200);assert.match(await r.text(),new RegExp(`lang="${locale}"`));}

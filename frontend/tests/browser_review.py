@@ -27,6 +27,7 @@ with sync_playwright() as p:
             key=path.removeprefix('/api/v1/admin/')
             data={'ok':True}
             if key=='me':data.update(email='review@example.invalid',role='owner')
+            elif key=='settings':data['settings']={'video':{'enabled':True,'url':'https://player.vimeo.com/video/1171310337?h=3416a6f4f5','posterMediaId':None},'services':{},'contact':{},'links':{}}
             elif key=='summary':data.update(openEnquiries=1,translationsToReview=1)
             elif key=='pages':data['pages']=[{'key':'home','locales':{l:{'status':'needs_review'} for l in ['uk','en','ar','ru']}}]
             elif key=='pages/home':data.update(defaultContent={'fields':{'hero':'Test heading','hero_desc':'Test description'}},fieldSchema={'hero':{'maxLength':260}},reviewStatus='ready')
@@ -76,6 +77,14 @@ with sync_playwright() as p:
     page.locator('[data-view=overview]').click()
     page.locator('[data-view=enquiries]').click()
     assert len(discard_dialogs)==1,'Confirmed discard left the editor dirty'
+    for selector,value in [('#video-url','https://player.vimeo.com/video/1171310337?h=3416a6f4f5'),('#video-enabled',False),('#video-poster-id','approved-test-image')]:
+        page.locator('[data-view=video]').click()
+        page.locator('#video-poster-id').wait_for(state='visible')
+        if selector=='#video-enabled':page.locator(selector).uncheck()
+        else:page.locator(selector).fill(value+' ' if selector=='#video-url' else value)
+        before=len(discard_dialogs)
+        page.locator('[data-view=overview]').click()
+        assert len(discard_dialogs)==before+1,'Video change did not warn on navigation'
     assert not errors,errors
     browser.close()
 print('PASS: 84 responsive page checks, four-language screenshots, unique form IDs, preselection, immutable retry, readable inbox, Ukrainian review and unsaved-edit protection')
