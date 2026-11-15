@@ -81,6 +81,17 @@ class FrontendBuildTests(unittest.TestCase):
                 self.assertIn('<bdi>',text)
                 self.assertLess(text.index('class="footer-meta"'),text.index('class="developer-credit"'))
 
+    def test_ukrainian_is_the_default_language(self):
+        root=(DIST/'index.html').read_text(encoding='utf8')
+        self.assertIn('lang="uk"',root)
+        self.assertIn('url=/uk/',root)
+        self.assertIn('https://nozha-badavi.com/uk/',root)
+        for loc in LOCALES:
+            html=(DIST/loc/'index.html').read_text(encoding='utf8')
+            self.assertIn('hreflang="x-default" href="https://nozha-badavi.com/uk/"',html)
+            self.assertIn('href="/uk/"',html)
+        self.assertIn('Українська',(DIST/'uk'/'index.html').read_text(encoding='utf8'))
+
     def test_sitemap_has_only_complete_locales(self):
         s=(DIST/'sitemap.xml').read_text()
         root=ET.fromstring(s)
