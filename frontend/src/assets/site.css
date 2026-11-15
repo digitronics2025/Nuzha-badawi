@@ -34,3 +34,13 @@
 
 /* Ukrainian-first mobile navigation: four languages fit inside the menu. */
 @media(max-width:600px){.header-right>.language-select{display:none}.mobile-langs{flex-wrap:wrap;gap:7px}.mobile-langs .lang-link{font-size:13px;padding:10px}}
+
+/* Editorial concept media; replace with an approved authentic portrait through the CMS. */
+.portrait-art{background-color:#dbc2aa}
+.portrait-concept{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 24%}
+.portrait-concept-disclosure{position:absolute;inset-inline:16px;bottom:15px;z-index:4;max-width:calc(100% - 32px);border-radius:6px;background:rgba(42,27,21,.78);color:#fff9f3;padding:6px 10px;font:600 10px/1.45 var(--sans);letter-spacing:.02em;backdrop-filter:blur(4px)}
+.portrait-art[data-image-id] .portrait-concept,.portrait-art[data-image-id] .portrait-concept-disclosure{display:none}
+.video-cover-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.video-poster:has(.video-cover-image) .video-art{display:block;background:linear-gradient(135deg,#b99675,#e0c9af)}
+.video-poster:has(.video-cover-image) .video-play{inset-inline-start:56%;background:rgba(59,36,27,.92)}
+@media(max-width:767px){.portrait-concept-disclosure{font-size:9px}.video-poster:has(.video-cover-image) .video-play{width:54px;height:54px;inset-inline-start:55%}}
