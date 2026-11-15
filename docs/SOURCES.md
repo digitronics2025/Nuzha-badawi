@@ -69,3 +69,6 @@ The user supplied a revised, one-page CV named `Nozha_Badavi_CV_изменён(1
 6. When connecting an existing D1-backed admin CMS, compare its published overrides and review status against the newly prepared static fallback copy; old published D1 revisions may supersede new source content. Never silently replace owner-edited content.
 
 **Release rule:** Treat the new profile copy as a proposed, source-documented update until Nozha explicitly approves the public wording, chronological discrepancies and each locale's translation. Preserve the previous published revision and provide an admin preview or staging link before going live.
+
+
+**Publication approval update (2026-11-15):** the user explicitly approved the specific CV-based biography for publication in the deployment-completion chat (“Yes, approved for publication”; decision D-023). This clears the release rule for the existing copy. Preserve CMS overrides and the exclusions of private contact data and unsupported claims.

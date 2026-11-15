@@ -43,6 +43,7 @@ jobs:
       - name: Validate public and admin output separation
         run: |
           test -f frontend/dist-public/en/index.html
+          test -f frontend/dist-public/uk/index.html
           test -f frontend/dist-public/ar/index.html
           test -f frontend/dist-public/ru/index.html
           test -f frontend/dist-admin/index.html

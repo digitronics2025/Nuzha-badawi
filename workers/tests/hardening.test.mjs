@@ -47,10 +47,12 @@ test('bundled binary WebP media is served byte-for-byte with correct headers',as
  assert.equal(response.status,304);assert.equal((await response.arrayBuffer()).byteLength,0);
 });
 
-test('root negotiates en/ar/ru and never yields an unsupported locale',async()=>{
+test('root negotiates all four locales with Ukrainian as the default',async()=>{
  assert.equal(preferredLocale('ar-MA,ar;q=0.9,en;q=0.5'),'ar');
  assert.equal(preferredLocale('ko-KR,ru;q=0.8'),'ru');
- assert.equal(preferredLocale('fr-FR'),'en');assert.equal(preferredLocale(''),'en');
+ assert.equal(preferredLocale('fr-FR'),'uk');assert.equal(preferredLocale(''),'uk');
+ assert.equal(preferredLocale('uk-UA,en;q=0.8'),'uk');
+ assert.equal(preferredLocale('uk;q=0,en;q=0.8'),'en');
  assert.equal(preferredLocale('en;q=0.1,ru;q=0.9'),'ru');
  const r=await publicWorker.fetch(new Request('https://nozha-badavi.com/',{headers:{'accept-language':'ru'}}),{},{});
  assert.equal(r.status,302);assert.equal(r.headers.get('location'),'/ru/');assert.match(r.headers.get('cache-control'),/no-store/);
