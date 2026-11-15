@@ -47,6 +47,20 @@ class FrontendBuildTests(unittest.TestCase):
     def test_social_links_are_external_safe(self):
         s=(DIST/'en'/'index.html').read_text()
         self.assertIn('rel="noopener noreferrer"',s)
+    def test_developer_credit_is_localized_and_safe_on_every_public_page(self):
+        from html import unescape
+        for loc in LOCALES:
+            for page in ['home','about','lessons','coaching','translation','contact','privacy']:
+                path=DIST/loc/(page if page!='home' else '')/'index.html'
+                text=path.read_text(encoding='utf8')
+                self.assertEqual(text.count('class="developer-link"'),1,(loc,page))
+                self.assertIn(COPY[loc]['developer_label'],unescape(text))
+                self.assertIn(COPY[loc]['developer_name'],unescape(text))
+                self.assertIn('href="https://dr-badawi-abdalsalam.com/"',text)
+                self.assertIn('target="_blank" rel="noopener noreferrer"',text)
+                self.assertIn('<bdi>',text)
+                self.assertLess(text.index('class="footer-meta"'),text.index('class="developer-credit"'))
+
     def test_sitemap_has_only_complete_locales(self):
         s=(DIST/'sitemap.xml').read_text()
         root=ET.fromstring(s)
