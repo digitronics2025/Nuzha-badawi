@@ -72,3 +72,8 @@ The user supplied a revised, one-page CV named `Nozha_Badavi_CV_изменён(1
 
 
 **Publication approval update (2026-11-15):** the user explicitly approved the specific CV-based biography for publication in the deployment-completion chat (“Yes, approved for publication”; decision D-023). This clears the release rule for the existing copy. Preserve CMS overrides and the exclusions of private contact data and unsupported claims.
+
+
+## Review hardening — 2026-11-15
+
+Review-hardening implementation: the owner authorized autonomous decisions and approved desktop/mobile/RTL fix mockups in chat. No genuine portrait or video still was supplied; source now uses original neutral NUSYA artwork in those slots rather than presenting an invented person. Existing generated image files are retained as repository assets but are not used as the default person/video representation. Privacy wording uses implemented processor facts and the existing notification inbox; no new biography, credentials or jurisdiction claims were added.

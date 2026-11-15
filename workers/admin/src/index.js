@@ -26,7 +26,7 @@ async function previewHtml(request,env,loc,key){
  const base=`https://${env.ADMIN_HOST||'admin.nozha-badavi.com'}/preview-public/${loc}/${key==='home'?'':key+'/'}index.html`;
  const asset=await env.ASSETS.fetch(new Request(base));
  if(!asset.ok)throw new HttpError(404,'NOT_FOUND','Preview not found.');
- const st=await state(env.DB,key,loc),draft=await revision(env.DB,st?.draft_revision);const conf=await settings(env.DB);
+ const st=await state(env.DB,key,loc);const requested=new URL(request.url).searchParams.get('revision');if(requested&&!/^[1-9][0-9]*$/.test(requested))throw new HttpError(400,'VALIDATION_FAILED','Invalid revision.');const draft=await revision(env.DB,requested?Number(requested):st?.draft_revision);if(requested&&(!draft||draft.page_key!==key||draft.locale!==loc))throw new HttpError(404,'NOT_FOUND','Revision not found.');const conf=await settings(env.DB);
  let res=renderPublished(asset,draft?.payload||{},conf,{locale:loc,mediaBase:'/api/v1/admin/media/'});
  res=noStore(res);return secureHeaders(res,true);
 }

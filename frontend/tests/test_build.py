@@ -76,9 +76,9 @@ class FrontendBuildTests(unittest.TestCase):
         for loc in LOCALES:
             for page in ('home','about'):
                 html=(DIST/loc/('' if page=='home' else 'about')/'index.html').read_text(encoding='utf8')
-                self.assertIn('/assets/nozha-portrait-optimized.webp',html,(loc,page))
-                self.assertIn('/assets/nusya-introduction-cover-optimized.webp',html,(loc,page))
-                self.assertIn('portrait-concept-disclosure',html,(loc,page))
+                self.assertIn('portrait-brand-fallback',html,(loc,page))
+                self.assertIn('video-brand-fallback',html,(loc,page))
+                self.assertNotIn('portrait-concept-disclosure',html,(loc,page))
                 self.assertIn('data-nusya-media=',html,(loc,page))
                 self.assertIn('data-video',html,(loc,page))
                 self.assertNotIn('<iframe',html,(loc,page))

@@ -90,3 +90,12 @@ The mandatory staging write suite now uses Ukrainian for the synthetic enquiry a
 Public pages on the configured staging `workers.dev` host now receive `X-Robots-Tag: noindex, nofollow`, including cached responses. Production remains indexable. No DNS, Access or paid infrastructure changes are required.
 
 Staging browser rendering checks passed for Home/About × UK/EN/AR/RU × 1440/768/390/320 px (32 pages): images decode, disclosure remains, Arabic is RTL, canonical/hreflang exist, no overflow or JavaScript errors, and no Vimeo requests before Play. The privacy hash is retained on click. The Vimeo player endpoint independently returned HTTP 200 with a 50-second video configuration; audible playback was not claimed. Browser transport used TLS-verified Node fetch responses under their original URLs because Chromium did not trust the environment proxy certificate. This validates rendering with live responses, not an unmodified browser network path.
+
+
+## Review-hardening release candidate — 2026-11-15
+
+Source changes are on `fix/review-reliability-hardening`, not yet deployed. Local evidence: 25 Worker tests, 13 frontend tests, SQL migration preservation checks, both Worker dry-run bundles, native workerd HTMLRewriter/D1 checks, and 84 responsive browser page checks plus retry/inbox/editor flows. Browser APIs are mocked; this does not establish live email delivery or owner login. The current main staging-noindex fix was merged and retained.
+
+Release blocker: Cloudflare API credentials are present, but staging `CF_ACCESS_CLIENT_ID` / `CF_ACCESS_CLIENT_SECRET` are unavailable. GitHub's Actions secrets endpoint returns HTTP 403 for the integration. No Access policies, credentials, production resources or DNS were changed; mandatory staging write verification must not be bypassed. An authorized repository owner must make the existing staging Access credentials available to the controlled pipeline before promotion.
+
+The build uses neutral brand panels until genuine portraits/stills are supplied. Four-language privacy copy describes the implemented processors and manual six-month retention review. Existing published CMS content takes precedence over source defaults: review/publish the updated privacy notice through owner admin during the verified rollout rather than overwriting owner revisions with a migration. No enquiry deletion was performed.

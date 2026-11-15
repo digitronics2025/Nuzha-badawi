@@ -52,3 +52,8 @@ The recommended design—subject to authorized codebase and vendor inspection—
 D1 supports immutable content revisions and persisted enquiries; R2 only if admin-uploaded photos need object storage. Use approved Cloudflare Custom Domains (not unreviewed Workers routes), static assets on edge, explicit published HTML cache strategy/invalidation or an intentional rebuild-on-publish flow. Isolated staging bindings, secrets, noindex preview, controlled form anti-spam, privacy-safe logs and verified rollback. Avoid unnecessary KV, cron, DO, Queues, AI, Stream and extra Workers. Cloudflare email sending and confirmed mailbox availability require vendor/pricing/ownership verification: Email Routing is not automatically an outbound transactional provider.
 
 Full configuration, approval gates, resource matrix, DNS, SSL, GitHub Builds, staging, migration, cost controls and recovery procedures are in [CLOUDFLARE_DEPLOYMENT.md](CLOUDFLARE_DEPLOYMENT.md) and [updated execution plan](PLAN-nusya-multilingual-studio.md). No cloud resources are known to have been created; user must approve actual infrastructure changes separately from UI design.
+
+
+## Review hardening — 2026-11-15
+
+The implemented stack is Python static generation plus dependency-free browser JavaScript, with separate public/admin Cloudflare Workers. Dynamic public HTML strips static conditional validators and uses a host-scoped versioned 90-second edge cache. Canonical redirects normalize encoded and index.html paths before CMS routing. Every public response receives security headers; staging remains noindex. No framework migration is planned.

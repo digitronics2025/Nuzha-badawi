@@ -48,3 +48,8 @@ When deployed, visitor routes should use `https://nozha-badavi.com/{en|ar|ru}/..
 The homepage is now arranged as H01 portrait-led hero, H02 evidence strip, H03 prominent user-controlled Vimeo intro, H04 English/Russian/Arabic lessons, H05 professional coaching, H06 translation and interpretation, H07 human biography, H08 consented reviews/FAQs, H09 closing conversion section. Mobile starts with headline and primary CTA before portrait/video; screen reader focus and logical URL semantics are preserved.
 
 Motion uses one-off, unobtrusive reveals and minimal hover feedback; the gold plane/path never loops, video never starts without user action, navigation transitions progressively enhance native links and conditional forms preserve focus. See `design.md` M01–M16 and `docs/PLAN-nusya-multilingual-studio.md` V01–V12 for the implementation acceptance contract. Nothing in this document approves a UI build before the mandatory mockup STOP.
+
+
+## Review hardening — 2026-11-15
+
+Approved review fixes: enquiry details are readable in admin; publication history includes revision previews; all four translation states are visible. An ambiguous submission freezes the original payload/identity for retry and offers an explicit new-request action. Field errors are associated with affected inputs. Vimeo fallback remains reachable after loading. Lesson links preselect their requested language. Neutral studio artwork is the fallback until genuine media are supplied.

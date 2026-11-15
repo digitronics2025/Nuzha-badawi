@@ -42,3 +42,8 @@ The domain `nozha-badavi.com` is visibly registered, but **no D1/R2 resources or
 ## Implemented locale storage update — 2026-11-15
 
 `cms_revisions`, `cms_state` and `enquiries` support website UI locales `uk` (default), `en`, `ar`, `ru` after migration `0002_ukrainian_locale.sql`. This adds a website interface language; offered lesson languages remain English, Russian and Arabic. The migration preserves rows, IDs, foreign keys, indexes and autoincrement sequences. Test upgrades against existing linked records; apply to isolated staging before production and record a D1 Time Travel restore point.
+
+
+## Review hardening — 2026-11-15
+
+No new migration is required by review hardening. Tests apply every migration. cms_state.source_revision_seen now records the English draft revision approved by a translation reviewer; publishing checks it atomically against the source. Translation edits require a new explicit review. Existing published translations stay public until replaced. Rollback eligibility requires a prior publish audit event and currently approved media.

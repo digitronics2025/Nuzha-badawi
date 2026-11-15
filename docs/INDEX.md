@@ -2,7 +2,7 @@
 
 > **Production:** [PRODUCTION.md](PRODUCTION.md) — live inventory, verification evidence, owner checklist, deploy/rollback.
 
-**Purpose:** keep product intent, approved design, factual content, technical decisions, AI guidance and operations synchronized. **As of initial documentation bootstrap, the repository is empty of application code**; technical files are specifications, not claims of implemented components.
+**Purpose:** keep product intent, approved design, factual content, technical decisions, AI guidance and operations synchronized. **Current implementation:** 28 public pages across UK/EN/AR/RU, Python static generation, separate public/admin Workers, D1 CMS/enquiries, R2 media, Access authentication and Turnstile. Use README for commands and PRODUCTION for deployment evidence; historical planning sections below are not live inventory.
 
 ## Start here
 | Document | Authority / subject |
@@ -31,7 +31,7 @@
 - Existing actual code, once added, is evidence of implementation, NOT automatic approval of unreviewed behavior or content.
 - Proposed architecture does not imply any Cloudflare Worker, D1, R2, KV, domain or environment already exists.
 - Source data must be approved before publication; see `SOURCES.md`. Never invent external metrics or credentials.
-- Exactly three public locales: English, Arabic, Russian; no Korean.
+- Exactly four public locales: Ukrainian (default), English, Arabic, Russian; no Korean.
 - Any material change to scope, design, schema, security, deployment or workflows updates its canonical doc and records an ADR-style entry in `DECISIONS.md`.
 - No new separate 'source of truth' files that conflict with established docs; link instead.
 - Preserve user assets securely; do not put unapproved CV/contact data or images in public GitHub.

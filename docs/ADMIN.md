@@ -40,3 +40,8 @@ Plan `https://admin.nozha-badavi.com` on an independently protected admin Worker
 
 ## Visual interaction contract (final proposed direction)
 The admin shares the NUSYA ivory/espresso identity but operates as a calm, functional utility rather than a cinematic marketing page. Responsive desktop sidebar ~240–260px; mobile stacked attention queue; real-only New Enquiries, Translation Review, Last Published, Site Status. Structured page editor shows EN/AR/RU review state and explicit Saved Draft, Preview, Published, conflict and rollback controls. Never animate counters/tables, fake metrics or destructive confirmations. Functional feedback <=220ms, no heavy transition dependencies. Include admin desktop/mobile overview, editor, error/empty/success in V08–V09 high-fidelity mockups, with approval before implementation. See `design.md` and the updated v3 plan.
+
+
+## Review hardening — 2026-11-15
+
+The inbox exposes customer messages, service details, reply links and event history through authenticated detail requests. UK is included in translation status. Page changes, navigation and unload protect unsaved edits; overlapping loads discard stale responses and disable heading fields while loading. History lists author/date/publication eligibility with protected revision previews and restore confirmation. Drafts cannot be restored as published revisions.

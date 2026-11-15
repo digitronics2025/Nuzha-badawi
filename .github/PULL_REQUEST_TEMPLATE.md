@@ -6,10 +6,10 @@ Describe the objective and exact affected pages/modules.
 - [ ] Actual repository UI/stack inspected; no unverified assumptions.
 - [ ] If any UI changed, high-fidelity desktop/mobile + Arabic RTL mockups were explicitly approved **before** implementation (link approval).
 - [ ] No production deployment, paid service, irreversible operation or external-account change without required separate approval.
-- [ ] No Korean content/services, no fourth public locale.
+- [ ] No Korean content/services, exactly UK/EN/AR/RU website locales.
 
 ## Accuracy and safety
-- [ ] EN, AR RTL, RU translations/content and SEO reviewed.
+- [ ] UK, EN, AR RTL, RU translations/content and SEO reviewed.
 - [ ] Public claims/media/contact/testimonials approved against `docs/SOURCES.md`.
 - [ ] No secrets, private CV details, customer PII or draft content exposed.
 - [ ] Preply flow compliant; Vimeo hash/fallback intact.
@@ -33,5 +33,5 @@ Describe the objective and exact affected pages/modules.
 - [ ] If relevant, confirm `nozha-badavi.com` is a **registered domain**, not assume a live website.
 - [ ] Consult `docs/CLOUDFLARE_DEPLOYMENT.md` for public/admin Worker isolation, Custom Domains and safe previews.
 - [ ] Production DNS, Workers, D1/R2, Access and email actions have **separate explicit authorization** before changes.
-- [ ] Apex, www redirect, admin protection, three locales, TLS, cache coherency, Vimeo, form/email failure and rollback validated where applicable.
+- [ ] Apex, www redirect, admin protection, four locales, TLS, cache coherency, Vimeo, form/email failure and rollback validated where applicable.
 - [ ] Costs and quotas evaluated; no unnecessary Workers, KV, Queues, Cron, AI or paid APIs.

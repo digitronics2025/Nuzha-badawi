@@ -131,14 +131,14 @@ export default {
     "privacy": {
       "fields": {
         "privacy_title": "Конфіденційність і захист даних",
-        "privacy_desc": "Затверджену політику конфіденційності буде додано до публічного запуску.",
-        "privacy_body": "Перед публічним запуском потрібна затверджена політика конфіденційності. Після активації форми дані можуть оброблятися для відповіді на запити. Остаточний текст має описувати зібрані дані, обробників, строки зберігання та права осіб.",
+        "privacy_desc": "Як NUSYA обробляє вашу інформацію.",
+        "privacy_body": "NUSYA Linguistic Studio (Нозха Бадаві) використовує надані ім’я, електронну адресу, повідомлення, побажання щодо послуги й дати, щоб розглянути запит і відповісти. Не надсилайте документи, фінансові чи інші чутливі дані. Cloudflare забезпечує хостинг, базу даних, перевірку безпеки та доставку сповіщень. Сповіщення власниці може містити ваш запит. Для захисту від зловживань використовується хеш IP з ключем; тимчасові лічильники очищуються автоматично. Vimeo отримує з’єднання лише після вашого вибору завантажити відео. Ми не продаємо дані запитів. Запити переглядаються щонайменше раз на шість місяців і видаляються, коли більше не потрібні, з урахуванням поточних послуг та правових вимог. Це ручний перегляд, а не автоматичне видалення. Для доступу, виправлення, видалення або питань пишіть contact@tenten.ma. Для захисту даних може знадобитися перевірка запиту. Застосовні права залежать від вашого місцезнаходження.",
         "title": "Конфіденційність і захист даних",
-        "description": "Затверджену політику конфіденційності буде додано до публічного запуску."
+        "description": "Як NUSYA обробляє вашу інформацію."
       },
       "seo": {
         "title": "Конфіденційність і захист даних",
-        "description": "Затверджену політику конфіденційності буде додано до публічного запуску."
+        "description": "Як NUSYA обробляє вашу інформацію."
       },
       "media": {}
     }
@@ -274,14 +274,14 @@ export default {
     "privacy": {
       "fields": {
         "privacy_title": "Privacy and data protection",
-        "privacy_desc": "An approved legal privacy notice will be provided before the public launch.",
-        "privacy_body": "This page needs an approved privacy notice before public launch. When the contact service is enabled, enquiry data may be processed to respond to requests. The final notice must specify collected data, processors, retention and individual rights.",
+        "privacy_desc": "How NUSYA handles your information.",
+        "privacy_body": "NUSYA Linguistic Studio (Nozha Badavi) uses the name, email address, message, service preferences and dates you submit to assess and answer your enquiry. Do not include identity documents, financial information or other sensitive material. Cloudflare provides hosting, database storage, security verification and notification delivery. An owner notification may contain your enquiry. A keyed IP hash is used for abuse protection; temporary rate-limit buckets are cleaned automatically. Vimeo is contacted only when you choose to load the introduction video. We do not sell enquiry data. Enquiries are reviewed at least every six months and removed when no longer needed, subject to ongoing service or legal requirements; this review is manual, not automatic deletion. To request access, correction or deletion, or ask about processing, contact contact@tenten.ma. We may ask for information needed to verify your request. Applicable rights depend on your location.",
         "title": "Privacy and data protection",
-        "description": "An approved legal privacy notice will be provided before the public launch."
+        "description": "How NUSYA handles your information."
       },
       "seo": {
         "title": "Privacy and data protection",
-        "description": "An approved legal privacy notice will be provided before the public launch."
+        "description": "How NUSYA handles your information."
       },
       "media": {}
     }
@@ -417,14 +417,14 @@ export default {
     "privacy": {
       "fields": {
         "privacy_title": "الخصوصية وحماية البيانات",
-        "privacy_desc": "ستضاف سياسة الخصوصية القانونية المعتمدة قبل الإطلاق العام.",
-        "privacy_body": "تحتاج هذه الصفحة إلى سياسة خصوصية معتمدة قبل الإطلاق العام. عند تفعيل خدمة الطلبات، قد تُعالج البيانات للرد عليها. يجب أن توضّح السياسة النهائية البيانات المجمّعة والجهات المعالجة ومدد الاحتفاظ والحقوق.",
+        "privacy_desc": "كيف تتعامل NUSYA مع معلوماتك.",
+        "privacy_body": "تستخدم NUSYA Linguistic Studio (نزهة بدوي) الاسم والبريد الإلكتروني والرسالة وتفضيلات الخدمة والتواريخ التي تقدمها لدراسة طلبك والرد عليه. لا ترسل وثائق هوية أو معلومات مالية أو بيانات حساسة. توفر Cloudflare الاستضافة وقاعدة البيانات والتحقق الأمني وتسليم الإشعارات. قد يتضمن إشعار المالكة محتوى طلبك. تُستخدم بصمة مشفرة لعنوان IP للحماية من إساءة الاستخدام وتُنظف عدادات التقييد المؤقتة تلقائياً. لا يتم الاتصال بـ Vimeo إلا عند اختيار تحميل الفيديو. لا نبيع بيانات الطلبات. تُراجع الطلبات كل ستة أشهر على الأقل وتُحذف عندما لا تعود مطلوبة مع مراعاة الخدمات الجارية والمتطلبات القانونية. المراجعة يدوية وليست حذفاً تلقائياً. لطلب الوصول أو التصحيح أو الحذف أو الاستفسار تواصل عبر contact@tenten.ma. قد نطلب التحقق من الطلب لحماية بياناتك. تعتمد الحقوق المطبقة على موقعك.",
         "title": "الخصوصية وحماية البيانات",
-        "description": "ستضاف سياسة الخصوصية القانونية المعتمدة قبل الإطلاق العام."
+        "description": "كيف تتعامل NUSYA مع معلوماتك."
       },
       "seo": {
         "title": "الخصوصية وحماية البيانات",
-        "description": "ستضاف سياسة الخصوصية القانونية المعتمدة قبل الإطلاق العام."
+        "description": "كيف تتعامل NUSYA مع معلوماتك."
       },
       "media": {}
     }
@@ -560,14 +560,14 @@ export default {
     "privacy": {
       "fields": {
         "privacy_title": "Конфиденциальность и защита данных",
-        "privacy_desc": "Согласованная юридическая политика конфиденциальности появится до публичного запуска.",
-        "privacy_body": "Перед публичным запуском здесь должна быть размещена согласованная политика конфиденциальности. После включения формы данные могут обрабатываться для ответа на запросы. Окончательная политика должна описывать данные, обработчиков, сроки хранения и права пользователей.",
+        "privacy_desc": "Как NUSYA обрабатывает ваши данные.",
+        "privacy_body": "NUSYA Linguistic Studio (Нузя Бадави) использует переданные имя, электронную почту, сообщение, пожелания об услуге и даты для рассмотрения запроса и ответа. Не отправляйте документы, финансовую или иную чувствительную информацию. Cloudflare обеспечивает хостинг, базу данных, проверку безопасности и доставку уведомлений. Уведомление владельцу может содержать ваш запрос. Для защиты от злоупотреблений используется хеш IP с ключом; временные счётчики очищаются автоматически. Соединение с Vimeo устанавливается только после выбора загрузить видео. Мы не продаём данные запросов. Запросы проверяются не реже раза в шесть месяцев и удаляются, когда больше не нужны, с учётом текущих услуг и правовых требований. Это ручная проверка, а не автоматическое удаление. Для доступа, исправления, удаления или вопросов пишите contact@tenten.ma. Для защиты данных может потребоваться проверка запроса. Применимые права зависят от вашего местонахождения.",
         "title": "Конфиденциальность и защита данных",
-        "description": "Согласованная юридическая политика конфиденциальности появится до публичного запуска."
+        "description": "Как NUSYA обрабатывает ваши данные."
       },
       "seo": {
         "title": "Конфиденциальность и защита данных",
-        "description": "Согласованная юридическая политика конфиденциальности появится до публичного запуска."
+        "description": "Как NUSYA обрабатывает ваши данные."
       },
       "media": {}
     }

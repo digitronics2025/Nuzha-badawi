@@ -73,3 +73,8 @@ All new services default to `acceptingRequests=false` until Nozha approves curre
 - Email via Cloudflare Email Service is optional and destination-restricted. The outbox remains durable even if sending is not configured or fails. No false `sent` status.
 - A cron retry is optional and disabled by default; avoid unnecessary polling/Queues/KV/AI.
 - Actual Cloudflare usage, accessibility, Vimeo ownership and live domain must be tested **after separate authorization and deployment**.
+
+
+## Review hardening — 2026-11-15
+
+Review changes: page GET includes fieldSchema (maxLength/multiline); revision list includes published eligibility; /preview/:locale/:page/?revision=:id renders an authenticated page-owned historical revision. Preview media uses /api/v1/admin/media/:id. Translated drafts require POST review before publish; publishing also validates the reviewed English source revision. Rollback returns PUBLICATION_REQUIRED for never-published revisions and rechecks media approval. Public page aliases redirect 308 to canonical routes with queries preserved. Dynamic HTML does not issue template ETags.

@@ -83,3 +83,8 @@ Before publishing, reconcile any D1 CMS overrides with source-derived fallback c
 | --- | --- | --- | --- | --- |
 | D-023 | 2026-11-15 | Publish the CV-based biography covered by D-022 | User approved | In the deployment chat the user explicitly answered “Yes, approved for publication” to the specific D-022 biography approval question. Supersedes the pending publication gate; no new biography claims or private contact details added. |
 | D-024 | 2026-11-15 | Complete staging then production deployment through existing safeguards; use Ukrainian as default and verify UK/EN/AR/RU and binary WebP assets | User requested | Deployment-completion instruction authorizes routine fixes, merging and deployment; preserve CMS overrides, production data, Access and rollback. Missing deployment credentials must fail preflight, never silently report success. |
+
+
+## Review hardening — 2026-11-15
+
+Review-hardening decision: keep the existing lightweight stack; use explicit content field metadata shared with admin, remove template ETags from CMS HTML, normalize page aliases, centralize response security, require translation source review, and restrict rollback to published audited revisions. Implement approved owner workflows and immutable enquiry retries. Use neutral studio artwork and factual four-language privacy text. Integrate main’s staging noindex fix. No production promotion until mandatory staging Access credentials permit full write verification.
