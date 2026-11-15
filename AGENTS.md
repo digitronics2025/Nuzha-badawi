@@ -48,3 +48,10 @@ Direct user instructions and safety requirements take precedence. For repository
 
 ## Final visual/motion contract — must read before any UI work
 `design.md` and `docs/PLAN-nusya-multilingual-studio.md` now define the *Cinematic Editorial Luxury / Art of Connection* aesthetic, real human-centered imagery, precise animation token system M01–M16, page artboards V01–V12, Arabic RTL/Russian mobile typography, reduced-motion/low-end fallback and performance targets. This is a **chosen design brief, not visual implementation approval**. Generate high-fidelity full-page mockups plus inspectable motion storyboard, show the user and **STOP until explicit design approval**. Do not introduce heavyweight animation frameworks or continuous scroll animations; accessibility and cost take priority over decoration.
+
+
+## Current deployment task scope — 2026-11-15
+
+The user's deployment-completion instruction explicitly requests preserving and verifying the existing `nozha-portrait-optimized.webp` and `nusya-introduction-cover-optimized.webp`, retaining the AI-generated portrait disclosure and CMS image overrides. For these two existing fallback illustration assets only, this supersedes the earlier authentic-photographs-only restriction (D-031). Do not describe the illustrated person as an authentic photograph or proof of Nozha's appearance. Retain the localized disclosure; consent requirements for future genuine photos remain in force.
+
+The user also explicitly requires completed Codex reviews before further release merges/promotion (D-032). Resolve actual findings, confirm the reviewed head, and retain mandatory staging writes, deployment credentials, production backup and rollback gates. Technical regression repairs are authorized by the current task; this does not authorize a new visual redesign.
