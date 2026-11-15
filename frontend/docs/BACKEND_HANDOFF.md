@@ -1,41 +1,37 @@
-# Backend agent: complete the operational NUSYA platform
+# NUSYA Backend Integration and Ownership Handoff
 
-## Objective
+**Status 2026-11-15:** Public and private Worker backend source is now implemented in `../../workers/`, with local SQLite/D1-compatible integration tests. **Nothing is deployed.** This document supersedes the original frontend-only handoff.
 
-Connect the already-designed and tested frontend to secure, durable Cloudflare services **without redesigning its layout or replacing its locale content model**. Review repo instructions (`AGENTS.md`, `CLAUDE.md`, `design.md`, `docs/PLAN-nusya-multilingual-studio.md`), then inspect `frontend/README.md`, `frontend/types/api.d.ts`, and generated frontend routes. Do not assume Cloudflare resources already exist; registered domain `nozha-badavi.com` is not proof of deployment.
+## Components and authoritative APIs
 
-## Hard boundaries
+- `../../workers/public/src/index.js`: localized HTML publishing, public site configuration, protected enquiry submission and approved media retrieval.
+- `../../workers/admin/src/index.js`: Cloudflare Access identity verification, owner/editor authorisation, CMS drafts/review/publish/rollback, service/video/settings, enquiry inbox and media approvals.
+- `../../workers/migrations/0001_initial.sql`: versioned D1 schema for content, enquiries, outbox, audit, media and rate-limit buckets.
+- `../../workers/shared/*`: validation, identity, rendering, persistence and notifications.
+- `../../workers/docs/WORKER_API.md`: exact implemented endpoints and response semantics; this replaces the aspirational endpoints below the original frontend plan.
+- `../types/api.d.ts`: frontend request/response types. Match this schema; no uncontrolled backend changes to page URLs or design.
 
-- Public: `https://nozha-badavi.com`, localized paths `/en/`, `/ar/`, `/ru/`.
-- Admin: **separate** `https://admin.nozha-badavi.com` Worker behind Access + verified application roles; never ship the current static admin preview on an unprotected public host.
-- Backend owns Worker APIs, D1 migrations and query/index design, auth, role enforcement, revisioned CMS, durable enquiries, email/notification delivery, optional R2 for approved media, cache coherency, backup and rollback.
-- Frontend owns visual composition, responsive breakpoints, content presentation and form UI. Keep the existing frontend stable and typed API contracts backwards-compatible.
-- Production/domain/DNS/billing changes require specific authorization. The frontend implementation alone is not a deployment approval.
+## Operational boundaries
 
-## Public API
+Public `nozha-badavi.com` and private `admin.nozha-badavi.com` must be separate Workers, with the admin domain protected by Access **and** independent signed-JWT role checks. Never expose `dist-admin` via the public Worker or unprotected preview URLs.
 
-`POST /api/v1/enquiries` accepts JSON `EnquiryRequest` and returns **HTTP 201** with `EnquiryAccepted` only *after* persistence succeeds. Accept a stable UUID idempotency key, prevent duplicates, validate same-origin content type, enforce bounded size and schema, service availability and permitted directed translation language pairs. Validate Turnstile on server if configured. Apply per-IP/account limits, ensure proper privacy notices and store minimum personal data. Return `ApiError` with meaningful status 400/403/429/500/503; avoid HTML error bodies. If email delivery fails, retain the enquiry and retry idempotently via an outbox. Do not falsely claim notification sent.
+Enquiry submission requires a valid Turnstile token, same-origin request, approved visible service, enabled request acceptance, approved directed language pair where relevant, and bounded rate limits. HTTP 201 is returned only after durable D1 persistence. Email is a separate outbox operation; no false 'sent' confirmations.
 
-## Private admin API
+All services initially have `acceptingRequests=false` and translation pairs are empty. No new customer should be allowed to send an unsupported service request until Nozha approves the actual services and site settings. Existing Preply students must remain within allowed booking rules.
 
-- `GET /api/v1/admin/me`: active authenticated identity and role.
-- `GET /api/v1/admin/pages`: content list, filters, draft/published and EN/AR/RU review states.
-- `GET /api/v1/admin/pages/:key`, `PUT /api/v1/admin/pages/:key`: structured content, optimistic revision control and validation.
-- `POST /api/v1/admin/pages/:key/preview`: private noindex/no-store preview.
-- `POST /api/v1/admin/pages/:key/publish`: atomic publish, cache refresh, verification, immutable revision.
-- `POST /api/v1/admin/pages/:key/rollback`: restore known-good published revision.
-- `GET /api/v1/admin/enquiries?limit=20&cursor=...`, `PATCH /api/v1/admin/enquiries/:reference`: authenticated, paginated inbox and audited statuses.
-- `GET/PUT /api/v1/admin/settings`: approved business contacts, service availability, video and external profile links.
-- `POST /api/v1/admin/media`: only if approved; size/MIME/license validation, private R2 storage and controlled public derivatives.
+Admin changes are versioned, with optimistic concurrency and locale review. The published version is reflected in public HTML through a tested 90-second cache contract. Actual Cloudflare HTMLRewriter, Access gateway and Cache API behavior **still require authorized staging tests**.
 
-## Publishing mechanism
+## Verification
 
-Current public content is prerendered. Decide deliberately between **authenticated build-on-publish** (simple static approach) and **published-only server rendering with verified edge caching**. D1 edits cannot modify static HTML without a rebuild or runtime render. Implement draft, EN/AR/RU review flags, publish, preview, rollback and conflict handling. Do not cache private admin data. Protect production with real backup/recovery tests.
+Locally executed: frontend static build, 9 frontend tests, 14 Node/WebCrypto/SQLite Worker tests, D1 schema constraints, Chromium isolated EN/AR/RU responsive UI checks. Cloudflare account provisioning, real domain, paid email, TLS, real Vimeo playback and live customer delivery have **not** been tested or deployed.
 
-## Operational validation
+## Steps requiring production authorisation
 
-Test auth bypass, Access bypass via workers.dev, permission boundary, safe secrets, parameterized SQL, D1 index/quotas and pagination, data deletion, translated publish propagation, form retries, duplicate submissions, notification outage, Vimeo domain playback, Preply policy, GDPR/jurisdiction review, DNS/TLS/redirect, service-unavailable experience, keyboard/RTL/mobile and measured spending. Log actual evidence; no invented tests.
+1. Merge a reviewed full-platform PR and inspect the latest upstream state.
+2. Approve Cloudflare resource creation, verify account/zone and billing, and configure staging D1 (production isolation, rollback and backup).
+3. Configure the Cloudflare Access application and approved owner/editor addresses **before admin deployment**; disable workers.dev bypass.
+4. Configure Turnstile domain keys, and optionally sender/recipient-verified Email Service and consented R2 media.
+5. Owner approves the exact languages offered, directed translation pairs, authentic photographs/rights, biography, privacy terms and contact details.
+6. Verify both Workers over HTTPS in staging with test records, then obtain separate explicit production/DNS approval and conduct a live end-to-end smoke test.
 
-## Unimplemented by design
-
-No auth, Cloudflare Worker, D1, R2, notification service, CRM, real content publishing or production deployment exists in the frontend delivery. These responsibilities belong entirely to the backend agent.
+See `../../workers/docs/RELEASE_READINESS.md` for the complete gate checklist.
