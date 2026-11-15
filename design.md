@@ -1,5 +1,13 @@
 # NUSYA Design System & UX Contract
 
+## Editorial redesign execution — 2026-11-15
+
+The current chat explicitly authorized autonomous design selection and implementation (D-035), superseding the separate mockup-approval pause **for this task only**. Do not describe this as approval of individual artboards. The chosen direction, retained assets and motion limits below continue to apply. English admin controls with UK/EN/AR/RU content editing were explicitly selected (D-036).
+
+Reference designs, state/motion coverage, provenance, reproducible gallery generation and verification are recorded in [the editorial experience report](docs/reports/editorial-experience/README.md). The homepage now connects a four-service guide, three lesson-language cards, source-backed timeline and ordered enquiry process. Shared implementation tokens are in `frontend/src/assets/tokens.css`; fonts are self-hosted with unmodified OFL files and provenance. Gold remains decorative; small text uses measured ink colors. Existing optimized illustrations, localized disclosure, on-demand Vimeo hash and footer developer credit remain.
+
+The historical mockup gate below remains the default for future work; it is not a claim that current reference boards received individual sign-off.
+
 **Status:** proposed direction, **not yet approved as final mockups**. This file defines the design brief and acceptance rules; the future coding agent must render high-fidelity mockups and obtain explicit user approval **before UI implementation**.
 
 ## Brand strategy

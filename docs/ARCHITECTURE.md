@@ -1,5 +1,7 @@
 # Conditional Architecture & Integration Design
 
+**Current implementation clarification:** Python generation and dependency-free browser modules remain the production architecture. The editorial redesign adds shared self-hosted font/design tokens and content-versioned CSS/JS links; it does not adopt the historical candidate framework below. WOFF2 is bundled as binary alongside existing image/icon formats. Structured infographic fields extend the existing allowlist and JSON revision payloads, requiring no database migration. Public availability is rendered from validated settings and needs no additional configuration request when already projected by the Worker.
+
 **No implemented stack was present when docs were first created.** All technology references are recommendations subject to future codebase and vendor verification, not deployed resources.
 
 ## Design principles
@@ -56,4 +58,4 @@ Full configuration, approval gates, resource matrix, DNS, SSL, GitHub Builds, st
 
 ## Review hardening — 2026-11-15
 
-The implemented stack is Python static generation plus dependency-free browser JavaScript, with separate public/admin Cloudflare Workers. Dynamic public HTML strips static conditional validators and uses a host-scoped versioned 90-second edge cache. Canonical redirects normalize encoded and index.html paths before CMS routing. Every public response receives security headers; staging remains noindex. No framework migration is planned.
+The implemented stack is Python static generation plus dependency-free browser JavaScript, with separate public/admin Cloudflare Workers. Dynamic public HTML strips static conditional validators and uses a host-scoped versioned 90-second edge cache (editorial templates use cms-v4). Canonical redirects normalize encoded and index.html paths before CMS routing. Every public response receives security headers; staging remains noindex. No framework migration is planned.

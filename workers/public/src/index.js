@@ -85,7 +85,7 @@ async function servePublished(request,env,ctx){
   return publicSecurity(asset,env);
  }
  const cache=globalThis.caches?.default;
- const cacheKey=new Request(`https://${env.PUBLIC_HOST||new URL(request.url).hostname}/cms-v3`+new URL(request.url).pathname);
+ const cacheKey=new Request(`https://${env.PUBLIC_HOST||new URL(request.url).hostname}/cms-v4`+new URL(request.url).pathname);
  if(cache){const saved=await cache.match(cacheKey);if(saved)return publicSecurity(saved,env);}
  const assetHeaders=new Headers(request.headers);assetHeaders.delete('if-none-match');assetHeaders.delete('if-modified-since');
  const asset=await env.ASSETS.fetch(new Request(request,{headers:assetHeaders}));if(!asset.ok||!asset.headers.get('content-type')?.includes('text/html'))return publicSecurity(asset,env);

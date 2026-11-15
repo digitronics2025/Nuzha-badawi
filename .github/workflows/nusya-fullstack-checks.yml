@@ -69,6 +69,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nusya-experience-evidence
+          retention-days: 7
           path: |
             /tmp/nusya-design
             /tmp/nusya-verified

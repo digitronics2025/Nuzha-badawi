@@ -1,5 +1,13 @@
 # NUSYA Worker API — Implementation Contracts
 
+## Editorial interface additions
+
+- `GET /api/v1/admin/summary` adds `lastPublication: null | {pageKey, locale, revision, action: 'publish'|'rollback', occurredAt}` from successful audit records; no actor identity is returned in this summary.
+- Page `fieldSchema` adds English `label`, `group` and `editable` metadata alongside existing length/multiline bounds. Historical heading aliases remain accepted, but the editor hides duplicate aliases.
+- Translation review accepts an optional `sourceRevision` (integer or null). The new editor supplies the English draft revision it displayed; an atomic comparison rejects approval if that source changed. Existing callers without this additive field retain their contract.
+- UK/EN/AR/RU infographic fields use the existing bounded plain-text payload; absent historical fields retain static defaults. Existing owner revisions are never rewritten.
+- Localized missing-page documents return 404 and noindex. Server-rendered service status removes closed enquiry actions, while the API continues to validate availability and directed pairs independently.
+
 **Status:** Code implemented locally, integration tested. Cloudflare bindings, production domain, live authentication and email remain unconfigured.
 
 ## Public Worker

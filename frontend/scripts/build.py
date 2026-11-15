@@ -32,7 +32,8 @@ def asset(name):
 def arrow():
     return '<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19 19 5M5 5h14v14"/></svg>'
 def field(loc, key, tag='span', cls=''):
-    return f'<{tag} class="{cls}" data-nusya-field="{key}">{T(loc,key)}</{tag}>'
+    direction=' dir="ltr"' if tag=='bdi' else ''
+    return f'<{tag}{direction} class="{cls}" data-nusya-field="{key}">{T(loc,key)}</{tag}>'
 def availability(loc, service):
     return f'<span class="availability-status" data-nusya-status="{service}" data-open-label="{T(loc,"available")}" data-closed-label="{T(loc,"unavailable")}">{T(loc,"availability_pending")}</span>'
 def E(s):return html.escape(str(s),quote=True)
@@ -51,7 +52,7 @@ def wordmark(loc):
            f'<span class="brand-row"><span class="brand-script">Nusya</span>{small_globe()}</span><span class="brand-small">LINGUISTIC STUDIO</span></a>'
 def header(loc,page):
     c=COPY[loc];nav=''.join(f'<a class="nav-link {"is-current" if key==page else ""}" href="{U(loc,key)}" {"aria-current=page" if key==page else ""}>{E(c["nav"][i])}</a>' for i,key in enumerate(NAV_KEYS))
-    languages=''.join(f'<a class="lang-link {"active" if l==loc else ""}" lang="{l}" dir="{COPY[l]["dir"]}" href="{U(l,page if page!='404' else 'home')}" {"aria-current=page" if l==loc else ""}>{E(COPY[l]["name"])}</a>' for l in LOCALES)
+    languages=''.join(f'<a class="lang-link {"active" if l==loc else ""}" lang="{l}" dir="{COPY[l]["dir"]}" href="{U(l,page if page!="404" else "home")}" {"aria-current=page" if l==loc else ""}>{E(COPY[l]["name"])}</a>' for l in LOCALES)
     return f'''<a class="skip-link" href="#main">{T(loc,'jump')}</a><header class="site-header" id="top"><div class="header-inner wrap">{wordmark(loc)}<nav class="desktop-nav" aria-label="{T(loc,'menu')}">{nav}</nav><div class="header-right"><div class="language-select" aria-label="{T(loc,'language_label')}">{languages}</div><button class="menu-toggle" type="button" aria-controls="mobile-menu" aria-expanded="false" aria-label="{T(loc,'menu')}"><span></span><span></span><span></span></button></div></div><nav class="mobile-menu" id="mobile-menu" aria-label="{T(loc,'menu')}">{nav}<div class="mobile-langs">{languages}</div></nav></header>'''
 def footer(loc):
     c=COPY[loc]
@@ -86,20 +87,21 @@ def page_intro(loc,eyebrow,head,lead):
     return f'<section class="page-intro"><div class="wrap">{label(eyebrow)}<h1 class="display page-heading" data-nusya-field="title">{E(head)}</h1><p class="page-lead" data-nusya-field="description">{E(lead)}</p></div></section>'
 def cta_section(loc):
     c=COPY[loc]
-    return f'''<section class="closing-section wrap"><div class="closing-box"><div class="closing-decoration" aria-hidden="true">{small_globe()}</div>{label(c['closing_eyebrow'])}<h2 class="display" data-nusya-field="closing_title">{T(loc,'closing_title')}</h2><p data-nusya-field="closing_desc">{T(loc,'closing_desc')}</p><div class="button-row">{pill(c['lessons_cta'],U(loc,'lessons'),'light')}{pill(c['request_cta'],U(loc,'contact'),'outline-light')}</div></div></section>'''
+    return f'''<section class="closing-section wrap"><div class="closing-box"><div class="closing-decoration" aria-hidden="true">{small_globe()}</div>{label(c['closing_eyebrow'])}<h2 class="display" data-nusya-field="closing_title">{T(loc,'closing_title')}</h2><p data-nusya-field="closing_desc">{T(loc,'closing_desc')}</p><div class="button-row">{pill(c['lessons_cta'],U(loc,'lessons'),'light')}{pill(c['find_service_cta'],U(loc)+'#services','outline-light')}</div></div></section>'''
 def video_section(loc):
     c=COPY[loc]
-    return f'''<section class="video-section section-pad" data-nusya-video-section id="introduction"><div class="wrap video-grid"><div class="video-copy" data-reveal>{label(c['video_eyebrow'])}{title(loc,'video_title')}<p class="section-lead" data-nusya-field="video_desc">{T(loc,'video_desc')}</p><span class="fine-rule"></span><p class="quiet-aside">NUSYA · LINGUISTIC STUDIO</p></div><div class="video-poster" data-video data-vimeo="{VIMEO}" data-video-title="{T(loc,'video_play')}" data-video-error="{T(loc,'video_error')}"><div class="video-art"><img class="video-cover-image" src="/assets/nusya-introduction-cover-optimized.webp" width="896" height="504" alt="" loading="lazy" decoding="async" /><div class="video-editorial"><span class="eyebrow">{T(loc,'video_disclosure')}</span><p>{T(loc,'video_title')}</p></div></div><button type="button" class="video-play" aria-label="{T(loc,'video_play')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" fill="currentColor"/></svg></button><div class="video-caption">{T(loc,'video_play')}</div><a class="video-fallback" href="{VIMEO_PUBLIC}" target="_blank" rel="noopener noreferrer">{T(loc,'video_link')} {arrow()}</a><noscript><a class="video-noscript" href="{VIMEO_PUBLIC}" target="_blank" rel="noopener noreferrer">{T(loc,'video_static')}</a></noscript></div></div></section>'''
+    return f'''<section class="video-section section-pad" data-nusya-video-section id="introduction"><div class="wrap video-grid"><div class="video-copy" data-reveal>{label(c['video_eyebrow'])}{title(loc,'video_title')}<p class="section-lead" data-nusya-field="video_desc">{T(loc,'video_desc')}</p><span class="fine-rule"></span><p class="quiet-aside">NUSYA · LINGUISTIC STUDIO</p></div><div class="video-media"><div class="video-poster" data-video data-vimeo="{VIMEO}" data-video-title="{T(loc,'video_play')}" data-video-error="{T(loc,'video_error')}"><div class="video-art"><img class="video-cover-image" src="/assets/nusya-introduction-cover-optimized.webp" width="896" height="504" alt="" loading="lazy" decoding="async" /><div class="video-editorial"><span class="eyebrow">NUSYA</span><p>{T(loc,'video_title')}</p></div></div><button type="button" class="video-play" aria-label="{T(loc,'video_play')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" fill="currentColor"/></svg></button><div class="video-caption">{T(loc,'video_play')}</div><noscript><a class="video-noscript" href="{VIMEO_PUBLIC}" target="_blank" rel="noopener noreferrer">{T(loc,'video_static')}</a></noscript></div><a class="video-fallback" href="{VIMEO_PUBLIC}" target="_blank" rel="noopener noreferrer">{T(loc,'video_link')} {arrow()}</a><p class="video-origin" data-video-origin>{T(loc,'video_disclosure')}</p></div></div></section>'''
 
 def lesson_cards(loc,detail=False):
     c=COPY[loc];out=[]
     for i,key in enumerate(['english','russian','arabic']):
         desc_key=key+'_long' if detail else key+'_desc'
-        target=SOCIAL['preply'] if detail and key=='english' else U(loc,'contact')+'?service=lesson&language='+key
+        target=(SOCIAL['preply'] if key=='english' else U(loc,'contact')+'?service=lesson&language='+key) if detail else U(loc,'lessons')+'#'+key
+        enquiry_attrs=f'data-nusya-enquiry="{key}" hidden' if detail else ''
         text=c['preply_cta'] if detail and key=='english' else c['learn_more'] if not detail else c['lessons_cta']
         link_label=text+' — '+c[key]
         deco=['A·Z','А·Я','أ·ي'][i]
-        out.append(f'''<article class="lesson-card lang-{key}" data-nusya-service="{key}" data-reveal><div class="lesson-decor"><span class="lesson-index">0{i+1}</span><span aria-hidden="true" class="lesson-glyph">{deco}</span><div class="line-art" aria-hidden="true"></div></div><div class="lesson-card-body"><span class="mini-label">{T(loc,"language_label_short")} 0{i+1}</span><h3 class="card-heading" data-nusya-field="{key}">{E(c[key])}</h3><p data-nusya-field="{desc_key}">{E(c[desc_key])}</p>{availability(loc,key)}<a class="text-link" data-nusya-enquiry="{key}" aria-label="{E(link_label)}" hidden href="{E(target)}" {('target="_blank" rel="noopener noreferrer"' if detail and key=='english' else '')}>{E(text)}{arrow()}</a></div></article>''')
+        out.append(f'''<article id="{key}" class="lesson-card lang-{key}" data-nusya-service="{key}" data-reveal><div class="lesson-decor"><span class="lesson-index">0{i+1}</span><span aria-hidden="true" class="lesson-glyph">{deco}</span><div class="line-art" aria-hidden="true"></div></div><div class="lesson-card-body"><span class="mini-label">{T(loc,"language_label_short")} 0{i+1}</span><h3 class="card-heading" data-nusya-field="{key}">{E(c[key])}</h3><p data-nusya-field="{desc_key}">{E(c[desc_key])}</p>{availability(loc,key)}<a class="text-link" {enquiry_attrs} aria-label="{E(link_label)}" href="{E(target)}" {('target="_blank" rel="noopener noreferrer"' if detail and key=='english' else '')}>{E(text)}{arrow()}</a></div></article>''')
     return '<div class="lesson-grid">'+''.join(out)+'</div>'
 def service_cards(loc):
     c=COPY[loc]
@@ -107,7 +109,7 @@ def service_cards(loc):
     markup=[]
     for name,desc,icon,kind in items:
         icon_html='<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 7h16l8 8v26H12zM28 7v9h8M17 22h14M17 28h13M17 34h9"/></svg>' if icon=='file-text' else '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 26v-3a16 16 0 0 1 32 0v3M8 24h7v14H8a4 4 0 0 1-4-4v-6a4 4 0 0 1 4-4zM40 24h-7v14h7a4 4 0 0 0 4-4v-6a4 4 0 0 0-4-4z"/></svg>'
-        markup.append(f'<article class="service-card" data-nusya-service="{kind}" data-reveal><div class="service-icon">{icon_html}</div><div><h3 class="card-heading" data-nusya-field="{name}">{T(loc,name)}</h3><p data-nusya-field="{desc}">{T(loc,desc)}</p>{availability(loc,kind)}<a class="text-link" data-nusya-enquiry="{kind}" hidden href="{U(loc,"contact")}?service={kind}">{T(loc,"quote_cta")}{arrow()}</a></div></article>')
+        markup.append(f'<article id="{kind}" class="service-card" data-nusya-service="{kind}" data-reveal><div class="service-icon">{icon_html}</div><div><h3 class="card-heading" data-nusya-field="{name}">{T(loc,name)}</h3><p data-nusya-field="{desc}">{T(loc,desc)}</p>{availability(loc,kind)}<a class="text-link" data-nusya-enquiry="{kind}" hidden href="{U(loc,"contact")}?service={kind}">{T(loc,"quote_cta")}{arrow()}</a></div></article>')
     return '<div class="service-grid">'+''.join(markup)+'</div>'
 def service_guide(loc):
     c=COPY[loc]
@@ -123,7 +125,7 @@ def experience_timeline(loc, compact=False):
     items=[]
     for i in selected:
         head,body=c['journey'][i]
-        items.append(f'<li>{field(loc,f'journey_{i}_date','span','timeline-date')}{field(loc,f"journey_{i}_title","h3")}{field(loc,f"journey_{i}_body","p")}</li>')
+        items.append(f'<li>{field(loc,f"journey_{i}_date","bdi","timeline-date")}{field(loc,f"journey_{i}_title","h3")}{field(loc,f"journey_{i}_body","p")}</li>')
     return '<ol class="experience-timeline'+(' compact-timeline' if compact else '')+'">'+''.join(items)+'</ol>'
 
 def process_section(loc):
@@ -133,8 +135,8 @@ def process_section(loc):
 
 def home(loc):
     c=COPY[loc]
-    hero=f'''<section class="hero"><div class="wrap hero-grid"><div class="hero-copy">{label(c['eyebrow'])}<p class="hero-person">{T(loc,'person')}</p><h1 class="display hero-title" data-nusya-field="hero">{T(loc,'hero')}</h1><p class="hero-lead" data-nusya-field="hero_desc">{T(loc,'hero_desc')}</p><div class="button-row">{pill(c['lessons_cta'],U(loc,'lessons'))}{pill(c['request_cta'],U(loc,'contact'),'outline')}</div></div><div class="hero-visual">{portrait(loc)}<svg class="connection-route" viewBox="0 0 560 120" aria-hidden="true"><path d="M10 100C100 100 70 10 200 20S350 110 550 10"/><circle cx="550" cy="10" r="4"/></svg></div></div></section>'''
-    proof='<div class="wrap proof-grid">'+''.join(f'<div class="proof-item"><span class="proof-icon" aria-hidden="true">{small_globe()}</span><span data-nusya-field="proof_{i}">{T(loc,f'proof_{i}')}</span></div>' for i,item in enumerate(c['proof']))+'</div>'
+    hero=f'''<section class="hero"><div class="wrap hero-grid"><div class="hero-copy">{label(c['eyebrow'])}<p class="hero-person">{T(loc,'person')}</p><h1 class="display hero-title" data-nusya-field="hero">{T(loc,'hero')}</h1><p class="hero-lead" data-nusya-field="hero_desc">{T(loc,'hero_desc')}</p><div class="button-row">{pill(c['lessons_cta'],U(loc,'lessons'))}{pill(c['find_service_cta'],U(loc)+'#services','outline')}</div></div><div class="hero-visual">{portrait(loc)}<svg class="connection-route" viewBox="0 0 560 120" aria-hidden="true"><path d="M10 100C100 100 70 10 200 20S350 110 550 10"/><circle cx="550" cy="10" r="4"/></svg></div></div></section>'''
+    proof='<div class="wrap proof-grid">'+''.join(f'<div class="proof-item"><span class="proof-icon" aria-hidden="true">{small_globe()}</span><span data-nusya-field="proof_{i}">{T(loc,f"proof_{i}")}</span></div>' for i,item in enumerate(c['proof']))+'</div>'
     about=f'''<section class="section-pad about-section"><div class="wrap about-grid"><div class="about-copy">{label(c['history_label'])}{title(loc,'about_title')}<p class="section-lead" data-nusya-field="about_desc">{T(loc,'about_desc')}</p>{pill(c['history_link'],U(loc,'about'),'outline')}</div>{experience_timeline(loc,True)}</div></section>'''
     faqs=f'''<section class="section-pad faq-section"><div class="wrap faq-grid"><div>{label(c['faq_eyebrow'])}{title(loc,'faq_title')}</div><div class="faq-list">{''.join(f'<details><summary>{field(loc,f"faq_{i}_question")}<span aria-hidden="true" class="faq-plus">+</span></summary>{field(loc,f"faq_{i}_answer","p")}</details>' for i,(q,a) in enumerate(c['faq']))}</div></div></section>'''
     return hero+f'<section class="proof-section">{proof}</section>'+video_section(loc)+service_guide(loc)+about+process_section(loc)+faqs+cta_section(loc)

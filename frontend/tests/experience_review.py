@@ -22,8 +22,10 @@ with sync_playwright() as p:
  def audit(name):
   page.evaluate('document.fonts.ready')
   for y in range(0,page.evaluate('document.body.scrollHeight'),1000):page.evaluate('(y)=>scrollTo(0,y)',y)
-  page.evaluate('scrollTo(0,0)');page.wait_for_timeout(60)
+  page.evaluate("async()=>{await Promise.all([...document.images].map(img=>{img.loading='eager';return img.decode().catch(()=>null)}))}");page.evaluate('scrollTo(0,0)');page.wait_for_timeout(60)
   assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),name
+  broken=page.locator('img').evaluate_all('(els)=>els.filter(e=>!e.complete||!e.naturalWidth).map(e=>e.getAttribute("src"))')
+  assert not broken,(name,broken)
   page.add_script_tag(path=str(AXE))
   issues=page.evaluate("""async()=>{const result=await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}});return result.violations.map(v=>({id:v.id,impact:v.impact,help:v.help,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))}));}""")
   if issues:violations.append({'page':name,'issues':issues})
@@ -113,6 +115,12 @@ with sync_playwright() as p:
  fixture.failures[('GET','/api/v1/admin/me')]=(401,'AUTH_REQUIRED');page.goto('http://admin.test/');page.wait_for_function('document.querySelector(".status-chip").textContent.includes("Sign-in")')
  assert page.locator('#save-draft').is_disabled()
  fixture.failures.clear()
+ # A 720 CSS-pixel layout at 2x scale represents a 1440px window at 200% zoom.
+ zoom=browser.new_context(viewport={'width':720,'height':500},device_scale_factor=2,reduced_motion='reduce');zoom.route('**/*',fixture.serve);zoom_page=zoom.new_page()
+ for locale in ['uk','ar','ru']:
+  for route in ['', 'contact/']:
+   zoom_page.goto(f'http://public.test/{locale}/{route}');assert not zoom_page.evaluate('document.documentElement.scrollWidth>innerWidth');assert zoom_page.locator('h1').is_visible()
+ fixture.role='owner';zoom_page.goto('http://admin.test/');zoom_page.wait_for_function('document.querySelector(".demo-banner").textContent.includes("OWNER")');zoom_page.get_by_role('button',name='Toggle admin navigation').click();zoom_page.locator('[data-view=pages]').click();zoom_page.wait_for_function('!document.querySelector("#hero-title").disabled');assert not zoom_page.evaluate('document.documentElement.scrollWidth>innerWidth');zoom.close()
  # JavaScript-free content and dynamic reduced-motion changes.
  nojs=browser.new_context(java_script_enabled=False,viewport={'width':320,'height':900});nojs.route('**/*',fixture.serve);static=nojs.new_page();static.goto('http://public.test/ar/')
  assert static.locator('h1').is_visible();assert static.locator('.guide-card').first.is_visible();assert static.locator('.experience-timeline').is_visible();nojs.close()

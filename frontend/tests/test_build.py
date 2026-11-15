@@ -144,7 +144,7 @@ class FrontendBuildTests(unittest.TestCase):
         for locale in LOCALES:
             error=(DIST/locale/'404.html').read_text()
             self.assertIn(f'lang="{locale}"',error)
-            self.assertIn('name="robots" content="noindex"',error)
+            self.assertIn('name="robots" content="noindex',error)
             home=(DIST/locale/'index.html').read_text()
             self.assertIn('class="guide-grid"',home)
             self.assertIn('class="experience-timeline compact-timeline"',home)

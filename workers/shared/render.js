@@ -19,7 +19,8 @@ export function renderPublished(htmlResponse,payload={},settings={},opts={}){
    const safe=id.replace(/[^a-z0-9_-]/gi,'');el.setAttribute('data-image-id',safe);el.setAttribute('aria-label',({uk:'Портрет Нозхи Бадаві',en:'Portrait of Nozha Badavi',ar:'صورة نزهة بدوي',ru:'Портрет Нузи Бадави'})[opts.locale] || 'Portrait of Nozha Badavi');
    el.append(`<img class="managed-portrait" alt="" loading="lazy" src="${opts.mediaBase||'/media/'}${safe}" />`,{html:true});
  }}});
- rewriter=rewriter.on('[data-video] .video-art',{element(el){const id=settings.video?.posterMediaId;if(id&&/^[a-z0-9_-]{10,80}$/i.test(id))el.setInnerContent(`<img class="video-cover-image" alt="" src="${opts.mediaBase||'/media/'}${id}" />`,{html:true});}});
+ rewriter=rewriter.on('[data-video-origin]',{element(el){if(settings.video?.posterMediaId)el.remove();}});
+ rewriter=rewriter.on('[data-video] .video-art',{element(el){const id=settings.video?.posterMediaId;if(id&&/^[a-z0-9_-]{10,80}$/i.test(id))el.setInnerContent(`<img class="video-cover-image managed-video-cover" alt="" src="${opts.mediaBase||'/media/'}${id}" />`,{html:true});}});
  rewriter=rewriter.on('a[data-nusya-link]',{element(el){const value=settings.links?.[el.getAttribute('data-nusya-link')];if(value){el.setAttribute('href',value);el.removeAttribute('hidden');}else if(value==='')el.remove();}});
  rewriter=rewriter.on('[data-nusya-contact]',{element(el){const kind=el.getAttribute('data-nusya-contact'),value=settings.contact?.[kind];if(value){el.removeAttribute('hidden');el.setAttribute('dir','ltr');el.setInnerContent(value);el.setAttribute('href',(kind==='email'?'mailto:':'tel:')+encodeURIComponent(value));}}});
  // HTMLRewriter escapes attribute quotes, but preserves ampersands/entity syntax.

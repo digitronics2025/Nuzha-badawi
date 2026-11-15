@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MockD1} from './mock-db.mjs';
-import {counts} from '../shared/store.js';
+import {counts,insertDraft,markReviewed,state} from '../shared/store.js';
 import {fieldSchema} from '../shared/content-schema.js';
 import defaults from '../shared/defaults.js';
 import {validatePagePayload} from '../shared/validation.js';
@@ -34,4 +34,17 @@ test('infographic fields remain bounded, localized and compatible with partial h
   assert.equal(defaults[locale].home.fields.hero.length>0,true);
   assert.throws(()=>validatePagePayload('home',locale,{fields:{journey_3_date:'x'.repeat(61)}}));
  }
+});
+
+test('translation review rejects an English source changed after the reviewer opened it',async()=>{
+ const db=new MockD1();
+ try{
+  const first=await insertDraft(db,'home','en',{fields:{hero:'First source'}},'owner',null);
+  const uk=await insertDraft(db,'home','uk',{fields:{hero:'Переклад'}},'owner',null);
+  const next=await insertDraft(db,'home','en',{fields:{hero:'Changed source'}},'owner',first);
+  await assert.rejects(()=>markReviewed(db,'home','uk',uk,'reviewer',first),error=>error.code==='EDIT_CONFLICT');
+  assert.equal((await state(db,'home','uk')).review_status,'needs_review');
+  await markReviewed(db,'home','uk',uk,'reviewer',next);
+  assert.equal((await state(db,'home','uk')).source_revision_seen,next);
+ }finally{db.close();}
 });

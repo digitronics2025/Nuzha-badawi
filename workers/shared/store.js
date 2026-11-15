@@ -47,9 +47,9 @@ export async function rollBack(db,key,loc,toRevision,actor){
  await audit(db,actor,'rollback',`${key}:${loc}`,toRevision);
  return {revision:toRevision,publishedAt:now()};
 }
-export async function markReviewed(db,key,loc,expectedDraft,actor){
- const r=await db.prepare("UPDATE cms_state SET review_status='ready',source_revision_seen=(SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en'),updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? RETURNING draft_revision").bind(key,now(),key,loc,expectedDraft).first();
- if(!r)throw new HttpError(409,'EDIT_CONFLICT','The translation draft changed.');
+export async function markReviewed(db,key,loc,expectedDraft,actor,expectedSourceRevision=undefined){
+ const r=await db.prepare("UPDATE cms_state SET review_status='ready',source_revision_seen=(SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en'),updated_at=? WHERE page_key=? AND locale=? AND draft_revision=? AND (?=0 OR ? IS (SELECT draft_revision FROM cms_state WHERE page_key=? AND locale='en')) RETURNING draft_revision").bind(key,now(),key,loc,expectedDraft,expectedSourceRevision===undefined?0:1,expectedSourceRevision??null,key).first();
+ if(!r)throw new HttpError(409,'EDIT_CONFLICT','The translation or English source changed. Reload before approving.');
  await audit(db,actor,'review',`${key}:${loc}`,expectedDraft);return r.draft_revision;
 }
 export async function audit(db,actor,action,target,rev=null){await db.prepare('INSERT INTO admin_audit(actor,action,target,revision) VALUES(?,?,?,?)').bind(actor,action,target,rev).run();}

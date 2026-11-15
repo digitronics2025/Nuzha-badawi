@@ -1,5 +1,11 @@
 # Private Admin & Publishing System
 
+## Current editorial workflow
+
+English controls manage all four public content locales (D-036). Structured editor groups cover service copy, evidence, process, FAQs and experience milestones; legacy page-heading aliases remain compatible but are not duplicated as editable controls. English source text is shown alongside translations. Draft, reviewed and published revisions remain distinct; errors persist and conflicts retain local input.
+
+The overview shows open enquiries, actual translation-review counts and the most recent audited publication/restoration. Connection status describes the authenticated admin API, not public uptime. Private uploads and owner consent publication are separate actions. Service, contact/social and video changes publish through the existing settings API; all unsaved forms and notes warn before leaving. Inbox reply links open an email app and do not claim a message was sent. Server-side Access, roles, review provenance and media approval remain authoritative.
+
 ## Goal
 Nozha should control day-to-day operation without coding: respond to leads, change availability, update biography, homepage/video, pages, media, SEO and EN/AR/RU translations.
 

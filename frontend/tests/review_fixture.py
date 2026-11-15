@@ -9,6 +9,7 @@ class ReviewFixture:
         defaults=self.root.parent/'workers/shared/defaults.js'
         self.defaults=json.loads(defaults.read_text().split('export default ',1)[1].strip().removesuffix(';'))
         self.role='owner'
+        self.empty_inbox=False
         self.calls=[]
         self.failures={}
         self.enquiries=[]
@@ -51,10 +52,12 @@ class ReviewFixture:
                 else:
                     copy=self.defaults[locale][page]
                     data.update(defaultContent=copy,draft=self.saved.get((page,locale)),draftRevision=self.revision,publishedRevision=2,reviewStatus=self.review,fieldSchema={k:{'maxLength':260 if k in ['hero','title'] or k.endswith('_title') else 2500,'multiline':k not in ['hero','title'] and not k.endswith('_title'),'label':k.replace('_',' ').capitalize(),'group':'Experience timeline' if k.startswith('journey_') else 'Next steps' if k.startswith('process_') else 'Services' if any(x in k for x in ['english','arabic','russian','coaching','translation','interpretation','lesson','guide','share']) else 'Page sections'} for k in copy['fields']})
-            elif key=='enquiries':data['items']=[{'reference':'NS-1234567890ABCDEF','name':'Sample visitor','email':'visitor@example.invalid','type':'lesson','status':'new','createdAt':'2026-11-15','notificationStatus':'pending'}]
+            elif key=='enquiries':data['items']=[] if self.empty_inbox else [{'reference':'NS-1234567890ABCDEF','name':'Sample visitor','email':'visitor@example.invalid','type':'lesson','status':'new','createdAt':'2026-11-15','notificationStatus':'pending'}]
             elif key.startswith('enquiries/'):
                 data.update(enquiry={'message':'I would like to practise for professional meetings. This is synthetic review data.','details':{'language':'english','goal':'Professional meetings'}},events=[{'created_at':'2026-11-15','event_type':'received','actor':'system','payload_json':'{}'}])
             elif key=='media':data['id']='review_private_image'
+            elif key.startswith('media/') and req.method=='GET':
+                route.fulfill(body=(self.root/'src/assets/nozha-portrait-optimized.webp').read_bytes(),content_type='image/webp');return
             route.fulfill(json=data);return
         base=self.root/('dist-admin' if u.hostname=='admin.test' else 'dist-public')
         file=base/path.lstrip('/')

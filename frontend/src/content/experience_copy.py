@@ -89,3 +89,9 @@ assert all(set(v)==set(EXPERIENCE['en']) for v in EXPERIENCE.values())
 
 for locale, value in {'en':'Availability confirmed individually','uk':'Доступність узгоджується індивідуально','ar':'يُؤكَّد التوفر بشكل فردي','ru':'Доступность согласуется индивидуально'}.items():
     EXPERIENCE[locale]['availability_pending']=value
+
+for locale, value in {'en':'AI-generated illustration — not an authentic photograph of Nozha Badavi.','uk':'Ілюстрація, створена ШІ — не справжнє фото Нозхи Бадаві.','ar':'رسم توضيحي مولّد بالذكاء الاصطناعي — ليس صورة حقيقية لنزهة بدوي.','ru':'Иллюстрация, созданная ИИ — не настоящая фотография Нузи Бадави.'}.items():
+    EXPERIENCE[locale]['video_disclosure']=value
+
+for locale, value in {'en':'Find the right service','uk':'Обрати відповідну послугу','ar':'اختر الخدمة المناسبة','ru':'Выбрать подходящую услугу'}.items():
+    EXPERIENCE[locale]['find_service_cta']=value

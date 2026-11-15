@@ -80,7 +80,7 @@ async function handleAPI(request,env,ctx,user){
      const rows=await env.DB.prepare("SELECT r.id,r.created_by,r.created_at,EXISTS(SELECT 1 FROM admin_audit a WHERE a.revision=r.id AND a.action='publish') AS published FROM cms_revisions r WHERE page_key=? AND locale=? ORDER BY id DESC LIMIT 20").bind(key,loc).all();return json({ok:true,revisions:rows.results||[]});
    }
    if(action==='review'&&method==='POST'){
-     const body=await readJson(request);return json({ok:true,revision:await markReviewed(env.DB,key,loc,parseIntStrict(body.revision),user.email)});
+     const body=await readJson(request);return json({ok:true,revision:await markReviewed(env.DB,key,loc,parseIntStrict(body.revision),user.email,Object.hasOwn(body,'sourceRevision')?parseIntStrict(body.sourceRevision):undefined)});
    }
    if(action==='publish'&&method==='POST'){
      requireRole(user);const body=await readJson(request);
