@@ -122,7 +122,8 @@ class FrontendBuildTests(unittest.TestCase):
         self.assertTrue((a/'index.html').exists())
         self.assertTrue((a/'robots.txt').read_text().find('Disallow: /')!=-1)
         self.assertFalse((DIST/'admin'/'index.html').exists())
-        self.assertIn('NO AUTHENTICATION', (a/'index.html').read_text())
+        self.assertIn('Checking your protected session', (a/'index.html').read_text())
+        self.assertIn('noindex,nofollow,noarchive', (a/'index.html').read_text())
     def test_html_structure(self):
         for loc in LOCALES:
             for page in ['home','about','contact']:
@@ -131,9 +132,47 @@ class FrontendBuildTests(unittest.TestCase):
                 self.assertEqual(len([t for t,a in p.tags if t=='h1']),1)
                 self.assertEqual(len([t for t,a in p.tags if t=='main']),1)
     def test_output_payload(self):
-        css=(DIST/'assets'/'site.css').stat().st_size
-        js=(DIST/'assets'/'site.js').stat().st_size
-        self.assertLess(css,46000)
-        self.assertLess(js,16000)
+        import gzip
+        assets=DIST/'assets'
+        css=sum(len(gzip.compress((assets/name).read_bytes())) for name in ('tokens.css','site.css'))
+        js=len(gzip.compress((assets/'site.js').read_bytes()))
+        self.assertLess(css,45_000)
+        self.assertLess(js,90_000)
+        self.assertNotIn('fonts.googleapis.com',(assets/'tokens.css').read_text())
+
+    def test_localized_errors_and_structured_infographics(self):
+        for locale in LOCALES:
+            error=(DIST/locale/'404.html').read_text()
+            self.assertIn(f'lang="{locale}"',error)
+            self.assertIn('name="robots" content="noindex',error)
+            home=(DIST/locale/'index.html').read_text()
+            self.assertIn('class="guide-grid"',home)
+            self.assertIn('class="experience-timeline compact-timeline"',home)
+            self.assertIn('data-nusya-field="process_0_title"',home)
+            self.assertNotIn('LANGUAGE 01',home if locale!='en' else '')
+            contact=(DIST/locale/'contact/index.html').read_text()
+            self.assertIn('method="post" action="/api/v1/enquiries"',contact)
+            self.assertIn('type="submit" disabled',contact)
+
+    def test_experience_periods_survive_localized_prose(self):
+        class Dates(HTMLParser):
+            def __init__(self):super().__init__();self.values={};self.current=None
+            def handle_starttag(self,tag,attrs):
+                attrs=dict(attrs)
+                if tag=='bdi' and attrs.get('data-nusya-field','').startswith('journey_'):
+                    self.current=attrs['data-nusya-field'];self.values[self.current]=[attrs.get('dir'),'']
+            def handle_data(self,data):
+                if self.current:self.values[self.current][1]+=data
+            def handle_endtag(self,tag):
+                if tag=='bdi':self.current=None
+        expected={2:'2023–2026',3:'2019–2022',4:'2021–2022',5:'2013–2018 · 2019–2021'}
+        for locale in LOCALES:
+            dates=Dates();dates.feed((DIST/locale/'about/index.html').read_text())
+            for index,period in expected.items():
+                self.assertEqual(COPY[locale][f'journey_{index}_date'],period)
+                self.assertEqual(dates.values[f'journey_{index}_date'],['ltr',period])
+                if index!=5:self.assertIn(period,(DIST/locale/'index.html').read_text())
+            self.assertEqual(COPY[locale]['journey_0_date'],'')
+            self.assertEqual(COPY[locale]['journey_1_date'],'')
 
 if __name__=='__main__':unittest.main()

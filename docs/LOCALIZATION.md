@@ -1,5 +1,9 @@
 # Four-Language Strategy — Ukrainian, English, Arabic, Russian
 
+## Editorial redesign policy (D-036)
+
+Admin controls remain English. Its content fields, previews and review queue support UK/EN/AR/RU, with Arabic direction and English-source comparison. Public labels, graphic descriptions, availability, validation, video errors and missing-page responses are localized. Preserve safe service/language preselection through contact-page locale changes; never propagate customer-entered data into links. Root entry points always open Ukrainian, independent of browser preference.
+
 ## Locked locales
 Exactly `uk`, `en`, `ar`, `ru` for the public site. Ukrainian is the default website language; Arabic is RTL. Offered lesson languages remain English, Russian and Arabic. No Korean content or services.
 

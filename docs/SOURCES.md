@@ -1,5 +1,11 @@
 # Evidence, Public-Content Approval & Asset Provenance
 
+## Editorial redesign provenance — 2026-11-15
+
+The service guide explains existing services and enquiry inputs; it adds no prices, availability promises, proficiency claims, testimonials or translation directions. Timeline and process fields reuse the existing D-029 biography and workflow copy. The two optimized illustration files remain byte-identical; the fallback portrait's accessible name includes its localized AI disclosure. Approved CMS portraits/posters retain precedence and full poster framing. Localized poster labels are interface descriptions, not invented video captions or transcripts.
+
+Cormorant Garamond, Manrope and IBM Plex Sans Arabic are served locally as unmodified Google Fonts WOFF2 subsets. OFL notices accompany the files; source URLs, byte sizes and hashes are in [font-sources.json](reports/editorial-experience/font-sources.json). There are no runtime font-provider requests. The concurrent D-034 icon/sharing-card update is preserved.
+
 This register separates **source-documented**, **approved**, and **unverified** claims. It does not itself authorize publication.
 
 ## Supplied source inventory

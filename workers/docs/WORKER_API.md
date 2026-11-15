@@ -1,12 +1,21 @@
 # NUSYA Worker API — Implementation Contracts
 
-**Status:** Code implemented locally, integration tested. Cloudflare bindings, production domain, live authentication and email remain unconfigured.
+## Editorial interface additions
+
+- `GET /api/v1/admin/summary` adds `lastPublication: null | {pageKey, locale, revision, action: 'publish'|'rollback', occurredAt}` from successful audit records; no actor identity is returned in this summary.
+- Page `fieldSchema` adds English `label`, `group` and `editable` metadata alongside existing length/multiline bounds. Historical heading aliases remain accepted, but the editor hides duplicate aliases.
+- Non-English translation review requires `sourceRevision` (positive integer, or explicit null when no English draft exists). The editor supplies the English draft revision it displayed; an atomic comparison rejects approval if that source changed. Omitting this value returns 400, including from older tabs/scripts, which must reload or adopt the current contract. English review does not require this property.
+- UK/EN/AR/RU infographic fields use the existing bounded plain-text payload; absent historical fields retain static defaults. Existing owner revisions are never rewritten.
+- Localized missing-page documents return 404 and noindex. Server-rendered service status removes closed enquiry actions, while the API continues to validate availability and directed pairs independently.
+- `GET /api/v1/admin/media?status=private|published|all&limit=20&cursor=...` returns up to 50 protected metadata records in insertion order: `id`, `contentType`, `byteSize`, `altText`, `source`, `published`, `createdAt`, with `nextCursor`. Default status is `private`; opaque pagination cursors come from the previous response. Saved provenance and pending uploads survive browser sessions; approval remains owner-only. An additive publication index bounds filtered reads without rewriting media records.
+
+**Status:** This contract describes the implemented platform. Existing Worker/resource inventory and deployment evidence are recorded in [PRODUCTION](../../docs/PRODUCTION.md) and the associated release PR; this API document is not a deployment receipt.
 
 ## Public Worker
 
 | Endpoint | Method | Behaviour |
 | --- | --- | --- |
-| `/en/...`, `/ar/...`, `/ru/...` | GET | Prerendered pages with published D1 plain-text/SEO/media overrides, 90-second edge cache, no draft content |
+| `/uk/...`, `/en/...`, `/ar/...`, `/ru/...` | GET | Prerendered pages with published D1 plain-text/SEO/media overrides, 90-second edge cache, no draft content |
 | `/api/v1/config` | GET | Only safe public site key, accepting-status and approved language directions; no secrets |
 | `/api/v1/enquiries` | POST | Strict schema, approved service/directed pair, valid Turnstile, HMAC IP rate limit, idempotent D1 + outbox transaction; HTTP 201 only after stored |
 | `/media/:id` | GET | Only explicitly approved media records from bound R2; unapproved files return 404 |
@@ -43,7 +52,7 @@ The reference and timestamp shown above are examples, not live records. HTTP 201
 | --- | --- | --- | --- |
 | `/api/v1/admin/me` | GET | Editor/owner | Verified identity and role |
 | `/api/v1/admin/summary` | GET | Editor/owner | Live open-enquiry and translation-review counts |
-| `/api/v1/admin/pages` | GET | Editor/owner | All seven page keys, three locales and statuses |
+| `/api/v1/admin/pages` | GET | Editor/owner | All seven page keys, four locales and statuses |
 | `/api/v1/admin/pages/:key?locale=..` | GET | Editor/owner | Default, draft and published structured data, revision pointers |
 | `/api/v1/admin/pages/:key?locale=..` | PUT | Editor/owner | Save validated draft with `baseRevision` optimistic lock |
 | `/api/v1/admin/pages/:key/revisions` | GET | Editor/owner | Latest 20 revisions |
@@ -56,6 +65,7 @@ The reference and timestamp shown above are examples, not live records. HTTP 201
 | `/api/v1/admin/enquiries/:reference` | GET/PATCH | Editor/owner | Read detail, audit status changes |
 | `/api/v1/admin/notifications/retry` | POST | Owner | Bounded retry of failed/pending notification outbox |
 | `/api/v1/admin/media` | POST | Editor/owner | Private validated photo upload to R2 (optional binding) |
+| `/api/v1/admin/media` | GET | Editor/owner | Private/published library, saved provenance and bounded cursor pagination |
 | `/api/v1/admin/media/:id/publish` | POST | Owner | Consent-confirmed publication of image |
 | `/api/v1/admin/media/:id` | GET | Editor/owner | Protected draft media preview |
 
@@ -63,13 +73,13 @@ The content payload is a schema-bounded structure `{fields:{...},seo:{title,desc
 
 ### Teaching experience and testimonials
 
-The homepage payload also accepts optional `testimonialsEnabled: boolean` (missing means false). Existing revisions therefore keep the new section hidden, including after rollback. Home fields include `proof_age`, `proof_levels`, `proof_formats`, `testimonials_title`, `testimonials_intro`, `testimonials_rating`, `testimonials_snapshot`, and `review_{yura,m,serg}_{quote,author,date}`. About and Lessons expose `teaching_experience`; Lessons also exposes `english_experience` and `russian_experience`. The normal allowlist, field limits, escaping and translation review apply; there is no new table or route.
+The homepage payload also accepts optional `testimonialsEnabled: boolean` (missing means false). Existing revisions therefore keep the new section hidden, including after rollback. Home fields reuse `proof_0`, `proof_1`, `proof_2` and add `testimonials_title`, `testimonials_intro`, `testimonials_rating`, `testimonials_snapshot`, and `review_{yura,m,serg}_{quote,author,date}`. Earlier draft keys `proof_age`, `proof_levels`, `proof_formats` remain accepted but are hidden from the editor; current rendering uses the existing numbered proof fields. About and Lessons expose `teaching_experience`; Lessons also exposes `english_experience` and `russian_experience`. The combined catalogue has 73 allowlisted homepage fields, so the payload cap is 128 fields; every key and per-field length remain strictly validated. The normal escaping and translation review apply; there is no new table or route.
 
 Home-only optional media keys `reviewYuraScreenshot`, `reviewMScreenshot` and `reviewSergScreenshot` accept existing media IDs (10–80 ASCII letters, digits, hyphen or underscore). No external image URLs are accepted. Publish/rollback require each referenced asset to be published with consent. The public media endpoint requires both publication and consent. Private previews use the authenticated media route. Review images use dedicated links and accessible labels, not the managed-portrait renderer; no source image is loaded before its link is opened. Empty quotations/authors remove their cards; absent image IDs leave text-only cards. Rating snapshots remain attributed plain text, never `AggregateRating` structured data or an automatic platform feed.
 
 ## Source-of-truth settings
 
-All new services default to `acceptingRequests=false` until Nozha approves current availability. The `approvedTranslationPairs` list is **directed**, e.g. `en:ru` does not imply `ru:en`. There is no Korean service or fourth public locale. The video is the supplied Vimeo ID/hash and can be updated to another allowlisted privacy-hashed Vimeo URL.
+All new services default to `acceptingRequests=false` until Nozha approves current availability. The `approvedTranslationPairs` list is **directed**, e.g. `en:ru` does not imply `ru:en`. Public locales are exactly UK/EN/AR/RU, with no Korean service or locale. The video is the supplied Vimeo ID/hash and can be updated to another allowlisted privacy-hashed Vimeo URL.
 
 ## Failure and cost contract
 

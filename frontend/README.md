@@ -1,61 +1,34 @@
 # NUSYA Linguistic Studio — Frontend
 
-Python-generated multilingual frontend with a separate protected admin UI. The deployed Worker backend and release evidence are documented in `../docs/PRODUCTION.md`; older frontend-only notes below are historical.
+Python-generated UK/EN/AR/RU public pages and a separate Access-protected admin. Ukrainian is the default public interface. Admin controls are English; content editing supports all four locales. Actual deployment evidence belongs in `../docs/PRODUCTION.md`.
 
-## What works
+## Build and verify
 
-- 28 static, semantic public pages (7 pages × 4 languages: default `uk`, `en`, `ar` RTL, `ru`).
-- Cinematic Editorial Luxury visual design, restrained globe/flight-line graphics, responsive desktop/mobile layouts and reduced-motion support.
-- On-demand Vimeo intro player (`1171310337`, hash `3416a6f4f5`) with no player requests before interaction.
-- Language lessons, coaching, translation/interpreting, About, FAQs, contact forms and official external profiles.
-- Service-aware form frontend now targets the implemented public Worker API in `../workers/public/src/index.js`; submission remains disabled and shows an honest error until domain, D1, Turnstile and service settings are configured.
-- Separate admin UI for overview, content, translations, services, media/video, and enquiries; its secure D1/Access backend is implemented in `../workers/` but requires deployment and configuration.
-- Metadata, canonical/hreflang, sitemap, favicon, OG imagery, accessibility-focused navigation.
+Public generation uses Python's standard library and no runtime framework. Workers require Node 22+ and the pinned Wrangler package. Browser/a11y/PDF tooling is development-only.
 
-## Build & preview
-
-Requirements: Python 3.10+; Node.js 20+ only for the convenient npm scripts. **No npm dependencies.**
-
-```bash
-npm run build
-npm test
-npm run preview:public  # localhost:4173/en/
-npm run preview:admin   # another terminal: localhost:4174/
+```sh
+npm ci --prefix ../workers
+python3 ../workers/tools/export_default_content.py
+python3 scripts/build.py
+python3 -m unittest discover -s tests -v
+pip install -r tests/requirements-browser.txt
+python3 -m playwright install chromium
+python3 tests/browser_review.py
+python3 tests/experience_review.py
+python3 tests/design_capture.py --output /tmp/nusya-design
 ```
 
-The repository's earlier plan preferred Astro/Tailwind if the repo started empty. Because network package installation was unavailable during this frontend execution and the site has very limited dynamic needs, I chose a **zero-dependency static-site generator** using Python's standard library, semantic HTML, CSS and small ES modules. This avoids runtime framework overhead and is directly compatible with Cloudflare Workers Static Assets. A future backend agent may adopt Astro only after a documented evidence-based cost/maintainability decision; the existing URL structure and API handoff are designed to remain stable.
+`dist-public/` and `dist-admin/` are ignored generated outputs. `npm run preview:public` / `preview:admin` serve static previews without storage or authentication; never publish the admin through an unprotected host. Browser fixtures are synthetic, not proof of production login or email.
 
-## Structure
+## Shared content and presentation
 
-| Path | Role |
-| --- | --- |
-| `scripts/build.py` | Pre-renders public HTML, sitemap, metadata and separate admin UI preview |
-| `src/content/site_copy.py` | Editable UK/EN/AR/RU content catalogue |
-| `src/assets/site.css`, `site.js` | Public design and progressive interaction |
-| `src/assets/admin.css`, `admin.js` | Admin demonstration frontend |
-| `src/admin.html` | Backend-disconnected admin UI prototype |
-| `types/api.d.ts` | Backend API request/response contracts |
-| `docs/BACKEND_HANDOFF.md` | Backend agent's scope, security, workflows and acceptance |
-| `tests/test_build.py` | Static generation, metadata, safety and completeness checks |
-| `tests/browser_qa.py` | Chromium visual and interaction QA (isolated page rendering) |
-| `dist-public/`, `dist-admin/` | Generated outputs, deliberately not committed |
+The generator composes semantic page helpers from `src/content/site_copy.py`, explanatory interface copy and the SEO catalogue. Existing allowlisted plain-text CMS revisions override generated fields. New infographic fields fill missing values in old revisions; no owner content is overwritten. Shared tokens and licensed local fonts live in `src/assets/tokens.css` and `fonts/`; public and admin styles/modules remain separate. CSS/JS URLs include a content version.
 
-## Source-implemented backend and deployment boundaries
+The homepage service guide, approved experience timeline and enquiry process use accessible text and ordered lists. Services follow owner-controlled visibility/availability; form success requires durable storage. Vimeo remains on demand with the privacy hash and visible fallback. Retain both disclosed illustration assets, CMS media overrides and the localized footer developer attribution.
 
-See `../workers/README.md`, `../workers/docs/WORKER_API.md` and `../workers/docs/RELEASE_READINESS.md`. Cloudflare Workers, D1 migration, Access identity verification, Turnstile enforcement, durable enquiry storage/outbox, structured CMS and admin routes have now been **implemented and tested locally**. They are not yet configured or verified in Cloudflare.
+The protected editor groups page fields, compares translations against English, and separates drafts, review, preview, publishing and eligible rollback. All writes remain authorized by the Worker API. Review also checks the source revision actually shown to the reviewer.
 
-## Scope boundaries and release gates
-
-- Real Worker API, D1 schema, access verification and publishing source exist in `../workers/`; **no cloud resources are provisioned, no live email has been sent, and production deployment is unapproved.**
-- The admin UI **must never be published openly**; create a separate protected Worker and verify Cloudflare Access and API authorization first.
-- Frontend contacts do not falsely confirm delivery. The API is designed and locally tested to persist an enquiry before returning `201`; test again in Cloudflare staging.
-- All professional claims, approved service availability, legal/privacy copy, translations, real photographs and the Vimeo embedding rights require owner approval before public launch.
-- No fabricated person images, prices, reviews or certified-translation claims. No Korean content.
-- Existing Preply students must continue using authorized platform bookings and payments.
-
-## Next agent
-
-Review `../workers/` and `docs/BACKEND_HANDOFF.md` before configuring any resources. The outstanding responsibility is authorized Cloudflare staging/production integration, security and billing approval, owner content approvals, and live end-to-end verification—not a second parallel backend implementation.
+The earlier frontend-only handoff is historical. Current API and release contracts are in `../workers/docs/WORKER_API.md` and `../docs/OPERATIONS.md`. Design/state evidence and authorization are documented in `../docs/reports/editorial-experience/README.md`.
 
 ## Icons and search/share metadata
 

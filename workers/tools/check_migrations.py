@@ -16,10 +16,11 @@ DELETE FROM cms_revisions WHERE id=100;
 INSERT INTO enquiries(id,reference,idempotency_key,request_hash,ip_hash,locale,type,name,email,message,details_json) VALUES (9,'NS-TEST','test-key','hash','hash','en','lesson','Synthetic','qa@example.com','Test','{}');
 INSERT INTO enquiry_events(reference,actor,event_type) VALUES ('NS-TEST','test','status_change');
 INSERT INTO notification_outbox(reference) VALUES ('NS-TEST');
+INSERT INTO media_assets(id,object_key,content_type,byte_size,alt_text,source,created_by) VALUES ('retained-media','private/retained','image/png',68,'Retained owner image','Existing licensed source','test');
 INSERT INTO enquiries(id,reference,idempotency_key,request_hash,ip_hash,locale,type,name,email,message,details_json) VALUES (100,'NS-DELETED','deleted-key','hash','hash','en','lesson','Synthetic','qa@example.com','Test','{}');
 DELETE FROM enquiries WHERE id=100;
 """)
-tables=['cms_revisions','cms_state','enquiries','enquiry_events','notification_outbox']
+tables=['cms_revisions','cms_state','enquiries','enquiry_events','notification_outbox','media_assets']
 before={name:conn.execute('SELECT * FROM '+name).fetchall() for name in tables}
 for path in paths[1:]:
     conn.executescript('BEGIN;\n'+path.read_text()+'\nCOMMIT;')

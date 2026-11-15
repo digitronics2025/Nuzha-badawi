@@ -1,13 +1,13 @@
 # Product Requirements — NUSYA Linguistic Studio
 
-**Status:** agreed product direction; implementation pending. See [SOURCES](SOURCES.md) before asserting public facts.
+**Current implementation:** seven page types in UK/EN/AR/RU and a protected owner/editor CMS. Historical proposals below are requirements, not release evidence; use PRODUCTION.md for actual rollout status. See [SOURCES](SOURCES.md) before asserting public facts.
 
 ## Mission
 Create a beautiful and useful professional home for Nozha Badavi: students understand and book suitable lessons; professional clients request translation, interpretation or communication coaching; Nozha manages it all independently.
 
 ## Locked product choices
 - Brand NUSYA Linguistic Studio; personal-professional site, **not** a large academy or SaaS.
-- Exactly three public UI languages: **English / Arabic (RTL) / Russian**.
+- Exactly four public UI languages: **Ukrainian (default) / English / Arabic (RTL) / Russian**.
 - Source-documented lesson subjects: **English, Russian, Arabic**; verify current lesson availability.
 - Professional communication coaching; translation/interpretation requests, within approved scope.
 - Supplied Vimeo intro prominently on homepage, controlled via admin.
@@ -46,7 +46,7 @@ Two distinct flows: authorised lesson booking (Preply where appropriate) vs qual
 6. High-fidelity desktop/mobile public/admin visuals explicitly approved **before any UI code**.
 
 ## Exclusions
-No LMS, user accounts for students, custom video calls, automatic Preply synchronisation, direct payment, fake metrics, AI chatbot, unreviewed translation auto-publish, broad CRM, public sensitive-document upload, huge page builder, uncontrolled paid integrations, Ukrainian fourth UI locale, Swedish lesson offer, Korean.
+No LMS, user accounts for students, custom video calls, automatic Preply synchronisation, direct payment, fake metrics, AI chatbot, unreviewed translation auto-publish, broad CRM, public sensitive-document upload, huge page builder, uncontrolled paid integrations, Swedish lesson offer, Korean. Ukrainian is an interface language, not an additional lesson offer.
 
 ## Success metrics (define baseline after launch)
 User can understand offer and act in first viewport; reliable qualified requests; admin can safely publish a reviewed change without coding; no lost leads; good Core Web Vitals; WCAG 2.2 AA target; indexed translated pages; sustainable low platform cost. Track quote requests and outbound Preply clicks separately.

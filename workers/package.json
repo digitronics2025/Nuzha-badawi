@@ -20,6 +20,7 @@
     "node": ">=22"
   },
   "devDependencies": {
+    "axe-core": "4.14.0",
     "wrangler": "4.162.0"
   },
   "license": "UNLICENSED"

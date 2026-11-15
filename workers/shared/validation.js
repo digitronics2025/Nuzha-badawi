@@ -71,7 +71,7 @@ export function validatePagePayload(pageKey,loc,payload){
  if(!isPageKey(pageKey)||!isLocale(loc))throw new HttpError(404,'NOT_FOUND','Unknown page.');
  if(!payload||typeof payload!=='object'||Array.isArray(payload))throw new HttpError(400,'VALIDATION_FAILED','Invalid page content.');
  if(Object.hasOwn(payload,'testimonialsEnabled')&&(pageKey!=='home'||typeof payload.testimonialsEnabled!=='boolean'))throw new HttpError(400,'VALIDATION_FAILED','Testimonials visibility must be a boolean on the homepage.');
- const f=payload.fields;if(!f||typeof f!=='object'||Array.isArray(f)||Object.keys(f).length>65)throw new HttpError(400,'VALIDATION_FAILED','Invalid page fields.');
+ const f=payload.fields;if(!f||typeof f!=='object'||Array.isArray(f)||Object.keys(f).length>128)throw new HttpError(400,'VALIDATION_FAILED','Invalid page fields.');
  const fields={};for(const [k,v] of Object.entries(f)){
    if(!/^[a-z][a-zA-Z0-9_.]{0,63}$/.test(k)||!Object.hasOwn(defaults?.[loc]?.[pageKey]?.fields||{},k))throw new HttpError(400,'VALIDATION_FAILED','Unsupported content field.');
    fields[k]=text(v,0, fieldSchema(loc,pageKey)[k].maxLength,k);

@@ -16,10 +16,10 @@ class TestTestimonials(unittest.TestCase):
         for locale in LOCALES:
             page=unescape((ROOT/'dist-public'/locale/'index.html').read_text())
             self.assertIn('data-nusya-testimonials hidden',page)
-            self.assertLess(page.index('id="languages"'),page.index('data-nusya-testimonials'))
-            self.assertLess(page.index('data-nusya-testimonials'),page.index('class="section-pad coaching-section"'))
+            self.assertLess(page.index('id="services"'),page.index('data-nusya-testimonials'))
+            self.assertLess(page.index('data-nusya-testimonials'),page.index('class="section-pad about-section"'))
             self.assertEqual(page.count('data-review-card='),3)
-            for field in ('proof_age','proof_levels','proof_formats','testimonials_rating','testimonials_snapshot'):
+            for field in ('proof_0','proof_1','proof_2','testimonials_rating','testimonials_snapshot'):
                 self.assertIn(COPY[locale][field],page)
             self.assertNotIn('AggregateRating',page)
             self.assertNotIn('109',COPY[locale]['testimonials_rating'])

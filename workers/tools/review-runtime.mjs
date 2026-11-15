@@ -33,13 +33,26 @@ try{
   r=await runtime.dispatchFetch(`https://nozha-badavi.com/${locale}/${page}`);assert.equal(r.status,200);const html=await r.text();assert.match(html,new RegExp(`lang="${locale}"`));
   const schema=JSON.parse(html.match(/<script id="nusya-schema" type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);assert.equal(schema['@graph'][2].url,`https://nozha-badavi.com/${locale}/${page}`);
  }
+ for(const locale of ['uk','en','ar','ru']){
+  for(const path of [`/${locale}/missing-page/`,`/${locale}/404.html`]){
+   r=await runtime.dispatchFetch('https://nozha-badavi.com'+path);
+   assert.equal(r.status,404);assert.match(await r.text(),new RegExp(`lang="${locale}"`));assert.match(r.headers.get('x-robots-tag'),/noindex/);
+  }
+ }
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/assets/fonts/body-400-latin.woff2');
+ assert.equal(r.headers.get('content-type'),'font/woff2');assert.equal(new TextDecoder().decode((await r.arrayBuffer()).slice(0,4)),'wOF2');
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/translation/');
+ const services=await r.text();assert.doesNotMatch(services,/data-nusya-enquiry="translation"/);assert.match(services,/Not accepting online enquiries/);
+ // Old partial CMS revisions keep their override and use new infographic defaults.
+ r=await runtime.dispatchFetch('https://nozha-badavi.com/en/');const infographic=await r.text();assert.match(infographic,/Native runtime CMS heading/);assert.match(infographic,/data-nusya-field="journey_3_body"/);
+
  // Save real HTMLRewriter output for the browser regressions, without a network service.
  const fixtures=process.env.NUSYA_REVIEW_FIXTURES||'/tmp/nusya-testimonial-runtime';mkdirSync(fixtures,{recursive:true});
  const cache=(await runtime.getCaches()).default;
  async function renderReview(locale,payload){
   const row=await db.prepare("INSERT INTO cms_revisions(page_key,locale,payload_json,created_by) VALUES('home',?,?,'test') RETURNING id").bind(locale,JSON.stringify(payload)).first();
   await db.prepare("INSERT INTO cms_state(page_key,locale,draft_revision,published_revision) VALUES('home',?,?,?) ON CONFLICT(page_key,locale) DO UPDATE SET draft_revision=excluded.draft_revision,published_revision=excluded.published_revision").bind(locale,row.id,row.id).run();
-  await cache.delete(`https://nozha-badavi.com/cms-v3/${locale}/`);
+  await cache.delete(`https://nozha-badavi.com/cms-v4/${locale}/`);
   const response=await runtime.dispatchFetch(`https://nozha-badavi.com/${locale}/`);
   return response.text();
  }
@@ -58,6 +71,8 @@ try{
   const empty=await renderReview(locale,payload);assert.doesNotMatch(empty,/data-review-card="m"/);
   payload.fields.review_yura_quote='<img src=x onerror=alert(1)>';
   const escaped=await renderReview(locale,payload);assert.match(escaped,/&lt;img src=x onerror=alert\(1\)&gt;/);assert.doesNotMatch(escaped,/<img src=x/);
+  payload.fields.proof_age='Legacy owner evidence';delete payload.fields.proof_0;
+  const alias=await renderReview(locale,payload);assert.match(alias,/data-nusya-field="proof_0">Legacy owner evidence/);
   delete payload.testimonialsEnabled;
   const legacy=await renderReview(locale,payload);assert.doesNotMatch(legacy,/data-nusya-testimonials/);
  }

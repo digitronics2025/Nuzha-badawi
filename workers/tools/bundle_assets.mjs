@@ -5,8 +5,8 @@ import {readdirSync,readFileSync,statSync,writeFileSync} from 'node:fs';
 import {join,relative,sep,extname,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 const here=dirname(fileURLToPath(import.meta.url));
-const TYPES={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8','.webmanifest':'application/manifest+json; charset=utf-8','.webp':'image/webp','.png':'image/png','.ico':'image/x-icon'};
-const BINARY=new Set(['.webp','.png','.ico']);
+const TYPES={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8','.webmanifest':'application/manifest+json; charset=utf-8','.webp':'image/webp','.png':'image/png','.ico':'image/x-icon','.woff2':'font/woff2'};
+const BINARY=new Set(['.webp','.png','.ico','.woff2']);
 function bundle(dir,out){
  const files={};
  (function walk(d){for(const f of readdirSync(d).sort()){const p=join(d,f);if(statSync(p).isDirectory()){walk(p);continue;}

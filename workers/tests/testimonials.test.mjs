@@ -10,7 +10,7 @@ test('testimonials are opt-in, bounded, homepage-only and backwards compatible',
   assert.equal(validatePagePayload('home','en',{fields:{hero:'Existing owner copy'}}).testimonialsEnabled,false);
   for(const locale of ['uk','en','ar','ru']){
     const content=structuredClone(defaults[locale].home);
-    assert.ok(Object.keys(content.fields).length<=65);
+    assert.ok(Object.keys(content.fields).length<=128);
     content.testimonialsEnabled=true;
     content.media.reviewYuraScreenshot='approvedimage123';
     assert.equal(validatePagePayload('home',locale,content).media.reviewYuraScreenshot,'approvedimage123');
@@ -39,7 +39,7 @@ test('review drafts stay private, need media consent and translation review, and
     assert.equal((await published(db,'home','en')).payload.testimonialsEnabled,true);
     const ar=await insertDraft(db,'home','ar',validatePagePayload('home','ar',{...defaults.ar.home,testimonialsEnabled:true}),'owner',null);
     await assert.rejects(()=>publishDraft(db,'home','ar',ar,'owner'),e=>e.code==='REVIEW_REQUIRED');
-    await markReviewed(db,'home','ar',ar,'owner');await publishDraft(db,'home','ar',ar,'owner');
+    await markReviewed(db,'home','ar',ar,'owner',draft);await publishDraft(db,'home','ar',ar,'owner');
     await rollBack(db,'home','en',old,'owner');
     assert.equal((await published(db,'home','en')).payload.testimonialsEnabled,undefined);
     assert.equal((await published(db,'home','en')).payload.fields.hero,'Owner headline');

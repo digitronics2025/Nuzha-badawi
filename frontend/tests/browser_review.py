@@ -63,7 +63,7 @@ with sync_playwright() as p:
         route.fulfill(path=str(file)) if file.is_file() else route.fulfill(status=404,body='Not found')
     page.route('**/*',serve)
     for locale in ['uk','en','ar','ru']:
-        for width in [320,390,1440]:
+        for width in [320,390,768,1440]:
             page.set_viewport_size({'width':width,'height':900})
             for route in ['', 'about/','lessons/','coaching/','translation/','contact/','privacy/']:
                 page.goto(f'http://public.test/{locale}/{route}')
@@ -98,9 +98,9 @@ with sync_playwright() as p:
     page.wait_for_function('document.querySelector(".demo-banner").textContent.includes("SECURE ADMIN")')
     page.locator('[data-view=enquiries]').click();page.get_by_role('button',name='Read enquiry').click()
     page.get_by_text('Message: Customer message is readable').wait_for(state='visible')
-    assert page.get_by_text('goal: Professional meetings').is_visible()
+    assert page.get_by_text('Goal: Professional meetings').is_visible()
     page.screenshot(path=str(OUT/'admin-enquiry-mobile.png'),full_page=True)
-    page.locator('[data-view=translations]').click();page.get_by_role('button',name='Українська — needs_review').wait_for(state='visible')
+    page.locator('[data-view=translations]').click();page.get_by_role('button',name='Українська — Needs review').wait_for(state='visible')
     page.locator('[data-view=pages]').click();page.wait_for_function('document.querySelector("#hero-title").value==="Test heading"&&!document.querySelector("#hero-title").disabled');page.locator('#hero-title').fill('Unsaved change')
     page.once('dialog',lambda d:d.dismiss());page.locator('#admin-page-select').select_option('about')
     assert page.locator('#admin-page-select').input_value()=='home'
@@ -127,14 +127,14 @@ with sync_playwright() as p:
     page.locator('[data-content-key=review_yura_quote]').fill('Owner-approved review excerpt')
     page.locator('[data-review-media=reviewYuraScreenshot]').fill('approvedimage123')
     page.locator('#save-draft').click()
-    page.wait_for_function('document.querySelector("#editor-message").textContent.includes("Draft 1")')
+    page.wait_for_function('document.querySelector("#editor-message").textContent.includes("Saved draft: 1")')
     assert saves[-1]['testimonialsEnabled'] is True
     assert saves[-1]['fields']['review_yura_quote']=='Owner-approved review excerpt'
     assert saves[-1]['fields']['hero']=='Test heading'
     assert saves[-1]['media']['reviewYuraScreenshot']=='approvedimage123'
     page.locator('[data-review-media=reviewYuraScreenshot]').fill('')
     page.locator('#save-draft').click()
-    page.wait_for_function('document.querySelector("#editor-message").textContent.includes("Draft 2")')
+    page.wait_for_function('document.querySelector("#editor-message").textContent.includes("Saved draft: 2")')
     assert 'reviewYuraScreenshot' not in saves[-1]['media']
     page.locator('[data-locale=ar]').click()
     page.wait_for_function('document.querySelector("[data-content-key=review_yura_quote]").dir==="rtl"')
@@ -142,6 +142,9 @@ with sync_playwright() as p:
         page.set_viewport_size({'width':width,'height':900})
         assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),('admin',width)
         page.locator('.testimonial-editor').screenshot(path=str(OUT/f'admin-testimonials-{width}.png'))
+    saved_pages['ru']={'fields':{'hero':'Test heading','proof_age':'Legacy owner evidence'},'media':{},'seo':{}}
+    page.locator('[data-locale=ru]').click()
+    page.wait_for_function('document.querySelector("[data-content-key=proof_0]").value==="Legacy owner evidence"')
 
     # These pages were rendered by the real Workers HTMLRewriter, not edited DOM fixtures.
     review_pages=True
@@ -153,6 +156,10 @@ with sync_playwright() as p:
             assert page.locator('[data-review-card]').count()==3
             assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),(locale,width,'testimonials')
             assert not image_requests,'Review images were loaded before opening the source'
+            if width==390:
+                page.add_script_tag(path=str(ROOT.parent/'workers'/'node_modules'/'axe-core'/'axe.min.js'))
+                violations=page.evaluate('''async()=>{const result=await axe.run(document.querySelector('[data-nusya-testimonials]'),{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}});return result.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.map(n=>n.target)}));}''')
+                assert not violations,(locale,'testimonials accessibility',violations)
             if width in [390,1440]:
                 page.locator('[data-nusya-testimonials]').screenshot(path=str(OUT/f'testimonials-{locale}-{width}.png'),style='.site-header,.skip-link{visibility:hidden!important}')
     source=page.locator('[data-review-image=reviewYuraScreenshot]')
