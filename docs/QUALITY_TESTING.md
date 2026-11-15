@@ -30,3 +30,6 @@ Report exact commands, environment, date, pass/fail, screenshots, known gaps and
 
 ## Release blockers
 Missing approved mockups; incomplete EN/AR/RU; broken contact journey; exposed admin; unverified video fallback; misrepresented claims, inaccessible core controls, data-loss failures or significant unresolved performance/cost regression.
+
+## Domain/Cloudflare release matrix
+After explicit design and later production authorization, test Cloudflare Custom Domain for `https://nozha-badavi.com` and admin at `https://admin.nozha-badavi.com`: TLS, DNS zone/CAA, apex/www redirect loop and path preservation; public /en /ar /ru routes, localized canonical/hreflang; `workers.dev`/preview isolation and noindex; admin rejection without Access and per-action API roles; no public admin CRUD; live D1 publish cache propagation and rollback; staging/prod separation; form idempotence/Turnstile/notification failures; Vimeo privacy hash and real playback; D1/R2 cost limits and log PII avoidance. Test actual hostname after deployment, not only an internal preview. Do not claim domain live because Registrar shows ready. See `CLOUDFLARE_DEPLOYMENT.md`.
