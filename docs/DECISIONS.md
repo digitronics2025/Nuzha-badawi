@@ -57,3 +57,12 @@ These are *documented design decisions*, **not** an assertion that the user appr
 | D-021 | 2026-11-15 | Add Dr. Badawi Abdalsalam as credited website designer and developer via `https://dr-badawi-abdalsalam.com/` in the discreet, localized public footer | User-requested and approved | Attribution remains visible without competing with NUSYA brand, with safe external links and RTL/mobile support |
 
 This applies to all 21 public pages (EN, AR, RU), underneath copyright. It does not give the developer account access or grant any GitHub/Cloudflare role.
+
+## Updated CV profile copy — content change under review
+
+| ID | Date | Decision | Status | Explanation |
+| --- | --- | --- | --- | --- |
+| D-022 | 2026-11-15 | Prepare a richer EN/AR/RU biography, named career milestones, education summary and accurate coaching/translation descriptions from the newer CV | **Proposed source-content update, pending public sign-off** | This is a reviewable content change; no private CV contact details, unsupported credentials or unapproved publication |
+| D-023 | 2026-11-15 | Replace hard-coded “backend not connected” contact guidance with neutral status wording | Content correction for review | Backend code exists but its live deployment state was not verified; successful enquiry must still be confirmed server-side |
+
+Before publishing, reconcile any D1 CMS overrides with source-derived fallback content and confirm all three translations; do not overwrite owner-edited published content without review.
