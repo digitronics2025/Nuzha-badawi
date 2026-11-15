@@ -6,7 +6,7 @@ COPY={
 'en':{
 'name':'English','dir':'ltr','nav':['Home','About','Language lessons','Communication','Translation','Contact'],
 'eyebrow':'THE ART OF CONNECTION','hero':'Learn a language. Find your voice. Connect with the world.','hero_desc':'Personalised English, Russian and Arabic lessons, professional communication coaching, translation and interpretation with Nozha Badavi.',
-'lessons_cta':'Explore lessons','request_cta':'Request language services','learn_more':'Learn more','profile_pic':'Approved portrait of Nozha','photo_note':'An authentic, approved professional portrait will appear here.','jump':'Skip to main content','menu':'Open navigation','menu_close':'Close navigation','language_label':'Website language',
+'lessons_cta':'Explore lessons','request_cta':'Request language services','learn_more':'Learn more','profile_pic':'AI-generated editorial portrait concept, not an authentic photo','photo_note':'AI-generated illustration · awaiting approved photograph.','jump':'Skip to main content','menu':'Open navigation','menu_close':'Close navigation','language_label':'Website language',
 'proof':['Personalised learning','Multilingual experience','Cross-cultural communication'],
 'video_eyebrow':'MEET YOUR EDUCATOR','video_title':'A personal introduction','video_desc':'Hear Nozha introduce herself and discover the person behind NUSYA Linguistic Studio.','video_play':'Play the introduction','video_error':'Video unavailable here? Watch directly on Vimeo.','video_link':'Open on Vimeo',
 'lessons_eyebrow':'LANGUAGE LEARNING','lessons_title':'Three languages. Your own path.','lessons_desc':'Every learner brings different goals. Explore lessons built around your needs, level and pace.',
@@ -28,7 +28,7 @@ COPY={
 'ar':{
 'name':'العربية','dir':'rtl','nav':['الرئيسية','من هي Nozha','دروس اللغات','التواصل المهني','الترجمة','اتصل بنا'],
 'eyebrow':'فن التواصل','hero':'تعلّم لغة. عبّر بثقة. وانفتح على العالم.','hero_desc':'دروس مخصّصة في الإنجليزية والروسية والعربية، والتواصل المهني والترجمة التحريرية والشفوية مع Nozha Badavi.',
-'lessons_cta':'اكتشف الدروس','request_cta':'اطلب خدمة لغوية','learn_more':'اعرف المزيد','profile_pic':'صورة Nozha المعتمدة','photo_note':'ستظهر هنا صورة احترافية حقيقية بعد اعتمادها.','jump':'انتقل إلى المحتوى','menu':'افتح القائمة','menu_close':'أغلق القائمة','language_label':'لغة الموقع',
+'lessons_cta':'اكتشف الدروس','request_cta':'اطلب خدمة لغوية','learn_more':'اعرف المزيد','profile_pic':'تصوّر فني مُنشأ بالذكاء الاصطناعي، وليس صورة حقيقية','photo_note':'تصميم بالذكاء الاصطناعي · بانتظار صورة حقيقية معتمدة.','jump':'انتقل إلى المحتوى','menu':'افتح القائمة','menu_close':'أغلق القائمة','language_label':'لغة الموقع',
 'proof':['تعلّم يناسبك','خبرة متعددة اللغات','تواصل بين الثقافات'],
 'video_eyebrow':'تعرّف على مدرّستك','video_title':'رسالة تعارف شخصية','video_desc':'استمع إلى Nozha وتعرّف على قصتها وعلى الشخص الذي يقف وراء NUSYA.','video_play':'شغّل فيديو التعارف','video_error':'الفيديو غير متاح هنا؟ يمكنك مشاهدته على Vimeo.','video_link':'فتح على Vimeo',
 'lessons_eyebrow':'تعلّم اللغات','lessons_title':'ثلاث لغات. طريق يناسبك.','lessons_desc':'لكل متعلّم أهداف مختلفة. استكشف دروساً تراعي مستواك واحتياجاتك وسرعتك.',
@@ -50,7 +50,7 @@ COPY={
 'ru':{
 'name':'Русский','dir':'ltr','nav':['Главная','О Нузе','Языковые уроки','Деловое общение','Перевод','Контакты'],
 'eyebrow':'ИСКУССТВО ОБЩЕНИЯ','hero':'Изучайте языки. Обретайте уверенность. Открывайте мир.','hero_desc':'Индивидуальные уроки английского, русского и арабского, подготовка к профессиональному общению, письменный и устный перевод с Nozha Badavi.',
-'lessons_cta':'Выбрать уроки','request_cta':'Заказать языковую услугу','learn_more':'Подробнее','profile_pic':'Одобренный портрет Нузи','photo_note':'Здесь появится подлинная профессиональная фотография после согласования.','jump':'Перейти к содержимому','menu':'Открыть навигацию','menu_close':'Закрыть навигацию','language_label':'Язык сайта',
+'lessons_cta':'Выбрать уроки','request_cta':'Заказать языковую услугу','learn_more':'Подробнее','profile_pic':'Портретная иллюстрация, созданная ИИ, не настоящая фотография','photo_note':'Иллюстрация ИИ · ожидается утверждённая фотография.','jump':'Перейти к содержимому','menu':'Открыть навигацию','menu_close':'Закрыть навигацию','language_label':'Язык сайта',
 'proof':['Индивидуальный подход','Многоязычный опыт','Общение между культурами'],
 'video_eyebrow':'ЗНАКОМСТВО С ПРЕПОДАВАТЕЛЕМ','video_title':'Личное видео-приветствие','video_desc':'Познакомьтесь с Нузей и узнайте историю человека, который стоит за NUSYA Linguistic Studio.','video_play':'Смотреть приветствие','video_error':'Видео недоступно? Посмотрите его на Vimeo.','video_link':'Открыть Vimeo',
 'lessons_eyebrow':'ИЗУЧЕНИЕ ЯЗЫКОВ','lessons_title':'Три языка. Ваш собственный путь.','lessons_desc':'У каждого свои цели. Выбирайте уроки с учётом уровня, потребностей и удобного темпа.',
