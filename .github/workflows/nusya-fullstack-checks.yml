@@ -1,0 +1,49 @@
+name: NUSYA Full Platform Checks
+on:
+  pull_request:
+    paths:
+      - 'frontend/**'
+      - 'workers/**'
+      - '.github/workflows/nusya-fullstack-checks.yml'
+  push:
+    paths:
+      - 'frontend/**'
+      - 'workers/**'
+      - '.github/workflows/nusya-fullstack-checks.yml'
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate localized frontend and fallback content
+        run: |
+          python3 workers/tools/export_default_content.py
+          python3 frontend/scripts/build.py
+          git diff --exit-code workers/shared/defaults.js
+      - name: Frontend tests
+        run: python3 -m unittest discover -s frontend/tests -v
+      - name: D1 migration validity
+        run: python3 workers/tools/check_migrations.py
+      - name: Worker API / identity / revision tests
+        run: cd workers && node --test tests/*.test.mjs
+      - name: Browser JavaScript syntax
+        run: |
+          node --check frontend/src/assets/site.js
+          node --check frontend/src/assets/admin.js
+          node --check workers/public/src/index.js
+          node --check workers/admin/src/index.js
+      - name: Validate public and admin output separation
+        run: |
+          test -f frontend/dist-public/en/index.html
+          test -f frontend/dist-public/ar/index.html
+          test -f frontend/dist-public/ru/index.html
+          test -f frontend/dist-admin/index.html
+          test ! -e frontend/dist-public/admin/index.html
