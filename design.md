@@ -160,4 +160,4 @@ The owner explicitly requested an unobtrusive developer credit and approved its 
 
 ## Review hardening — 2026-11-15
 
-Review-hardening desktop/mobile/RTL workflow proposals were explicitly approved in the implementation chat before UI edits. Retain the editorial palette and motion rules. The owner subsequently delegated remaining content decisions: neutral wordmark/globe panels replace generated-person imagery as the default; genuine consented portraits remain configurable in CMS. Localized PNG sharing cards render the existing vector studio artwork. This approval covers these review fixes, not a future unrelated redesign.
+Review-hardening desktop/mobile/RTL workflow proposals were explicitly approved in the implementation chat before UI edits. Retain the editorial palette and motion rules. The owner subsequently delegated remaining content decisions: the existing optimized portrait/video illustrations and localized AI disclosure are retained under D-031; genuine consented portraits remain configurable in CMS. Localized PNG sharing cards render the existing vector studio artwork. This approval covers these review fixes, not a future unrelated redesign.

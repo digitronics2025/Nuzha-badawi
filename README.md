@@ -30,6 +30,6 @@ No secret values belong in source. See [workers/README.md](workers/README.md) fo
 
 An older release exists at https://nozha-badavi.com; the protected admin is https://admin.nozha-badavi.com. Repository code is not proof of deployment. [PRODUCTION.md](docs/PRODUCTION.md) records release evidence and known credential blockers. The single deployment pipeline requires tests, isolated staging write verification, and production recovery safeguards. Do not bypass staging or assume migrations are applied.
 
-Current source uses neutral studio artwork until consented genuine photographs are supplied through the CMS. Privacy copy describes actual processors and a manual six-month retention review; it does not claim automatic enquiry deletion or an unverified legal jurisdiction.
+Current source preserves the two existing optimized illustration assets and localized AI disclosure, as required by D-031; genuine photographs remain available through consented CMS publishing. Privacy copy describes actual processors and a manual six-month retention review; it does not claim automatic enquiry deletion or an unverified legal jurisdiction.
 
 Read [AGENTS.md](AGENTS.md), [documentation index](docs/INDEX.md), [design contract](design.md), and [source provenance](docs/SOURCES.md). UI fixes in the review-hardening change were approved from desktop/mobile/RTL mockups in the implementation chat. No Korean content or services.

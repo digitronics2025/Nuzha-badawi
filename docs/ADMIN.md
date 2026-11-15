@@ -45,3 +45,5 @@ The admin shares the NUSYA ivory/espresso identity but operates as a calm, funct
 ## Review hardening — 2026-11-15
 
 The inbox exposes customer messages, service details, reply links and event history through authenticated detail requests. UK is included in translation status. Page changes, navigation and unload protect unsaved edits; overlapping loads discard stale responses and disable heading fields while loading. History lists author/date/publication eligibility with protected revision previews and restore confirmation. Drafts cannot be restored as published revisions.
+
+The editor also exposes SEO title/description, internal enquiry notes, owner contact/social settings and approved video poster IDs; these controls use existing validated APIs and plain-text DOM rendering.
