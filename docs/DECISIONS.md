@@ -49,3 +49,11 @@ This supplement records **proposed** architecture, not confirmation that Workers
 | D-020 | 2026-11-15 | Required full-page designs V01–V12 before UI code | Mandatory user approval pending | High-fidelity desktop/mobile/Arabic RTL/Russian/admin/interaction and failure-state review |
 
 These are *documented design decisions*, **not** an assertion that the user approved final mockup artboards or implementation. See [design.md](../design.md) for exact durations, typography and animation fallbacks.
+
+## Developer credit decision (2026-11-15)
+
+| ID | Date | Decision | Status | Rationale |
+| --- | --- | --- | --- | --- |
+| D-021 | 2026-11-15 | Add Dr. Badawi Abdalsalam as credited website designer and developer via `https://dr-badawi-abdalsalam.com/` in the discreet, localized public footer | User-requested and approved | Attribution remains visible without competing with NUSYA brand, with safe external links and RTL/mobile support |
+
+This applies to all 21 public pages (EN, AR, RU), underneath copyright. It does not give the developer account access or grant any GitHub/Cloudflare role.
