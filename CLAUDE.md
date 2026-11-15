@@ -19,3 +19,6 @@
 - `docs/ROADMAP.md`: phases and approval boundaries.
 
 Do not treat a documentation-only repository as an implemented application; do not deploy unverified code. No Korean features or content.
+
+## Registered domain and approved execution boundary
+The intended domain is `nozha-badavi.com`, visibly registered in the user's Cloudflare screenshot; **not deployed**. Read `docs/CLOUDFLARE_DEPLOYMENT.md` and `docs/PLAN-nusya-multilingual-studio.md` before designing Workers or touching cloud resources. Public and protected admin hostnames are proposed in those files. Require explicit UI mockup approval before coding, plus separate permission for domain, Workers, D1/R2, email, DNS and production actions.
