@@ -34,3 +34,6 @@ One or two clicks to open unanswered requests, edit hero, change video and toggl
 
 ## Support and export
 Maintain simple operator guide, ability to export records safely, backup + tested restore, and no public exposure of drafts or client messages. Nozha should retain access/control through approved account ownership.
+
+## Protected admin hostname and publishing boundary
+Plan `https://admin.nozha-badavi.com` on an independently protected admin Worker, with Cloudflare Access/MFA as a perimeter and **verified identity plus roles enforced in application APIs**. Keep private content/enquiry APIs off the public hostname; avoid `workers.dev` bypass, disable unnecessary preview access, noindex/no-store everywhere private. The admin publishes versioned records to a public content projection for `https://nozha-badavi.com` and triggers **verified** cache freshness, not an untested static/D1 hybrid. No Cloudflare resources are yet verified. See `CLOUDFLARE_DEPLOYMENT.md`.
