@@ -51,9 +51,12 @@ Content rollback remains the normal way to restore an eligible publication. For 
 
 ## Agent tool permissions
 
-`.claude/settings.json` pre-approves only the **read-only** Cloudflare MCP tools
-(`search`, `docs`, `whoami`) so Claude sessions stop asking for them. The
-Cloudflare `execute` tool can change live Workers, DNS, D1 and R2, so it keeps
-its per-call approval prompt on purpose. Cloud sessions read this file only when
-the session has this one repository attached. Copy the same file into other
-repositories to get the same behaviour there.
+`.claude/settings.json` pre-approves all four Cloudflare MCP tools (`search`,
+`docs`, `whoami` and `execute`) so Claude sessions stop asking for them. This was
+the owner's explicit choice (2026-11-16). `execute` can change live Workers, DNS,
+D1 and R2 **without a prompt**, so the approval rules in `AGENTS.md` and
+`CLAUDE.md` (separate permission for domain, Workers, D1/R2, DNS and production
+actions) still apply; the agent must ask in chat before any such change. To bring
+the prompt back, remove `mcp__cloudflare_mcp__execute` from the file. Cloud
+sessions read this file only when the session has this one repository attached.
+Copy the same file into other repositories to get the same behaviour there.
