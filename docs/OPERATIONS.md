@@ -48,3 +48,12 @@ Retention workflow: at least every six months the owner reviews closed/spam enqu
 The redesign uses the existing staging-first pipeline and changes no resource bindings or database schema. Record the existing public/admin versions and production Time Travel bookmark before promotion. Preserve D1 owner revisions and settings rather than replacing them with source defaults; new infographic fields fill only missing slots. The new edge-template cache namespace avoids serving pre-redesign HTML with new scripts. CSS/JS links include content versions.
 
 Content rollback remains the normal way to restore an eligible publication. For a visual regression, public Worker rollback preserves enquiry and CMS data. If owners have saved new infographic fields, keep the compatible admin API while recovering the public UI: older admin versions' strict field allowlists may reject those newer fields. Do not strip fields or rewrite immutable revisions to make a code downgrade work; prefer a verified forward fix for admin regressions.
+
+## Agent tool permissions
+
+`.claude/settings.json` pre-approves only the **read-only** Cloudflare MCP tools
+(`search`, `docs`, `whoami`) so Claude sessions stop asking for them. The
+Cloudflare `execute` tool can change live Workers, DNS, D1 and R2, so it keeps
+its per-call approval prompt on purpose. Cloud sessions read this file only when
+the session has this one repository attached. Copy the same file into other
+repositories to get the same behaviour there.
