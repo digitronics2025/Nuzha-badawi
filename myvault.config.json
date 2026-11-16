@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "repository": "digitronics2025/Nuzha-badawi",
+  "github": {
+    "profiles": []
+  },
+  "cloudflare": {
+    "destinations": []
+  },
+  "requiredNames": []
+}
